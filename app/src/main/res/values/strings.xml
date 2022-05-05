@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Hanasu</string>
+    <string name="landing_title">Chats</string>
 </resources>
