@@ -1,4 +1,4 @@
-package com.abstrack.hanasu.util;
+package com.abstrack.hanasu.lib.story;
 
 import android.graphics.Rect;
 import android.view.View;

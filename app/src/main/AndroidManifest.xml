@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Hanasu">
         <activity
-            android:name=".LandingScreen"
+            android:name=".LandingActivty"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

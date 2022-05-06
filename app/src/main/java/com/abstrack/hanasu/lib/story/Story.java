@@ -1,4 +1,4 @@
-package com.abstrack.hanasu.util;
+package com.abstrack.hanasu.lib.story;
 
 public class Story {
 

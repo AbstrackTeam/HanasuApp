@@ -1,4 +1,4 @@
-package com.abstrack.hanasu.util;
+package com.abstrack.hanasu.lib.story;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -37,7 +37,8 @@ public class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.StoriesV
 
     @Override
     public void onBindViewHolder(@NonNull StoriesViewHolder holder, int position) {
-        // Changing the background color if the story is seen
+        // Changing the background color if the story is seen example
+        // Testing purposes
         if (stories.get(position).isSeen()) {
             holder.storyCircle.setCardBackgroundColor(context.getResources().getColor(R.color.contrast_background));
         }
