@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Hanasu</string>
+    <string name="app_name_caps">HANASU</string>
     <string name="register">Registro</string>
     <string name="register_instruction">Por favor ingresa tu información personal</string>
     <string name="register_user">Nombre de usuario</string>
@@ -17,4 +18,5 @@
     <string name="logo">Logo</string>
     <string name="user_icon">User icon</string>
     <string name="landing_title">Chats</string>
+    <string name="loading_message">from Abstrack &amp; CBTIS 051</string>
 </resources>

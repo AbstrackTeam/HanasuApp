@@ -24,8 +24,8 @@ public class LandingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AndroidUtil.hideActionBar(this);
         setContentView(R.layout.activity_landing);
-        Objects.requireNonNull(getSupportActionBar()).hide();
         init();
     }
 
