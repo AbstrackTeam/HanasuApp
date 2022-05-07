@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Hanasu</string>
+    <string name="register">Registro</string>
+    <string name="register_instruction">Por favor ingresa tu información personal</string>
+    <string name="register_user">Nombre de usuario</string>
+    <string name="register_user_hint">Usuario</string>
+    <string name="register_mail">Correo</string>
+    <string name="register_mail_hint">Correo electrónico</string>
+    <string name="register_pswd">Contraseña</string>
+    <string name="register_pswd_hint">Introduzca su contraseña</string>
+    <string name="register_pswd_confirm">Confirma tu contraseña</string>
+    <string name="register_pswd_confirm_hint">Confirme su contraseña ingresada</string>
+    <string name="register_btn">Registrarse</string>
+    <string name="return_btn">Retorno</string>
+    <string name="already_login">¿Tienes una cuenta?</string>
+    <string name="login">Inicia sesión</string>
+    <string name="logo">Logo</string>
 </resources>
