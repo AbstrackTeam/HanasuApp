@@ -1,6 +1,5 @@
 package com.abstrack.hanasu;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,19 +10,18 @@ import com.abstrack.hanasu.logic.chat.ChatsAdapter;
 import com.abstrack.hanasu.logic.story.StoriesAdapter;
 import com.abstrack.hanasu.logic.story.StoriesDecorator;
 import com.abstrack.hanasu.logic.story.Story;
-import com.abstrack.hanasu.util.AndroidUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class LandingActivity extends BaseAppActivity {
 
     private RecyclerView storiesBar, chatsListView;
 
     @Override
-    public void onCreate(Bundle savedInstanceState, int layoutResID) {
-        super.onCreate(savedInstanceState, R.layout.activity_landing);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_landing);
         init();
     }
 

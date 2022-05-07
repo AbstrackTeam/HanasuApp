@@ -1,20 +1,20 @@
 package com.abstrack.hanasu;
 
-import androidx.appcompat.app.AppCompatActivity;
-import android.content.Intent;
+import androidx.annotation.Nullable;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.os.Bundle;
+import android.widget.EditText;
+import android.widget.Toast;
 
 public class RegisterActivity extends BaseAppActivity {
 
     @Override
-    public void onCreate(Bundle savedInstanceState, int layoutResID) {
-        super.onCreate(savedInstanceState, R.layout.activity_register);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_register);
     }
-    public void changeToLoginActivity(View view){
+
+    public void changeToLastActivity(View view){
         finish();
     }
 }
