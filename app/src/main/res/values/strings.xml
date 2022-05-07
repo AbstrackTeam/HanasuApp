@@ -15,4 +15,6 @@
     <string name="already_login">¿Tienes una cuenta?</string>
     <string name="login">Inicia sesión</string>
     <string name="logo">Logo</string>
+    <string name="user_icon">User icon</string>
+    <string name="landing_title">Chats</string>
 </resources>
