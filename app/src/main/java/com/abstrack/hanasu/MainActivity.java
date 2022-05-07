@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
         AndroidUtil.hideActionBar(this);
         setContentView(R.layout.activity_main);
 
-        Intent i = new Intent(this, RegisterActivity.class);
+        Intent i = new Intent(this, LoginActivity.class);
         startActivity(i);
     }
 }

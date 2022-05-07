@@ -50,14 +50,16 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="40dp"
                 android:fontFamily="@font/asap"
+                android:onClick="changeToRegisterActivity"
                 android:text="@string/register_2"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.239"
-                app:layout_constraintStart_toEndOf="@+id/txtAccount" />
+                app:layout_constraintHorizontal_bias="0.206"
+                app:layout_constraintStart_toEndOf="@+id/txtAccount"
+                tools:ignore="TouchTargetSizeCheck,TouchTargetSizeCheck" />
 
             <TextView
                 android:id="@+id/txtLogin"
@@ -160,6 +162,7 @@
                 android:textColor="@color/white"
                 android:textColorHint="#90A4AE"
                 android:textSize="16sp"
+                android:longClickable="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.021"
                 app:layout_constraintStart_toStartOf="parent"
@@ -202,12 +205,12 @@
                 android:id="@+id/txtNewMember"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="72dp"
+                android:layout_marginStart="76dp"
                 android:layout_marginTop="12dp"
                 android:fontFamily="@font/asap"
                 android:text="@string/new_member"
                 android:textColor="#90A4AE"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btnRegister" />
