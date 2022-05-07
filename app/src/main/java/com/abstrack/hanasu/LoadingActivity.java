@@ -6,14 +6,9 @@ import android.os.Bundle;
 
 import com.abstrack.hanasu.util.AndroidUtil;
 
-public class LoadingActivity extends AppCompatActivity {
-
+public class LoadingActivity extends BaseAppActivity {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        AndroidUtil.hideActionBar(this);
-        setContentView(R.layout.activity_loading);
-
-
+    public void onCreate(Bundle savedInstanceState, int layoutResID) {
+        super.onCreate(savedInstanceState, R.layout.activity_loading);
     }
 }

@@ -17,15 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class LandingActivity extends AppCompatActivity {
+public class LandingActivity extends BaseAppActivity {
 
     private RecyclerView storiesBar, chatsListView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        AndroidUtil.hideActionBar(this);
-        setContentView(R.layout.activity_landing);
+    public void onCreate(Bundle savedInstanceState, int layoutResID) {
+        super.onCreate(savedInstanceState, R.layout.activity_landing);
         init();
     }
 

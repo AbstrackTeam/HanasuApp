@@ -8,13 +8,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.abstrack.hanasu.util.AndroidUtil;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseAppActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        AndroidUtil.hideActionBar(this);
-        setContentView(R.layout.activity_main);
+    public void onCreate(Bundle savedInstanceState, int layoutResID) {
+        super.onCreate(savedInstanceState, R.layout.activity_main);
 
         Intent i = new Intent(this, LoginActivity.class);
         startActivity(i);

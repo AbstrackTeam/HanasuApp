@@ -8,13 +8,11 @@ import android.view.View;
 
 import com.abstrack.hanasu.util.AndroidUtil;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseAppActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        AndroidUtil.hideActionBar(this);
-        setContentView(R.layout.activity_login);
+    public void onCreate(Bundle savedInstanceState, int layoutResID) {
+        super.onCreate(savedInstanceState, R.layout.activity_login);
     }
     public void changeToRegisterActivity(View view){
         Intent i = new Intent(this, RegisterActivity.class);
