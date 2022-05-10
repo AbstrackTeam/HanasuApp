@@ -34,6 +34,18 @@ public class AuthManager {
         return true;
     }
 
+    public static boolean validateLoginForm(TextInputLayout emailTextInput, TextInputLayout passwordTextInput) {
+        if(!validateTextField(emailTextInput)){
+            return false;
+        }
+
+        if(!validateTextField(passwordTextInput)){
+            return false;
+        }
+
+        return true;
+    }
+
     public static boolean validateTextField(TextInputLayout textInput){
         String textValue = textInput.getEditText().getText().toString();
 

@@ -148,6 +148,7 @@
                 android:background="@drawable/round_button"
                 android:backgroundTint="@color/purple_500"
                 android:fontFamily="@font/quicksand_bold"
+                android:onClick="loginAccount"
                 android:text="@string/login_btn"
                 android:textAllCaps="false"
                 android:textSize="20sp"

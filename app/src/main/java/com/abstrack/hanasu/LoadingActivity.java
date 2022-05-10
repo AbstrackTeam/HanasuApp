@@ -15,6 +15,7 @@ public class LoadingActivity extends BaseAppActivity {
     protected void onStart() {
         super.onStart();
 
+        //Placeholder
         AuthManager.getFireAuth().signOut();
 
         if (AuthManager.isUserLogged()) {
