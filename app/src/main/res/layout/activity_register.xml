@@ -32,11 +32,11 @@
           android:textStyle="bold"
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/btnRegister"
+          app:layout_constraintTop_toBottomOf="@+id/btnSend"
           app:layout_constraintVertical_bias="0.0" />
 
       <TextView
-          android:id="@+id/txtLogin"
+          android:id="@+id/txtForgotPassword"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginStart="5dp"
@@ -52,7 +52,7 @@
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintHorizontal_bias="0.0"
           app:layout_constraintStart_toEndOf="@+id/txtAccount"
-          app:layout_constraintTop_toBottomOf="@+id/btnRegister"
+          app:layout_constraintTop_toBottomOf="@+id/btnSend"
           app:layout_constraintVertical_bias="0.0" />
 
       <TextView
@@ -175,7 +175,7 @@
           app:layout_constraintTop_toBottomOf="@+id/imgLogo" />
 
       <Button
-          android:id="@+id/btnRegister"
+          android:id="@+id/btnSend"
           android:layout_width="0dp"
           android:layout_height="62dp"
           android:layout_marginStart="21dp"

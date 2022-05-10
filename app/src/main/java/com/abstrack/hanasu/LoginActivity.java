@@ -52,4 +52,7 @@ public class LoginActivity extends BaseAppActivity {
     public void changeToRegisterActivity(View view) {
         AndroidUtil.startNewActivity(this, RegisterActivity.class);
     }
+    public void changeToForgotPasswordActivity(View view){
+        AndroidUtil.startNewActivity(this, ForgotPasswordActivity.class);
+    }
 }

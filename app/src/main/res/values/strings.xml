@@ -2,6 +2,7 @@
     <string name="app_name">Hanasu</string>
     <string name="app_name_caps">HANASU</string>
     <string name="register">Registro</string>
+    <string name="register_2">Registrarse</string>
     <string name="register_instruction">Por favor ingresa tu información personal</string>
     <string name="register_user">Nombre de usuario</string>
     <string name="register_user_hint">Usuario</string>
@@ -24,5 +25,7 @@
     <string name="forgot_password">¿Olvidaste tu contraseña?</string>
     <string name="login_btn">Inicio de sesión</string>
     <string name="new_member">¿No tienes cuenta?</string>
-    <string name="register_2">Registrarse</string>
+    <string name="send">Enviar</string>
+    <string name="text_forgot">Ingresa tu dirección de correo electrónico y te enviaremos un enlace para que puedas crear una nueva contraseña.</string>
+
 </resources>
