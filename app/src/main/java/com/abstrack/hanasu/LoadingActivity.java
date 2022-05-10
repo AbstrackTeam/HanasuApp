@@ -15,8 +15,10 @@ public class LoadingActivity extends BaseAppActivity {
     protected void onStart() {
         super.onStart();
 
+        AuthManager.getFireAuth().signOut();
+
         if (AuthManager.isUserLogged()) {
-            AndroidUtil.startNewActivity(this, RegisterActivity.class);
+            AndroidUtil.startNewActivity(this, LandingActivity.class);
         } else {
             AndroidUtil.startNewActivity(this, LoginActivity.class);
         }
