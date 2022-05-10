@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_centerHorizontal="false"
     android:background="#31384B"
     android:backgroundTint="#31384B"
     tools:context=".LoginActivity">
@@ -34,14 +35,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 android:fontFamily="@font/asap"
                 android:text="@string/forgot_password"
                 android:textColor="#90A4AE"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edtTxtPswd" />
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutPswd" />
 
             <TextView
                 android:id="@+id/txtLogin_2"
@@ -113,7 +114,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 android:fontFamily="@font/asap"
                 android:text="@string/register_pswd"
                 android:textColor="@color/white"
@@ -122,51 +123,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edtTxtMail" />
-
-            <EditText
-                android:id="@+id/edtTxtMail"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:autofillHints=""
-                android:backgroundTint="@color/white"
-                android:ems="10"
-                android:fontFamily="@font/asap"
-                android:hint="@string/register_mail_hint"
-                android:inputType="textPersonName"
-                android:minHeight="48dp"
-                android:textColor="@color/white"
-                android:textColorHint="#90A4AE"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.021"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtMail" />
-
-            <EditText
-                android:id="@+id/edtTxtPswd"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:autofillHints=""
-                android:backgroundTint="@color/white"
-                android:drawableEnd="@drawable/ic_baseline_visibility_off"
-                android:ems="10"
-                android:fontFamily="@font/asap"
-                android:hint="@string/password_txt"
-                android:inputType="textPassword"
-                android:minHeight="48dp"
-                android:textColor="@color/white"
-                android:textColorHint="#90A4AE"
-                android:textSize="16sp"
-                android:longClickable="false"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.021"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtPswd" />
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEmail" />
 
             <TextView
                 android:id="@+id/txtHanasu"
@@ -189,7 +146,7 @@
                 android:layout_marginTop="36dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/round_button"
-                android:backgroundTint="@color/accent_color"
+                android:backgroundTint="@color/purple_500"
                 android:fontFamily="@font/quicksand_bold"
                 android:text="@string/login_btn"
                 android:textAllCaps="false"
@@ -214,6 +171,51 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btnRegister" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:hint="@string/register_mail_hint"
+                android:textColorHint="@color/hints"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtMail">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtTxtEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/background"
+                    android:gravity="bottom"
+                    android:textColor="@color/white"
+                    android:inputType="textEmailAddress" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutPswd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:hint="@string/register_pswd_hint"
+                android:textColorHint="@color/hints"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtPswd">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtTxtPswd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/background"
+                    android:gravity="bottom"
+                    android:inputType="textVisiblePassword|textPassword"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/hints" />
+            </com.google.android.material.textfield.TextInputLayout>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
