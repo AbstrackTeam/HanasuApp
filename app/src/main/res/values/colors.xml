@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <color name="purple_200">#8252C2</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -13,4 +13,5 @@
     <color name="hints">#90A4AE</color>
     <color name="detail_color_secondary">#9AA4C1</color>
     <color name="contrast_background">#374058</color>
+    <color name="mtrl_error" tools:override="true">#FA1111</color>
 </resources>

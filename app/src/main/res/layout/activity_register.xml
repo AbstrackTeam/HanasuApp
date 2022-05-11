@@ -260,17 +260,23 @@
           android:layout_marginEnd="20dp"
           android:hint="@string/register_pswd_hint"
           android:textColorHint="@color/hints"
+          app:counterEnabled="true"
+          app:counterMaxLength="16"
+          app:counterTextColor="@color/white"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/txtPswd">
+          app:layout_constraintTop_toBottomOf="@+id/txtPswd"
+          app:passwordToggleEnabled="true"
+          app:passwordToggleTint="@color/white">
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtTxtPswd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/background"
             android:gravity="bottom"
-            android:textColor="@color/white"
             android:inputType="textPassword"
+            android:textColor="@color/white"
             android:textColorHint="@color/hints" />
       </com.google.android.material.textfield.TextInputLayout>
 
@@ -284,15 +290,18 @@
           android:textColorHint="@color/hints"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/txtPswdC">
+          app:layout_constraintTop_toBottomOf="@+id/txtPswdC"
+          app:passwordToggleEnabled="true"
+          app:passwordToggleTint="@color/white">
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtTxtPswdC"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/background"
             android:gravity="bottom"
-            android:textColor="@color/white"
             android:inputType="textPassword"
+            android:textColor="@color/white"
             android:textColorHint="@color/hints" />
       </com.google.android.material.textfield.TextInputLayout>
 

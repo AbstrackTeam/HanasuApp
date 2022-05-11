@@ -27,7 +27,7 @@ public class AuthManager {
         }
 
         if(!confirmPasswordText.equals(passwordText)){
-            confirmPasswordTextInput.getEditText().setError("Password does not match.");
+            confirmPasswordTextInput.setError("Password does not match.");
             return false;
         }
 
