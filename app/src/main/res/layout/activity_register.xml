@@ -43,6 +43,7 @@
           android:layout_marginTop="12dp"
           android:layout_marginEnd="40dp"
           android:fontFamily="@font/asap"
+          android:minHeight="48dp"
           android:onClick="changeToLastActivity"
           android:text="@string/login"
           android:textColor="@color/white"
@@ -54,22 +55,6 @@
           app:layout_constraintStart_toEndOf="@+id/txtAccount"
           app:layout_constraintTop_toBottomOf="@+id/btnSend"
           app:layout_constraintVertical_bias="0.0" />
-
-      <TextView
-          android:id="@+id/txtUser"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginStart="20dp"
-          android:layout_marginTop="12dp"
-          android:fontFamily="@font/asap"
-          android:text="@string/register_user"
-          android:textColor="@color/white"
-          android:textSize="14sp"
-          android:textStyle="bold"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintHorizontal_bias="0.0"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/txtInstruction" />
 
       <TextView
           android:id="@+id/txtRegister"
@@ -132,7 +117,7 @@
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintHorizontal_bias="0.002"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/textInputLayoutUser" />
+          app:layout_constraintTop_toBottomOf="@+id/txtInstruction" />
 
       <TextView
           android:id="@+id/txtPswd"
@@ -210,27 +195,6 @@
           tools:ignore="DuplicateSpeakableTextCheck" />
 
       <com.google.android.material.textfield.TextInputLayout
-          android:id="@+id/textInputLayoutUser"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginStart="20dp"
-          android:layout_marginEnd="20dp"
-          android:hint="@string/register_user_hint"
-          android:textColorHint="@color/hints"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/txtUser">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edtTxtUser"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/background"
-            android:gravity="bottom"
-            android:textColor="@color/white"
-            android:textColorHint="@color/hints" />
-      </com.google.android.material.textfield.TextInputLayout>
-
-      <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/textInputLayoutEmail"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -260,14 +224,10 @@
           android:layout_marginEnd="20dp"
           android:hint="@string/register_pswd_hint"
           android:textColorHint="@color/hints"
-          app:counterEnabled="true"
-          app:counterMaxLength="16"
           app:counterTextColor="@color/white"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/txtPswd"
-          app:passwordToggleEnabled="true"
-          app:passwordToggleTint="@color/white">
+          app:layout_constraintTop_toBottomOf="@+id/txtPswd">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtTxtPswd"
@@ -290,9 +250,7 @@
           android:textColorHint="@color/hints"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/txtPswdC"
-          app:passwordToggleEnabled="true"
-          app:passwordToggleTint="@color/white">
+          app:layout_constraintTop_toBottomOf="@+id/txtPswdC">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtTxtPswdC"

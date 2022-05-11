@@ -206,10 +206,7 @@
                 android:textColorHint="@color/hints"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtPswd"
-                app:passwordToggleEnabled="true"
-                app:passwordToggleTint="@color/white">
-
+                app:layout_constraintTop_toBottomOf="@+id/txtPswd">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edtTxtPswd"
                     android:layout_width="match_parent"
