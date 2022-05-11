@@ -38,10 +38,8 @@ public class LoginActivity extends BaseAppActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            //Inició sesión
                             AndroidUtil.startNewActivity(LoginActivity.this, LandingActivity.class);
                         } else {
-                            //No jaló
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }

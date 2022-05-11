@@ -2,6 +2,7 @@ package com.abstrack.hanasu;
 
 import android.text.TextUtils;
 
+import com.abstrack.hanasu.util.AndroidUtil;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -14,15 +15,15 @@ public class AuthManager {
         String passwordText = passwordTextInput.getEditText().getText().toString();
         String confirmPasswordText = confirmPasswordTextInput.getEditText().getText().toString();
 
-        if(!validateTextField(emailTextInput)) {
+        if(!validateEmailText(emailTextInput)){
             return false;
         }
 
-        if(!validateTextField(passwordTextInput)) {
+        if(!validatePasswordText(passwordTextInput)){
             return false;
         }
 
-        if(!validateTextField(confirmPasswordTextInput)) {
+        if(!validatePasswordText(confirmPasswordTextInput)) {
             return false;
         }
 
@@ -35,26 +36,58 @@ public class AuthManager {
     }
 
     public static boolean validateLoginForm(TextInputLayout emailTextInput, TextInputLayout passwordTextInput) {
-        if(!validateTextField(emailTextInput)){
+        if(!validateEmailText(emailTextInput)){
             return false;
         }
 
-        if(!validateTextField(passwordTextInput)){
+        if(!validatePasswordText(passwordTextInput)){
             return false;
         }
 
         return true;
     }
 
-    public static boolean validateTextField(TextInputLayout textInput){
-        String textValue = textInput.getEditText().getText().toString();
+    protected static boolean validatePasswordText(TextInputLayout passwordTextInput){
+        String passwordText = passwordTextInput.getEditText().getText().toString();
 
-        if (TextUtils.isEmpty(textValue)) {
-            textInput.setError("Required");
+        if(!validateTextField(passwordTextInput)){
             return false;
         }
 
-        textInput.getEditText().setError(null);
+        if(!passwordText.matches(AndroidUtil.PASSWORD_PATTERN)){
+            passwordTextInput.setError("Invalid password");
+            return false;
+        }
+
+        passwordTextInput.setError(null);
+        return true;
+    }
+
+    protected static boolean validateEmailText(TextInputLayout emailTextInput){
+        String emailText = emailTextInput.getEditText().getText().toString();
+
+        if(!validateTextField(emailTextInput)){
+            return false;
+        }
+
+        if(!emailText.matches(AndroidUtil.EMAIL_PATTERN)){
+            emailTextInput.setError("Invalid email address");
+            return false;
+        }
+
+        emailTextInput.setError(null);
+        return true;
+    }
+
+    protected static boolean validateTextField(TextInputLayout textInput){
+        String textValue = textInput.getEditText().getText().toString();
+
+        if (TextUtils.isEmpty(textValue)) {
+            textInput.setError("The field cannot be left blank");
+            return false;
+        }
+
+        textInput.setError(null);
         return true;
     }
 
