@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".LandingActivty">
+    tools:context=".LandingActivity">
 
     <TextView
         android:id="@+id/txtChats"
@@ -41,6 +41,7 @@
         android:id="@+id/scrollMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:keepScreenOn="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtChats">
 
@@ -60,7 +61,9 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/storiesBar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:clipChildren="false"
+                    android:keepScreenOn="true">
 
                 </androidx.recyclerview.widget.RecyclerView>
             </androidx.core.widget.NestedScrollView>
