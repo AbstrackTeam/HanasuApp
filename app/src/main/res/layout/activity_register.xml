@@ -204,7 +204,8 @@
           android:textColorHint="@color/hints"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/txtMail">
+          app:layout_constraintTop_toBottomOf="@+id/txtMail"
+          app:errorIconDrawable="@null">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtTxtEmail"
             android:layout_width="match_parent"
@@ -227,7 +228,10 @@
           app:counterTextColor="@color/white"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/txtPswd">
+          app:layout_constraintTop_toBottomOf="@+id/txtPswd"
+          app:passwordToggleEnabled="true"
+          app:passwordToggleTint="#FFFFFF"
+          app:errorIconDrawable="@null">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtTxtPswd"
@@ -250,7 +254,10 @@
           android:textColorHint="@color/hints"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/txtPswdC">
+          app:layout_constraintTop_toBottomOf="@+id/txtPswdC"
+          app:passwordToggleEnabled="true"
+          app:passwordToggleTint="#FFFFFF"
+          app:errorIconDrawable="@null">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtTxtPswdC"
