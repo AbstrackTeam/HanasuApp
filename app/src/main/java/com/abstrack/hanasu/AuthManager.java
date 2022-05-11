@@ -55,7 +55,7 @@ public class AuthManager {
         }
 
         if(!passwordText.matches(AndroidUtil.PASSWORD_PATTERN)){
-            passwordTextInput.setError("Invalid password");
+            passwordTextInput.setError("Your password needs to include both lower and uppercase characters, and be at least 8 characters long.");
             return false;
         }
 
@@ -71,7 +71,7 @@ public class AuthManager {
         }
 
         if(!emailText.matches(AndroidUtil.EMAIL_PATTERN)){
-            emailTextInput.setError("Invalid email address");
+            emailTextInput.setError("Invalid email address.");
             return false;
         }
 
@@ -83,7 +83,7 @@ public class AuthManager {
         String textValue = textInput.getEditText().getText().toString();
 
         if (TextUtils.isEmpty(textValue)) {
-            textInput.setError("The field cannot be left blank");
+            textInput.setError("Field cannot be left blank.");
             return false;
         }
 
