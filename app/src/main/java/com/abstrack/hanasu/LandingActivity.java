@@ -9,9 +9,7 @@ import android.os.Bundle;
 import com.abstrack.hanasu.logic.chat.Chat;
 import com.abstrack.hanasu.logic.chat.ChatsAdapter;
 import com.abstrack.hanasu.logic.story.StoriesAdapter;
-import com.abstrack.hanasu.logic.story.StoriesDecorator;
 import com.abstrack.hanasu.logic.story.Story;
-import com.abstrack.hanasu.util.AndroidUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,14 +40,10 @@ public class LandingActivity extends AppCompatActivity {
         stories.add(new Story(false));
         stories.add(new Story(false));
         stories.add(new Story(false));
-        stories.add(new Story(true));
-        stories.add(new Story(true));
-        stories.add(new Story(true));
-        stories.add(new Story(true));
-        stories.add(new Story(true));
-        stories.add(new Story(true));
-        stories.add(new Story(true));
-        stories.add(new Story(true));
+        stories.add(new Story(false));
+        stories.add(new Story(false));
+        stories.add(new Story(false));
+
         // Chats
         chats.add(new Chat(false, "Bochin",0, 7, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
         chats.add(new Chat(false, "Soy una persona insaciable",0, 4, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
@@ -70,11 +64,11 @@ public class LandingActivity extends AppCompatActivity {
         chats.add(new Chat(false, "sd",0, 7, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
         chats.add(new Chat(false, "sd",0, 7, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
 
-        StoriesAdapter storiesAdapter = new StoriesAdapter(stories, this);
+        StoriesAdapter storiesAdapter = new StoriesAdapter(stories, storiesBar,this);
         storiesBar.setAdapter(storiesAdapter);
         storiesBar.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
-        // Space between story items
-        storiesBar.addItemDecoration(new StoriesDecorator(10));
+
+        storiesBar.setItemAnimator(null);
 
         ChatsAdapter chatsAdapter = new ChatsAdapter(chats, this);
         chatsListView.setAdapter((chatsAdapter));
