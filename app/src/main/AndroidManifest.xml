@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Hanasu">
         <activity
+            android:name=".VerifyActivity"
+            android:exported="false" />
+        <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
         <activity

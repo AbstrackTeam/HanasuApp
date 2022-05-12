@@ -14,4 +14,7 @@
     <color name="detail_color_secondary">#9AA4C1</color>
     <color name="contrast_background">#374058</color>
     <color name="mtrl_error" tools:override="true">#FA1111</color>
+    <color name="instruction_color">#90A4AE</color>
+    <color name="resend_color">#FCDEBE</color>
+    <color name="verify_background_color">#363F59</color>
 </resources>

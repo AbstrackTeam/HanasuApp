@@ -27,5 +27,13 @@
     <string name="new_member">¿No tienes cuenta?</string>
     <string name="send">Enviar</string>
     <string name="text_forgot">Ingresa tu dirección de correo electrónico y te enviaremos un enlace para que puedas crear una nueva contraseña.</string>
+    <string name="verify_title">Confirme su correo para empezar</string>
+    <string name="verify_instruction">¡Muchas gracias por registrarse! Hemos enviado un enlace de confirmación al correo:</string>
+    <string name="verify_instruction2">Debe entrar al enlace para verificar su cuenta.</string>
+    <string name="verify_email">example@gmail.com</string>
+    <string name="verify_not_mail">¿No recibiste ningún correo?</string>
+    <string name="verify_resend"><u>reenviar correo</u></string>
+    <string name="verify_send">Enviar</string>
+    <string name="verify_check">Revise su pestaña de spam o</string>
 
 </resources>
