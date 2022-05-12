@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
+    android:onClick="changeToLoginActivity"
     tools:context=".VerifyActivity">
 
     <Button
@@ -147,6 +148,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="15dp"
         android:fontFamily="@font/asap"
+        android:onClick="sendVerificationEmail"
         android:text="@string/verify_resend"
         android:textColor="@color/resend_color"
         android:textSize="16sp"

@@ -15,13 +15,18 @@ public class LoadingActivity extends BaseAppActivity {
     protected void onStart() {
         super.onStart();
 
-        //Placeholder
         AuthManager.getFireAuth().signOut();
 
-        if (AuthManager.isUserLogged()) {
+        if(AuthManager.isUserLogged()){
+            if(!AuthManager.getFireAuth().getCurrentUser().isEmailVerified()){
+                AndroidUtil.startNewActivity(this, LoginActivity.class);
+                return;
+            }
+
             AndroidUtil.startNewActivity(this, LandingActivity.class);
-        } else {
-            AndroidUtil.startNewActivity(this, LoginActivity.class);
+            return;
         }
+
+        AndroidUtil.startNewActivity(this, LoginActivity.class);
     }
 }

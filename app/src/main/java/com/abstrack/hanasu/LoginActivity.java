@@ -22,6 +22,9 @@ public class LoginActivity extends BaseAppActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        if(AuthManager.isUserLogged())
+            AuthManager.getFireAuth().signOut();
+
         emailInputText = findViewById(R.id.textInputLayoutEmail);
         passwordInputText = findViewById(R.id.textInputLayoutPswd);
     }
@@ -38,6 +41,11 @@ public class LoginActivity extends BaseAppActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            if(!AuthManager.getFireAuth().getCurrentUser().isEmailVerified()) {
+                                AndroidUtil.startNewActivity(LoginActivity.this, VerifyActivity.class);
+                                return;
+                            }
+
                             AndroidUtil.startNewActivity(LoginActivity.this, LandingActivity.class);
                         } else {
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
