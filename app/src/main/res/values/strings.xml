@@ -30,7 +30,7 @@
     <string name="verify_title">Verifique su cuenta</string>
     <string name="verify_instruction">¡Muchas gracias por registrarse! Hemos enviado un enlace de confirmación al correo:</string>
     <string name="verify_instruction2">Debe entrar al enlace para verificar su cuenta.</string>
-    <string name="verify_email">example@gmail.com</string>
+    <string name="verify_email">placeholder@gmail.com</string>
     <string name="verify_not_mail">¿No recibiste ningún correo?</string>
     <string name="verify_resend"><u>reenviar correo</u></string>
     <string name="verify_send">Enviar</string>

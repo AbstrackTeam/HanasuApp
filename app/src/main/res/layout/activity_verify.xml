@@ -88,29 +88,29 @@
         android:layout_width="363dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="92dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="20dp"
-        android:fontFamily="@font/asap"
 
+        android:fontFamily="@font/asap"
         android:text="@string/verify_instruction2"
         android:textColor="@color/instruction_color"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.142"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtVerify" />
+        app:layout_constraintTop_toBottomOf="@+id/txtEmail" />
 
     <TextView
         android:id="@+id/txtEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="241dp"
         android:fontFamily="@font/asap"
         android:text="@string/verify_email"
         android:textColor="@color/detail_color_primary"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtInstruction" />
 
     <TextView
@@ -118,45 +118,39 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="156dp"
+        android:layout_marginTop="98dp"
         android:fontFamily="@font/asap"
         android:text="@string/verify_not_mail"
         android:textColor="@color/instruction_color"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtInstruction" />
-
-    <TextView
-        android:id="@+id/txtResend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="78dp"
-        android:layout_marginBottom="209dp"
-        android:fontFamily="@font/asap"
-        android:text="@string/verify_resend"
-        android:textColor="@color/resend_color"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/txtInstruction4"
-        app:layout_constraintTop_toBottomOf="@+id/txtNotEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/txtInstruction2" />
 
     <TextView
         android:id="@+id/txtInstruction4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:layout_marginStart="20dp"
         android:layout_marginTop="15dp"
-
-        android:layout_marginBottom="209dp"
         android:fontFamily="@font/asap"
         android:text="@string/verify_check"
         android:textColor="@color/instruction_color"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtNotEmail" />
+
+    <TextView
+        android:id="@+id/txtResend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="15dp"
+        android:fontFamily="@font/asap"
+        android:text="@string/verify_resend"
+        android:textColor="@color/resend_color"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/txtInstruction4"
         app:layout_constraintTop_toBottomOf="@+id/txtNotEmail" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
