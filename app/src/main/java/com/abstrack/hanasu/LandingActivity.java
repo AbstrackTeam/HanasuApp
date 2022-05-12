@@ -1,10 +1,13 @@
 package com.abstrack.hanasu;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import com.abstrack.hanasu.logic.chat.Chat;
 import com.abstrack.hanasu.logic.chat.ChatsAdapter;
@@ -34,7 +37,7 @@ public class LandingActivity extends AppCompatActivity {
         List<Story> stories = new ArrayList<>();
         List<Chat> chats = new ArrayList<>();
 
-        // Testing purposes
+        // Testing purposes - WILL REFACTOR
         // Stories
         stories.add(new Story(false));
         stories.add(new Story(false));
@@ -74,5 +77,17 @@ public class LandingActivity extends AppCompatActivity {
         chatsListView.setAdapter((chatsAdapter));
         chatsListView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
+        CardView addChatButton = findViewById(R.id.addChatButton);
+        addChatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addChat();
+            }
+        });
+    }
+
+    public void addChat(){
+        // TODO
+        Toast.makeText(this, "add chat button clicked", Toast.LENGTH_SHORT).show();
     }
 }

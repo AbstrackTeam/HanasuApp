@@ -18,4 +18,5 @@
     <string name="user_icon">User icon</string>
     <string name="landing_title">Chats</string>
     <string name="story_icon_description">Story icon</string>
+    <string name="add_chat_icon">Add chat icon</string>
 </resources>
