@@ -41,7 +41,7 @@ public class RegisterActivity extends BaseAppActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            AndroidUtil.startNewActivity(RegisterActivity.this, LandingActivity.class);
+                            AndroidUtil.startNewActivity(RegisterActivity.this, VerifyActivity.class);
                         } else {
                             Toast.makeText(RegisterActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
