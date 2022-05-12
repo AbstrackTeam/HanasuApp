@@ -9,16 +9,15 @@ import androidx.annotation.NonNull;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.textfield.TextInputLayout;
 
-public class VerifyActivity extends BaseAppActivity {
+public class VerifyEmailActivity extends BaseAppActivity {
 
     TextView textViewEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_verify);
+        setContentView(R.layout.activity_verify_email);
 
         textViewEmail = findViewById(R.id.txtEmail);
         textViewEmail.setText(AuthManager.getFireAuth().getCurrentUser().getEmail());

@@ -1,6 +1,5 @@
 package com.abstrack.hanasu;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -22,9 +21,6 @@ public class LoginActivity extends BaseAppActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        if(AuthManager.isUserLogged())
-            AuthManager.getFireAuth().signOut();
-
         emailInputText = findViewById(R.id.textInputLayoutEmail);
         passwordInputText = findViewById(R.id.textInputLayoutPswd);
     }
@@ -42,7 +38,7 @@ public class LoginActivity extends BaseAppActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             if(!AuthManager.getFireAuth().getCurrentUser().isEmailVerified()) {
-                                AndroidUtil.startNewActivity(LoginActivity.this, VerifyActivity.class);
+                                AndroidUtil.startNewActivity(LoginActivity.this, VerifyEmailActivity.class);
                                 return;
                             }
 

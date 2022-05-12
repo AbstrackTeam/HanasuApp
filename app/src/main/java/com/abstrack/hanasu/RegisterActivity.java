@@ -5,15 +5,12 @@ import androidx.annotation.Nullable;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseUser;
 
 public class RegisterActivity extends BaseAppActivity {
 
@@ -41,7 +38,7 @@ public class RegisterActivity extends BaseAppActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            AndroidUtil.startNewActivity(RegisterActivity.this, VerifyActivity.class);
+                            AndroidUtil.startNewActivity(RegisterActivity.this, VerifyEmailActivity.class);
                         }
                     }
                 });

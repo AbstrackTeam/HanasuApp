@@ -1,11 +1,11 @@
 package com.abstrack.hanasu;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
 
+import com.abstrack.hanasu.util.AndroidUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -32,6 +32,9 @@ public class ForgotPasswordActivity extends BaseAppActivity {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            AndroidUtil.startNewActivity(ForgotPasswordActivity.this, VerifyEmailActivity.class);
+                        }
                     }
                 });
     }

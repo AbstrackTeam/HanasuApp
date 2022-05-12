@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Hanasu">
         <activity
-            android:name=".VerifyActivity"
+            android:name=".VerifyEmailActivity"
             android:exported="false" />
         <activity
             android:name=".ForgotPasswordActivity"
