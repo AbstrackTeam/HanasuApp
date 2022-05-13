@@ -35,5 +35,7 @@
     <string name="verify_resend"><u>reenviar correo</u></string>
     <string name="verify_send">Enviar</string>
     <string name="verify_check">Revise su pestaña de spam o</string>
-
+    <string name="restore_pswd">Restablecimiento de contraseña</string>
+    <string name="restore_instruction">Hemos enviado un enlace para el restablecimiento de su contraseña al correo:</string>
+    <string name="restore_instruction2">Debe entrara al enlace para restablecer su contraseña.</string>
 </resources>
