@@ -14,6 +14,7 @@
         <activity
             android:name=".VerifyEmailActivity"
             android:exported="false" />
+        <!-- ForgotPasswordActivity -->
         <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
