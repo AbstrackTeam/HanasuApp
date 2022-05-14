@@ -1,4 +1,4 @@
-package com.abstrack.hanasu.logic.story;
+package com.abstrack.hanasu.core.story;
 
 import android.content.Context;
 import android.view.LayoutInflater;

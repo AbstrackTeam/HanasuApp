@@ -1,7 +1,12 @@
-package com.abstrack.hanasu;
+package com.abstrack.hanasu.activity;
 
 import android.os.Bundle;
-import com.abstrack.hanasu.util.AndroidUtil;
+
+import com.abstrack.hanasu.BaseAppActivity;
+import com.abstrack.hanasu.R;
+import com.abstrack.hanasu.activity.auth.LoginActivity;
+import com.abstrack.hanasu.auth.AuthManager;
+import com.abstrack.hanasu.util.Util;
 
 public class LoadingActivity extends BaseAppActivity {
 
@@ -21,14 +26,14 @@ public class LoadingActivity extends BaseAppActivity {
         if(AuthManager.isUserLogged()){
             if(!AuthManager.getFireAuth().getCurrentUser().isEmailVerified()){
                 AuthManager.getFireAuth().signOut();
-                AndroidUtil.startNewActivity(this, LoginActivity.class);
+                Util.startNewActivity(this, LoginActivity.class);
                 return;
             }
 
-            AndroidUtil.startNewActivity(this, LandingActivity.class);
+            Util.startNewActivity(this, LandingActivity.class);
             return;
         }
 
-        AndroidUtil.startNewActivity(this, LoginActivity.class);
+        Util.startNewActivity(this, LoginActivity.class);
     }
 }

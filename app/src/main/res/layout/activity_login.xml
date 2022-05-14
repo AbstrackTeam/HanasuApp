@@ -7,7 +7,7 @@
     android:layout_centerHorizontal="false"
     android:background="#31384B"
     android:backgroundTint="#31384B"
-    tools:context=".LoginActivity">
+    tools:context=".activity.auth.LoginActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -219,7 +219,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/background"
                     android:gravity="bottom"
-                    android:inputType="textVisiblePassword|textPassword"
+                    android:inputType="textPassword"
                     android:textColor="@color/white"
                     android:textColorHint="@color/hints" />
             </com.google.android.material.textfield.TextInputLayout>

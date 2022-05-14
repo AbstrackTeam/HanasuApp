@@ -12,25 +12,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Hanasu" >
         <activity
-            android:name=".VerifyEmailActivity"
+            android:name=".activity.auth.VerifyEmailActivity"
             android:exported="false" />
         <activity
-            android:name=".ForgotPasswordActivity"
+            android:name=".activity.auth.ForgotPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".VerifyForgottenPasswordActivity"
+            android:name=".activity.auth.VerifyForgottenPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activity.auth.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".LandingActivity"
+            android:name=".activity.LandingActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".activity.auth.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".LoadingActivity"
+            android:name=".activity.LoadingActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
