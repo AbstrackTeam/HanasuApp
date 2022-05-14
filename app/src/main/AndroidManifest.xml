@@ -14,9 +14,11 @@
         <activity
             android:name=".VerifyEmailActivity"
             android:exported="false" />
-        <!-- ForgotPasswordActivity -->
         <activity
             android:name=".ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".VerifyForgottenPasswordActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
@@ -36,7 +38,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <service
             android:name=".firebase.MessagingService"
             android:exported="false">

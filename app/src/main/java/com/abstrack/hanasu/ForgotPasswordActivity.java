@@ -22,7 +22,7 @@ public class ForgotPasswordActivity extends BaseAppActivity {
         emailTextInput = findViewById(R.id.textInputLayoutEmail);
     }
 
-    public void sendForgotPasswordCode(View view){
+    public void sendForgotPasswordEmail(View view){
         if(!AuthManager.validateEmailText(emailTextInput))
             return;
 
@@ -33,7 +33,8 @@ public class ForgotPasswordActivity extends BaseAppActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
-                            AndroidUtil.startNewActivity(ForgotPasswordActivity.this, VerifyEmailActivity.class);
+                            VerifyForgottenPasswordActivity.textEmail = emailText;
+                            AndroidUtil.startNewActivity(ForgotPasswordActivity.this, VerifyForgottenPasswordActivity.class);
                         }
                     }
                 });
