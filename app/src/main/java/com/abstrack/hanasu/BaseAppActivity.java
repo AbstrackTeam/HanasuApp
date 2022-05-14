@@ -12,5 +12,6 @@ public class BaseAppActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Util.hideActionBar(this);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 }
