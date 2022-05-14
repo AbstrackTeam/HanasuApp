@@ -33,6 +33,7 @@
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:background="#00FFFFFF"
+                android:outlineProvider="none"
                 app:cardBackgroundColor="#00FFFFFF"
                 app:cardCornerRadius="100dp"
                 app:layout_constraintStart_toStartOf="parent"
