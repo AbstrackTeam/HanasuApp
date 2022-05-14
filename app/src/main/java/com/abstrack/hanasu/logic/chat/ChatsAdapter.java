@@ -5,9 +5,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.abstrack.hanasu.R;
@@ -38,7 +41,13 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
         holder.name.setText(chats.get(position).getName().toString());
         holder.previewMessage.setText(chats.get(position).getMessages().toString());
         holder.messageQuantity.setText(String.valueOf(chats.get(position).getMessagesCount()));
-
+        holder.userIcon.setImageResource(R.drawable.ic_launcher_foreground);
+        holder.chatCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, "Chat clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -49,13 +58,16 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
     public static class ChatsViewHolder extends RecyclerView.ViewHolder{
         // Components
         private TextView name, previewMessage, messageQuantity;
+        private CardView chatCard;
+        private ImageView userIcon;
 
         public ChatsViewHolder(@NonNull View itemView) {
             super(itemView);
+            chatCard = itemView.findViewById(R.id.chatCard);
             name = itemView.findViewById(R.id.chatName);
             previewMessage = itemView.findViewById(R.id.previewMessage);
             messageQuantity = itemView.findViewById(R.id.messagesCount);
-
+            userIcon = itemView.findViewById(R.id.userIcon);
         }
     }
 }

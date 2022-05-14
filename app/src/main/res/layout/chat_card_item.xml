@@ -17,8 +17,10 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
         android:background="#00FFFFFF"
+        android:clickable="true"
         app:cardBackgroundColor="#00FFFFFF"
-        app:cardElevation="0dp">
+        app:cardElevation="0dp"
+        android:focusable="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -32,7 +34,7 @@
                 android:layout_height="55dp"
                 android:background="#00FFFFFF"
                 app:cardBackgroundColor="#00FFFFFF"
-                app:cardCornerRadius="25dp"
+                app:cardCornerRadius="100dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 

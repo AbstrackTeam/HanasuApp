@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".LandingActivty">
+    tools:context=".LandingActivity">
 
     <TextView
         android:id="@+id/txtChats"
@@ -40,7 +40,9 @@
     <ScrollView
         android:id="@+id/scrollMain"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:keepScreenOn="false"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtChats">
 
@@ -55,12 +57,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
-                android:fillViewport="false">
+                android:fillViewport="false"
+                android:overScrollMode="never">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/storiesBar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:clipChildren="false"
+                    android:descendantFocusability="blocksDescendants"
+                    android:overScrollMode="never">
 
                 </androidx.recyclerview.widget.RecyclerView>
             </androidx.core.widget.NestedScrollView>
@@ -75,20 +81,36 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/chatsListView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:overScrollMode="never" />
             </androidx.core.widget.NestedScrollView>
 
         </LinearLayout>
     </ScrollView>
 
-    <TextView
-        android:id="@+id/txtBorderedLine2"
-        android:layout_width="0dp"
-        android:layout_height="1.5dp"
-        android:background="@drawable/rounded_corner_border_secondary"
-        app:layout_constrainedWidth="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/scrollMain" />
+    <androidx.cardview.widget.CardView
+        android:id="@+id/addChatButton"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:elevation="4dp"
+        app:cardBackgroundColor="@color/accent_color"
+        app:cardCornerRadius="27dp"
+        app:cardElevation="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="33dp"
+            android:layout_height="33dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="1dp"
+            android:contentDescription="@string/add_chat_icon"
+            app:srcCompat="@drawable/ic_add_chat" />
+    </androidx.cardview.widget.CardView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

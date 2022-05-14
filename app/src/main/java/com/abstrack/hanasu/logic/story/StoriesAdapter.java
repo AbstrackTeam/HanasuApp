@@ -4,24 +4,23 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.abstrack.hanasu.R;
-
 import java.util.List;
 
 public class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.StoriesViewHolder> {
 
     // Store the stories
-    private List<Story> stories;
-    private Context context;
+    private final List<Story> stories;
+    private final Context context;
+    private final RecyclerView storiesBar;
 
-    public StoriesAdapter(List<Story> stories, Context context) {
+    public StoriesAdapter(List<Story> stories, RecyclerView storiesBar, Context context) {
         this.stories = stories;
         this.context = context;
+        this.storiesBar = storiesBar;
     }
 
 
@@ -30,33 +29,47 @@ public class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.StoriesV
     public StoriesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.story_item, parent, false);
-        StoriesViewHolder viewHolder = new StoriesViewHolder(view);
 
-        return viewHolder;
+        return new StoriesViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull StoriesViewHolder holder, int position) {
-        // Changing the background color if the story is seen example
-        // Testing purposes
-        if (stories.get(position).isSeen()) {
-            holder.storyCircle.setCardBackgroundColor(context.getResources().getColor(R.color.contrast_background));
-        }
-
-
+        holder.story.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (stories.get(holder.getAdapterPosition()).isSeen()) {
+                    // Just launches the story
+                    return;
+                }
+                // Remove the seen icon, TODO: check the amount of stories
+                holder.story.findViewById(R.id.seenIcon).setVisibility(View.INVISIBLE);
+                stories.get(holder.getAdapterPosition()).setSeen(true);
+                moveStoryToLastPosition(stories.get(holder.getAdapterPosition()));
+            }
+        });
     }
-
     @Override
     public int getItemCount() {
         return stories.size();
     }
 
-    public static class StoriesViewHolder extends RecyclerView.ViewHolder{
-        private CardView storyCircle;
+    public static class StoriesViewHolder extends RecyclerView.ViewHolder {
+        private final LinearLayout story;
+
         public StoriesViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            storyCircle = itemView.findViewById(R.id.storyOutline);
+            story = itemView.findViewById(R.id.story);
         }
+    }
+
+    public void moveStoryToLastPosition(Story story) {
+        // Sort the stories
+        int lastIndexOfStory = stories.lastIndexOf(story);
+        stories.remove(story);
+        stories.add(story);
+        notifyItemMoved(lastIndexOfStory, stories.indexOf(story));
+        // Nullify the scroll animation
+        storiesBar.scrollToPosition(lastIndexOfStory);
     }
 }

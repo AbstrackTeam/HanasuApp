@@ -1,38 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:id="@+id/story"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:orientation="vertical">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/storyOutline"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        android:layout_gravity="center"
-        app:cardBackgroundColor="@color/accent_color"
-        app:cardCornerRadius="27dp">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clipChildren="true">
 
         <androidx.cardview.widget.CardView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            app:cardCornerRadius="25dp">
+            android:id="@+id/seenIcon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="end"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            app:cardBackgroundColor="@color/important_color_primary"
+            app:cardCornerRadius="47dp"
+            app:cardElevation="1dp"
+            app:cardMaxElevation="0dp"
+            app:cardPreventCornerOverlap="false"
+            app:layout_constraintEnd_toEndOf="@+id/storyOutline"
+            app:layout_constraintTop_toTopOf="@+id/storyOutline">
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_launcher_foreground" />
+            <androidx.cardview.widget.CardView
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_gravity="center"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                app:cardBackgroundColor="@color/important_color_secondary"
+                app:cardCornerRadius="47dp"
+                app:cardElevation="1dp"
+                app:cardMaxElevation="0dp"
+                app:cardPreventCornerOverlap="false"
+                app:layout_constraintEnd_toEndOf="@+id/storyOutline"
+                app:layout_constraintTop_toTopOf="@+id/storyOutline">
 
+            </androidx.cardview.widget.CardView>
         </androidx.cardview.widget.CardView>
-    </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/storyOutline"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_gravity="center"
+            android:clipChildren="true"
+            app:cardBackgroundColor="@color/background"
+            app:cardCornerRadius="27dp"
+            app:cardElevation="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                app:cardCornerRadius="25dp">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/imageHolder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="25dp"
+                    app:cardElevation="0dp"
+                    app:cardMaxElevation="0dp"
+                    app:cardPreventCornerOverlap="false">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/story_icon_description"
+                        android:elevation="0dp"
+                        android:src="@drawable/ic_launcher_foreground" />
+                </androidx.cardview.widget.CardView>
+
+            </androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
+        android:id="@+id/storyUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:fontFamily="@font/asap"
-        android:text="Bochin"
         android:textColor="@color/white" />
 
 </LinearLayout>
