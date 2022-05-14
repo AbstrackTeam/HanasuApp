@@ -1,7 +1,5 @@
 package com.abstrack.hanasu;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,9 +14,8 @@ import com.abstrack.hanasu.logic.story.Story;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class LandingActivity extends AppCompatActivity {
+public class LandingActivity extends BaseAppActivity {
 
     private RecyclerView storiesBar, chatsListView;
 
@@ -26,7 +23,6 @@ public class LandingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
-        Objects.requireNonNull(getSupportActionBar()).hide();
         init();
     }
 

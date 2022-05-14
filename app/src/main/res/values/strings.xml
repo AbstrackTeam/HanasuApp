@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Hanasu</string>
+    <string name="app_name_caps">HANASU</string>
     <string name="register">Registro</string>
+    <string name="register_2">Registrarse</string>
     <string name="register_instruction">Por favor ingresa tu información personal</string>
     <string name="register_user">Nombre de usuario</string>
     <string name="register_user_hint">Usuario</string>
@@ -19,4 +21,23 @@
     <string name="landing_title">Chats</string>
     <string name="story_icon_description">Story icon</string>
     <string name="add_chat_icon">Add chat icon</string>
+    <string name="loading_message">from Abstrack &amp; CBTIS 051</string>
+    <string name="login_msg">¡Hola! Que gusto tenerte de vuelta.</string>
+    <string name="password_txt">Introduce tu contraseña</string>
+    <string name="forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="login_btn">Inicio de sesión</string>
+    <string name="new_member">¿No tienes cuenta?</string>
+    <string name="send">Enviar</string>
+    <string name="text_forgot">Ingresa tu dirección de correo electrónico y te enviaremos un enlace para que puedas crear una nueva contraseña.</string>
+    <string name="verify_title">Verifique su cuenta</string>
+    <string name="verify_instruction">¡Muchas gracias por registrarse! Hemos enviado un enlace de confirmación al correo:</string>
+    <string name="verify_instruction2">Debe entrar al enlace para verificar su cuenta.</string>
+    <string name="verify_email">placeholder@gmail.com</string>
+    <string name="verify_not_mail">¿No recibiste ningún correo?</string>
+    <string name="verify_resend"><u>reenviar correo</u></string>
+    <string name="verify_send">Enviar</string>
+    <string name="verify_check">Revise su pestaña de spam o</string>
+    <string name="restore_pswd">Restablecimiento de contraseña</string>
+    <string name="restore_instruction">Hemos enviado un enlace para el restablecimiento de su contraseña al correo:</string>
+    <string name="restore_instruction2">Debe entrara al enlace para restablecer su contraseña.</string>
 </resources>

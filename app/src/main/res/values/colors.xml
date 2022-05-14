@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="purple_200">#FFBB86FC</color>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <color name="purple_200">#8252C2</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
@@ -9,10 +9,14 @@
     <color name="white">#FFFFFFFF</color>
     <color name="important_color_primary">#FCDEBE</color>
     <color name="important_color_secondary">#F9BA77</color>
-    <color name="background">#2F374B</color>
+    <color name="background">#31384B</color>
     <color name="detail_color_primary">#FFDAD6</color>
     <color name="accent_color">#FFBCB5</color>
-    <color name="hints">#989EB1</color>
+    <color name="hints">#90A4AE</color>
     <color name="detail_color_secondary">#9AA4C1</color>
     <color name="contrast_background">#374058</color>
+    <color name="mtrl_error" tools:override="true">#FA1111</color>
+    <color name="instruction_color">#90A4AE</color>
+    <color name="resend_color">#FCDEBE</color>
+    <color name="verify_background_color">#363F59</color>
 </resources>
