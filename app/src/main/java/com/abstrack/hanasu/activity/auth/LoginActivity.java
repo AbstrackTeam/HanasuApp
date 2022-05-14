@@ -1,4 +1,4 @@
-package com.abstrack.hanasu;
+package com.abstrack.hanasu.activity.auth;
 
 import android.os.Bundle;
 import android.view.View;
@@ -6,7 +6,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.abstrack.hanasu.util.AndroidUtil;
+import com.abstrack.hanasu.auth.AuthManager;
+import com.abstrack.hanasu.BaseAppActivity;
+import com.abstrack.hanasu.activity.LandingActivity;
+import com.abstrack.hanasu.R;
+import com.abstrack.hanasu.util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -38,11 +42,11 @@ public class LoginActivity extends BaseAppActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             if(!AuthManager.getFireAuth().getCurrentUser().isEmailVerified()) {
-                                AndroidUtil.startNewActivity(LoginActivity.this, VerifyEmailActivity.class);
+                                Util.startNewActivity(LoginActivity.this, VerifyEmailActivity.class);
                                 return;
                             }
 
-                            AndroidUtil.startNewActivity(LoginActivity.this, LandingActivity.class);
+                            Util.startNewActivity(LoginActivity.this, LandingActivity.class);
                         } else {
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
@@ -52,9 +56,9 @@ public class LoginActivity extends BaseAppActivity {
     }
 
     public void changeToRegisterActivity(View view) {
-        AndroidUtil.startNewActivity(this, RegisterActivity.class);
+        Util.startNewActivity(this, RegisterActivity.class);
     }
     public void changeToForgotPasswordActivity(View view){
-        AndroidUtil.startNewActivity(this, ForgotPasswordActivity.class);
+        Util.startNewActivity(this, ForgotPasswordActivity.class);
     }
 }

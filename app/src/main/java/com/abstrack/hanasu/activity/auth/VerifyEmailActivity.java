@@ -1,4 +1,4 @@
-package com.abstrack.hanasu;
+package com.abstrack.hanasu.activity.auth;
 
 import android.os.Bundle;
 import android.view.View;
@@ -6,7 +6,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.abstrack.hanasu.util.AndroidUtil;
+import com.abstrack.hanasu.auth.AuthManager;
+import com.abstrack.hanasu.BaseAppActivity;
+import com.abstrack.hanasu.R;
+import com.abstrack.hanasu.util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -36,6 +39,6 @@ public class VerifyEmailActivity extends BaseAppActivity {
     }
 
     public void changeToLoginActivity(View view) {
-        AndroidUtil.startNewActivity(this, LoginActivity.class);
+        Util.startNewActivity(this, LoginActivity.class);
     }
 }

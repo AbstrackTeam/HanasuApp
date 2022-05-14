@@ -1,11 +1,14 @@
-package com.abstrack.hanasu;
+package com.abstrack.hanasu.activity.auth;
 
 import androidx.annotation.NonNull;
 
 import android.os.Bundle;
 import android.view.View;
 
-import com.abstrack.hanasu.util.AndroidUtil;
+import com.abstrack.hanasu.auth.AuthManager;
+import com.abstrack.hanasu.BaseAppActivity;
+import com.abstrack.hanasu.R;
+import com.abstrack.hanasu.util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -34,7 +37,7 @@ public class ForgotPasswordActivity extends BaseAppActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
                             VerifyForgottenPasswordActivity.textEmail = emailText;
-                            AndroidUtil.startNewActivity(ForgotPasswordActivity.this, VerifyForgottenPasswordActivity.class);
+                            Util.startNewActivity(ForgotPasswordActivity.this, VerifyForgottenPasswordActivity.class);
                         }
                     }
                 });

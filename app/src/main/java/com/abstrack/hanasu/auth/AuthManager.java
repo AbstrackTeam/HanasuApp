@@ -1,8 +1,9 @@
-package com.abstrack.hanasu;
+package com.abstrack.hanasu.auth;
 
 import android.text.TextUtils;
+import android.util.Patterns;
 
-import com.abstrack.hanasu.util.AndroidUtil;
+import com.abstrack.hanasu.util.Util;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -54,7 +55,7 @@ public class AuthManager {
             return false;
         }
 
-        if(!passwordText.matches(AndroidUtil.PASSWORD_PATTERN)){
+        if(!passwordText.matches(Util.PASSWORD_PATTERN)){
             passwordTextInput.setError("Your password needs to include both lower and uppercase characters, and be at least 8 characters long.");
             return false;
         }
@@ -63,14 +64,14 @@ public class AuthManager {
         return true;
     }
 
-    protected static boolean validateEmailText(TextInputLayout emailTextInput){
+    public static boolean validateEmailText(TextInputLayout emailTextInput){
         String emailText = emailTextInput.getEditText().getText().toString();
 
         if(!validateTextField(emailTextInput)){
             return false;
         }
 
-        if(!emailText.matches(AndroidUtil.EMAIL_PATTERN)){
+        if(!Patterns.EMAIL_ADDRESS.matcher(emailText).matches()) {
             emailTextInput.setError("Invalid email address.");
             return false;
         }

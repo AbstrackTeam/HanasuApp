@@ -1,4 +1,4 @@
-package com.abstrack.hanasu;
+package com.abstrack.hanasu.activity;
 
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,10 +8,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.abstrack.hanasu.logic.chat.Chat;
-import com.abstrack.hanasu.logic.chat.ChatsAdapter;
-import com.abstrack.hanasu.logic.story.StoriesAdapter;
-import com.abstrack.hanasu.logic.story.Story;
+import com.abstrack.hanasu.BaseAppActivity;
+import com.abstrack.hanasu.R;
+import com.abstrack.hanasu.core.chat.Chat;
+import com.abstrack.hanasu.core.chat.ChatsAdapter;
+import com.abstrack.hanasu.core.story.StoriesAdapter;
+import com.abstrack.hanasu.core.story.Story;
 
 import java.util.ArrayList;
 import java.util.List;
