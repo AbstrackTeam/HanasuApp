@@ -46,26 +46,12 @@ public class LandingActivity extends AppCompatActivity {
         stories.add(new Story(false));
         stories.add(new Story(false));
         stories.add(new Story(false));
+        stories.add(new Story(false));
+        stories.add(new Story(false));
 
         // Chats
         chats.add(new Chat(false, "Bochin",0, 7, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
         chats.add(new Chat(false, "Soy una persona insaciable",0, 4, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
-        chats.add(new Chat(false, "Bredo mejor juego",0, 7, "EL VATOO XDDDDDD", "2:34 AM"));
-        chats.add(new Chat(false, "hola",0, 7, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
-        chats.add(new Chat(false, "OMA NENO",0, 1, "marciano", "2:34 AM"));
-        chats.add(new Chat(false, "Bochin5",0, 7, "WEY", "2:34 AM"));
-        chats.add(new Chat(false, "Bochin6",0, 45, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
-        chats.add(new Chat(false, "Bochin7",0, 7, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
-        chats.add(new Chat(false, "Bochin8",0, 7, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
-        chats.add(new Chat(false, "Bochin9",0, 7, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
-        chats.add(new Chat(false, "Bochin10",0, 7, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
-        chats.add(new Chat(false, "Bochin11",0, 7, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
-        chats.add(new Chat(false, "Bochin11",0, 7, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
-        chats.add(new Chat(false, "Bochin12231",0, 7, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
-        chats.add(new Chat(false, "sd",0, 7, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
-        chats.add(new Chat(false, "sd",0, 7, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
-        chats.add(new Chat(false, "sd",0, 7, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
-        chats.add(new Chat(false, "sd",0, 7, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
 
         StoriesAdapter storiesAdapter = new StoriesAdapter(stories, storiesBar,this);
         storiesBar.setAdapter(storiesAdapter);

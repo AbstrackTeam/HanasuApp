@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +41,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
         holder.name.setText(chats.get(position).getName().toString());
         holder.previewMessage.setText(chats.get(position).getMessages().toString());
         holder.messageQuantity.setText(String.valueOf(chats.get(position).getMessagesCount()));
-
+        holder.userIcon.setImageResource(R.drawable.ic_launcher_foreground);
         holder.chatCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,6 +59,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
         // Components
         private TextView name, previewMessage, messageQuantity;
         private CardView chatCard;
+        private ImageView userIcon;
 
         public ChatsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -65,7 +67,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
             name = itemView.findViewById(R.id.chatName);
             previewMessage = itemView.findViewById(R.id.previewMessage);
             messageQuantity = itemView.findViewById(R.id.messagesCount);
-
+            userIcon = itemView.findViewById(R.id.userIcon);
         }
     }
 }
