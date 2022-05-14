@@ -55,7 +55,6 @@ public class LandingActivity extends BaseAppActivity {
         StoriesAdapter storiesAdapter = new StoriesAdapter(stories, storiesBar,this);
         storiesBar.setAdapter(storiesAdapter);
         storiesBar.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
-
         storiesBar.setItemAnimator(null);
 
         ChatsAdapter chatsAdapter = new ChatsAdapter(chats, this);

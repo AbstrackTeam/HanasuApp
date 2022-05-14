@@ -19,6 +19,7 @@
             android:layout_gravity="end"
             android:clipChildren="false"
             android:clipToPadding="false"
+            android:outlineProvider="none"
             app:cardBackgroundColor="@color/important_color_primary"
             app:cardCornerRadius="47dp"
             app:cardElevation="1dp"
@@ -27,12 +28,14 @@
             app:layout_constraintEnd_toEndOf="@+id/storyOutline"
             app:layout_constraintTop_toTopOf="@+id/storyOutline">
 
+
             <androidx.cardview.widget.CardView
                 android:layout_width="10dp"
                 android:layout_height="10dp"
                 android:layout_gravity="center"
                 android:clipChildren="false"
                 android:clipToPadding="false"
+                android:outlineProvider="none"
                 app:cardBackgroundColor="@color/important_color_secondary"
                 app:cardCornerRadius="47dp"
                 app:cardElevation="1dp"
