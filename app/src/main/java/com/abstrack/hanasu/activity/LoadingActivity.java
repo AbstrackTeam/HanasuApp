@@ -1,6 +1,7 @@
 package com.abstrack.hanasu.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
@@ -20,9 +21,6 @@ public class LoadingActivity extends BaseAppActivity {
     protected void onStart() {
         super.onStart();
 
-        //For testing purposes
-        AuthManager.getFireAuth().signOut();
-
         if(AuthManager.isUserLogged()){
             if(!AuthManager.getFireAuth().getCurrentUser().isEmailVerified()){
                 AuthManager.getFireAuth().signOut();
@@ -35,5 +33,6 @@ public class LoadingActivity extends BaseAppActivity {
         }
 
         Util.startNewActivity(this, LoginActivity.class);
+        return;
     }
 }

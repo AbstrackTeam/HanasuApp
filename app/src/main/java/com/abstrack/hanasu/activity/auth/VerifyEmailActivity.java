@@ -33,7 +33,9 @@ public class VerifyEmailActivity extends BaseAppActivity {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        AuthManager.getFireAuth().signOut();
+                        if(task.isSuccessful()){
+                            AuthManager.getFireAuth().signOut();
+                        }
                     }
                 });
     }
