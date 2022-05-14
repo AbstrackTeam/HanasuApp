@@ -1,4 +1,4 @@
-package com.abstrack.hanasu.logic.chat;
+package com.abstrack.hanasu.core.chat;
 
 public class Chat {
     private boolean seen;
