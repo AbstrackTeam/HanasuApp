@@ -52,10 +52,9 @@ public class LoadingActivity extends BaseAppActivity {
             }
 
             Util.startNewActivity(this, LandingActivity.class);
-            return;
         }
-
-        Util.startNewActivity(this, LoginActivity.class);
-        return;
+        else{
+            Util.startNewActivity(this, LoginActivity.class);
+        }
     }
 }

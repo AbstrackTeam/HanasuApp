@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.BaseAppActivity;
@@ -40,9 +41,12 @@ public class RegisterActivity extends BaseAppActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Util.startNewActivity(RegisterActivity.this, VerifyEmailActivity.class);
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(RegisterActivity.this, "Se produjo un error", Toast.LENGTH_SHORT).show();
+                            return;
                         }
+
+                        Util.startNewActivity(RegisterActivity.this, VerifyEmailActivity.class);
                     }
                 });
     }

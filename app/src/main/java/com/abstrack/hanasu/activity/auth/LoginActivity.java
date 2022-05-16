@@ -6,10 +6,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.abstrack.hanasu.activity.LandingActivity;
 import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.BaseAppActivity;
-import com.abstrack.hanasu.activity.LandingActivity;
 import com.abstrack.hanasu.R;
+import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -41,12 +42,22 @@ public class LoginActivity extends BaseAppActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+
                             if(!AuthManager.getFireAuth().getCurrentUser().isEmailVerified()) {
                                 Util.startNewActivity(LoginActivity.this, VerifyEmailActivity.class);
                                 return;
                             }
 
+                            // Check if the user is on the database
+                            UserManager userManager = new UserManager();
+
+                            if(!userManager.userOnDatabase(AuthManager.getFireAuth().getCurrentUser().getUid())){
+                                // If not, add it (blank user)
+                                userManager.writeNewUser(AuthManager.getFireAuth().getCurrentUser().getUid());
+                            }
+
                             Util.startNewActivity(LoginActivity.this, LandingActivity.class);
+
                         } else {
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
@@ -61,4 +72,5 @@ public class LoginActivity extends BaseAppActivity {
     public void changeToForgotPasswordActivity(View view){
         Util.startNewActivity(this, ForgotPasswordActivity.class);
     }
+
 }

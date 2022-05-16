@@ -10,10 +10,14 @@ import android.widget.Toast;
 
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
+import com.abstrack.hanasu.activity.auth.LoginActivity;
+import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.core.chat.Chat;
 import com.abstrack.hanasu.core.chat.ChatsAdapter;
 import com.abstrack.hanasu.core.story.StoriesAdapter;
 import com.abstrack.hanasu.core.story.Story;
+import com.abstrack.hanasu.util.Util;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +72,7 @@ public class LandingActivity extends BaseAppActivity {
                 addChat();
             }
         });
+
     }
 
     public void addChat(){
