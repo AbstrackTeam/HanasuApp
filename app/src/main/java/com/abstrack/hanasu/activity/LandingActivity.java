@@ -61,7 +61,7 @@ public class LandingActivity extends BaseAppActivity {
         chatsListView.setAdapter((chatsAdapter));
         chatsListView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
-        CardView addChatButton = findViewById(R.id.addChatButton);
+        CardView addChatButton = findViewById(R.id.moreOptions);
         addChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -41,9 +41,9 @@
         android:id="@+id/scrollMain"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
         android:keepScreenOn="false"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtChats">
 
         <LinearLayout
@@ -89,7 +89,33 @@
     </ScrollView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/addChatButton"
+        android:id="@+id/search"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:elevation="4dp"
+        app:cardBackgroundColor="@color/accent_color"
+        app:cardCornerRadius="27dp"
+        app:cardElevation="2dp"
+        app:layout_constraintBottom_toTopOf="@id/addGroup"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:focusable="true">
+
+        <ImageView
+            android:id="@+id/searchIcon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/search_icon"
+            app:srcCompat="@drawable/ic_search"
+            tools:ignore="ImageContrastCheck" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/addGroup"
         android:layout_width="55dp"
         android:layout_height="55dp"
         android:layout_marginEnd="16dp"
@@ -100,16 +126,76 @@
         app:cardCornerRadius="27dp"
         app:cardElevation="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintBottom_toTopOf="@id/addChat"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:focusable="true">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/addGroupIcon"
             android:layout_width="33dp"
             android:layout_height="33dp"
             android:layout_gravity="center"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="1dp"
+            android:contentDescription="@string/add_group_icon"
+            app:srcCompat="@drawable/ic_group"
+            tools:ignore="ImageContrastCheck" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/addChat"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:elevation="4dp"
+        app:cardBackgroundColor="@color/accent_color"
+        app:cardCornerRadius="27dp"
+        app:cardElevation="2dp"
+        app:layout_constraintBottom_toTopOf="@+id/moreOptions"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:focusable="true">
+
+        <ImageView
+            android:id="@+id/chatIcon"
+            android:layout_width="33dp"
+            android:layout_height="33dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="1dp"
             android:layout_marginTop="1dp"
             android:contentDescription="@string/add_chat_icon"
-            app:srcCompat="@drawable/ic_add_chat" />
+            app:srcCompat="@drawable/ic_add_chat"
+            tools:ignore="ImageContrastCheck" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/moreOptions"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:elevation="4dp"
+        app:cardBackgroundColor="@color/accent_color"
+        app:cardCornerRadius="27dp"
+        app:cardElevation="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:focusable="true">
+
+        <ImageView
+            android:id="@+id/moreOptionsIcon"
+            android:layout_width="33dp"
+            android:layout_height="37dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="1dp"
+            android:contentDescription="@string/plus_icon"
+            app:srcCompat="@drawable/ic_plus"
+            tools:ignore="ImageContrastCheck" />
+
     </androidx.cardview.widget.CardView>
 
 
