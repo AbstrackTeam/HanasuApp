@@ -1,14 +1,8 @@
 package com.abstrack.hanasu.core.user;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-
 import com.abstrack.hanasu.util.Util;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
+import java.util.Random;
 
 public class UserManager {
 
@@ -16,36 +10,20 @@ public class UserManager {
 
     public UserManager() {
         String PATH = "users";
-        databaseReference = Util.getDatabaseReference().getReference(PATH);
+        databaseReference = Util.getFbDatabase().getReference(PATH);
     }
 
-    public void writeNewUser(String uid) {
-        User user = new User(uid);
-        databaseReference.child(uid).setValue(user);
+    public String generateTag() {
+        Random random = new Random();
+
+        String tag = String.format("%04d", random.nextInt(10000));
+
+        return tag;
     }
 
-    public void updateUser(String uid, User user){
-        databaseReference.child(uid).setValue(user);
+    public void writeNewUser(String name, String tag) {
+        User user = new User(name, tag);
+        databaseReference.child(user.getIdentifier()).setValue(user);
     }
 
-    public boolean userOnDatabase(String uid){
-
-        boolean[] isOnDatabase = new boolean[1];
-
-        databaseReference.child(uid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                if(task.getResult().getValue() != null){
-                    isOnDatabase[0] = true;
-                }
-
-            }
-        });
-
-        return isOnDatabase[0];
-    }
 }

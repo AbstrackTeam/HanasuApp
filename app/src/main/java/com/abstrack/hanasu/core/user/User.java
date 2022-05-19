@@ -1,23 +1,29 @@
 package com.abstrack.hanasu.core.user;
 
+import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.core.story.Story;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class User {
 
-    private String uid, name, imgKey, about;
+    private String name, tag, imgKey, about, identifier, uid;
     private ConnectionStatus connectionStatus;
     private ArrayList<String> contactsUid;
     private ArrayList<Story> stories;
 
     public User(){}
 
-    public User(String uid) {
-        this.uid = uid;
-        name = "TestName";
-        imgKey = "TestImgUri";
-        about = "That's me, kaserola";
+    public User(String name, String tag) {
+        this.name = name;
+        this.tag = tag;
+        imgKey = getDefaultImageUri();
+        about = "Sin descripción";
+        uid = AuthManager.getFireAuth().getUid();
+        identifier = name + tag;
     }
 
     public String getUid() {
@@ -28,6 +34,10 @@ public class User {
         this.uid = uid;
     }
 
+    private String getDefaultImageUri() {
+        return "";
+    }
+
     public String getName() {
         return name;
     }
@@ -35,6 +45,15 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
     public String getImgKey() {
         return imgKey;
     }
@@ -73,5 +92,13 @@ public class User {
 
     public void setStories(ArrayList<Story> stories) {
         this.stories = stories;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 }

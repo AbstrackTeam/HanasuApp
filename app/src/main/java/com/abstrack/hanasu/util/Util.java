@@ -21,7 +21,7 @@ public class Util {
         Objects.requireNonNull(baseAppActivity.getSupportActionBar()).hide();
     }
 
-    public static FirebaseDatabase getDatabaseReference(){
+    public static FirebaseDatabase getFbDatabase(){
         return FirebaseDatabase.getInstance();
     }
 
