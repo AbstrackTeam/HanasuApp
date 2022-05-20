@@ -40,4 +40,10 @@
     <string name="restore_pswd">Restablecimiento de contraseña</string>
     <string name="restore_instruction">Hemos enviado un enlace para el restablecimiento de su contraseña al correo:</string>
     <string name="restore_instruction2">Debe entrara al enlace para restablecer su contraseña.</string>
+    <string name="username_title">Nombre de usuario</string>
+    <string name="username_instruction">¡Ingresa el nombre con el que podrán contactarte otros usuarios!</string>
+    <string name="username_hashtag">#</string>
+    <string name="username_hint">Usuario</string>
+    <string name="username_tag_hint">Tag</string>
+    <string name="username_btn">Aceptar</string>
 </resources>

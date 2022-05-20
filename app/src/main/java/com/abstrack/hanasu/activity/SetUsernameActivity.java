@@ -34,9 +34,9 @@ public class SetUsernameActivity extends BaseAppActivity {
         name = "";
         identifier = "";
 
-        nameField = findViewById(R.id.name);
-        tagField = findViewById(R.id.tag);
-        submitButton = findViewById(R.id.submit);
+        nameField = findViewById(R.id.editTextUsername); // editTextUsername
+        tagField = findViewById(R.id.editTextTag); // editTextTag
+        submitButton = findViewById(R.id.btnSubmit); // btnSubmit
 
         userManager = new UserManager();
 
@@ -88,4 +88,7 @@ public class SetUsernameActivity extends BaseAppActivity {
         });
     }
 
+    public void changeToLastActivity(View view) {
+        finish();
+    }
 }
