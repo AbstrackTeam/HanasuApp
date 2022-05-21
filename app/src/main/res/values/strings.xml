@@ -43,4 +43,18 @@
     <string name="restore_pswd">Restablecimiento de contraseña</string>
     <string name="restore_instruction">Hemos enviado un enlace para el restablecimiento de su contraseña al correo:</string>
     <string name="restore_instruction2">Debe entrara al enlace para restablecer su contraseña.</string>
+    <string name="username_title">Nombre de usuario</string>
+    <string name="username_instruction">¡Ingresa el nombre con el que podrán contactarte otros usuarios!</string>
+    <string name="username_hashtag">#</string>
+    <string name="username_hint">Usuario</string>
+    <string name="username_tag_hint">Tag</string>
+    <string name="username_btn">Aceptar</string>
+    <string name="profile_info_title">Información del perfil</string>
+    <string name="profile_info_instruction">Por favor, ingresa un nombre y foto de perfil.</string>
+    <string name="profile_info_name_hint">Escribe tu nombre aquí</string>
+    <string name="profile_info_btn">Continuar</string>
+    <string name="welcome_title">¡Bienvenido a Hanasu!</string>
+    <string name="welcome_terms">Lee nuestras</string>
+    <string name="welcome_terms_2"><u>políticas de privacidad.</u></string>
+    <string name="a">Presiona el siguiente botón para aceptar nuestros términos y condiciones.</string>
 </resources>
