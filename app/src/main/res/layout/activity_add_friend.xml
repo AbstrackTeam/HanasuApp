@@ -61,7 +61,7 @@
         android:textColor="@color/white"
         android:textColorHint="@color/hints"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/addChatButton"
+        app:layout_constraintBottom_toTopOf="@+id/addChat"
         app:layout_constraintStart_toStartOf="@+id/addChatInstructions"
         app:layout_constraintTop_toBottomOf="@+id/addChatInstructions"
         app:layout_constraintVertical_bias="0.0" />
@@ -96,11 +96,11 @@
         app:layout_constraintTop_toTopOf="@+id/nameField" />
 
     <Button
-        android:id="@+id/addChatButton"
+        android:id="@+id/addChat"
         android:layout_width="300dp"
         android:layout_height="60dp"
         android:fontFamily="@font/asap"
-        android:text="@string/add_chat_btn"
+        android:text="@string/add_friend_btn"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

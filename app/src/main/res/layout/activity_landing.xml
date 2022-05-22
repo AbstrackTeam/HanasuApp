@@ -165,7 +165,7 @@
             android:layout_gravity="center"
             android:layout_marginStart="1dp"
             android:layout_marginTop="1dp"
-            android:contentDescription="@string/add_chat_icon"
+            android:contentDescription="@string/add_friend_icon"
             app:srcCompat="@drawable/ic_add_chat"
             tools:ignore="ImageContrastCheck" />
 
