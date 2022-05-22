@@ -16,9 +16,10 @@
             android:exported="false" />
         <activity
             android:name=".activity.auth.ProfileInfoActivity"
-            android:name=".activity.landing.AddFriendActivity"
-            android:noHistory="true"
             android:exported="false" />
+        <activity
+            android:name=".activity.landing.AddFriendActivity"
+            android:noHistory="true"/>
         <activity
             android:name=".activity.auth.VerifyEmailActivity"
             android:noHistory="true"
