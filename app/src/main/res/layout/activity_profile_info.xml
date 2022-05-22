@@ -5,7 +5,7 @@
     android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.auth.ProfileInfoActivity">
+    tools:context=".activity.welcome.ProfileInfoActivity">
 
     <Button
         android:id="@+id/btnContinue"
@@ -17,6 +17,7 @@
         android:background="@drawable/round_button"
         android:backgroundTint="@color/purple_500"
         android:fontFamily="@font/quicksand_bold"
+        android:onClick="submit"
         android:text="@string/profile_info_btn"
         android:textAllCaps="false"
         android:textSize="20sp"

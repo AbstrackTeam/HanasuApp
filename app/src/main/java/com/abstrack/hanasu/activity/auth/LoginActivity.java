@@ -1,20 +1,22 @@
 package com.abstrack.hanasu.activity.auth;
 
 import android.os.Bundle;
-import android.preference.Preference;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.abstrack.hanasu.activity.SetUsernameActivity;
+import com.abstrack.hanasu.activity.welcome.SetUsernameActivity;
+import com.abstrack.hanasu.activity.welcome.WelcomeActivity;
 import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.R;
-import com.abstrack.hanasu.util.Preferences;
-import com.abstrack.hanasu.util.Util;
+import com.abstrack.hanasu.core.Preferences;
+import com.abstrack.hanasu.Util;
+import com.abstrack.hanasu.db.FireDB;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -36,55 +38,58 @@ public class LoginActivity extends BaseAppActivity {
     }
 
     public void loginAccount(View view){
-        if (!AuthManager.validateLoginForm(emailInputText, passwordInputText))
+        if(!AuthManager.validateLoginForm(emailInputText, passwordInputText))
             return;
 
         String emailText = emailInputText.getEditText().getText().toString();
         String passwordText = passwordInputText.getEditText().getText().toString();
 
-        AuthManager.getFireAuth().signInWithEmailAndPassword(emailText, passwordText)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        AuthManager.getFireAuth().signInWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(!task.isSuccessful()){
+                    Log.e("HanasuFirebase", "Error Login In", task.getException());
+                    return;
+                }
+
+                if(!AuthManager.getFireAuth().getCurrentUser().isEmailVerified()){
+                    AuthManager.getFireAuth().signOut();
+                    Util.startNewActivity(LoginActivity.this, VerifyEmailActivity.class);
+                    return;
+                }
+
+                FireDB.getFbDatabase().getReference().child("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            if(!AuthManager.getFireAuth().getCurrentUser().isEmailVerified()) {
-                                Util.startNewActivity(LoginActivity.this, VerifyEmailActivity.class);
-                                return;
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        boolean hasIdentifier = false;
+
+                        if (!task.isSuccessful()) {
+                            Log.e("HanasuFirebase", "Error getting data", task.getException());
+                            return;
+                        }
+
+                        for(DataSnapshot user : task.getResult().getChildren()){
+                            if(!user.child("uid").getValue().equals(AuthManager.getFireAuth().getCurrentUser().getUid())){
+                                continue;
                             }
 
-                            DatabaseReference databaseReference = Util.getFbDatabase().getReference();
-                            databaseReference.child("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                    boolean hasIdentifier = false;
-
-                                    if (!task.isSuccessful()) {
-                                        Log.e("firebase", "Error getting data", task.getException());
-                                        return;
-                                    }
-                                    for (DataSnapshot user : task.getResult().getChildren()) {
-                                        if (!user.child("uid").getValue().equals(AuthManager.getFireAuth().getCurrentUser().getUid())) {
-                                            continue;
-                                        }
-                                        if (user.child("identifier").getValue() != null) {
-                                            Preferences.setIdentifier(user.child("identifier").getValue().toString(), LoginActivity.this);
-                                            hasIdentifier = true;
-                                            break;
-                                        }
-                                    }
-                                    if (hasIdentifier) {
-                                        Util.startNewActivity(LoginActivity.this, LandingActivity.class);
-                                    } else {
-                                        Util.startNewActivity(LoginActivity.this, SetUsernameActivity.class);
-                                    }
-                                }
-                            });
-                            Util.startNewActivity(LoginActivity.this, LandingActivity.class);
-                        } else {
-                            Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            if(user.child("identifier").getValue() != null){
+                                hasIdentifier = true;
+                                break;
+                            }
                         }
+
+                        if(hasIdentifier){
+                            Util.startNewActivity(LoginActivity.this, LandingActivity.class);
+                            return;
+                        }
+
+                        Util.startNewActivity(LoginActivity.this, WelcomeActivity.class);
+                        return;
                     }
                 });
+            }
+        });
     }
 
     public void changeToRegisterActivity(View view) {

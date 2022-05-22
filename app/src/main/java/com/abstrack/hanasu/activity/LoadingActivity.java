@@ -2,6 +2,7 @@ package com.abstrack.hanasu.activity;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -15,8 +16,9 @@ import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.auth.LoginActivity;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.auth.AuthManager;
-import com.abstrack.hanasu.util.Preferences;
-import com.abstrack.hanasu.util.Util;
+import com.abstrack.hanasu.core.Preferences;
+import com.abstrack.hanasu.Util;
+import com.abstrack.hanasu.db.FireDB;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -54,46 +56,47 @@ public class LoadingActivity extends BaseAppActivity {
         txtHanasu.setAnimation(down_anim);
     }
 
-    public void changeActivity() {
-        if (!AuthManager.isUserLogged()) {
-            Util.startNewActivity(LoadingActivity.this, LoginActivity.class);
-            return;
-        }
-        if (!AuthManager.getFireAuth().getCurrentUser().isEmailVerified()) {
-            AuthManager.getFireAuth().signOut();
-            Util.startNewActivity(LoadingActivity.this, LoginActivity.class);
+    public void changeActivity(){
+        if(!AuthManager.isUserLogged()){
+            Util.startNewActivity(this, LoginActivity.class);
             return;
         }
 
-        DatabaseReference databaseReference = Util.getFbDatabase().getReference();
-        databaseReference.child("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        FireDB.getFbDatabase().getReference().child("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 boolean hasIdentifier = false;
-                String identifier = "";
 
-                if (!task.isSuccessful()) {
+                if(!task.isSuccessful()){
                     Log.e("firebase", "Error getting data", task.getException());
                     return;
                 }
-                for (DataSnapshot user : task.getResult().getChildren()) {
-                    if (!user.child("uid").getValue().equals(AuthManager.getFireAuth().getCurrentUser().getUid())) {
+
+                for(DataSnapshot user : task.getResult().getChildren()){
+                    if(!user.child("uid").getValue().equals(AuthManager.getFireAuth().getCurrentUser().getUid())){
                         continue;
                     }
-                    if (user.child("identifier").getValue() != null) {
-                        Preferences.setIdentifier(user.child("identifier").getValue().toString(), LoadingActivity.this);
+
+                    if(user.child("identifier").getValue() != null){
                         hasIdentifier = true;
-                        identifier = user.child("identifier").getValue(String.class);
                         break;
                     }
                 }
-                if(hasIdentifier){
-                    Util.startNewActivity(LoadingActivity.this, LandingActivity.class);
-                    Preferences.setIdentifier(identifier, LoadingActivity.this);
-                }
-                else {
+
+                if(hasIdentifier) {
+                    if (AuthManager.getFireAuth().getCurrentUser().isEmailVerified()) {
+                        Util.startNewActivity(LoadingActivity.this, LandingActivity.class);
+                        return;
+                    }
+
+                    AuthManager.getFireAuth().signOut();
                     Util.startNewActivity(LoadingActivity.this, LoginActivity.class);
+                    return;
                 }
+
+                AuthManager.getFireAuth().signOut();
+                Util.startNewActivity(LoadingActivity.this, LoginActivity.class);
+                return;
             }
         });
     }

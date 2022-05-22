@@ -1,4 +1,4 @@
-package com.abstrack.hanasu.util;
+package com.abstrack.hanasu.core;
 
 import android.content.Context;
 import android.content.SharedPreferences;

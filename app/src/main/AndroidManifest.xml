@@ -12,10 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Hanasu">
         <activity
-            android:name=".activity.auth.WelcomeActivity"
+            android:name=".activity.welcome.WelcomeActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.auth.ProfileInfoActivity"
+            android:name=".activity.welcome.ProfileInfoActivity"
             android:exported="false" />
         <activity
             android:name=".activity.landing.AddFriendActivity"
@@ -36,7 +36,7 @@
             android:name=".activity.auth.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.SetUsernameActivity"
+            android:name=".activity.welcome.SetUsernameActivity"
             android:exported="false" />
         <activity
             android:name=".activity.landing.LandingActivity"

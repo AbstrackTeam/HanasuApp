@@ -4,8 +4,6 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.abstrack.hanasu.util.Util;
-
 public class BaseAppActivity extends AppCompatActivity {
 
     @Override

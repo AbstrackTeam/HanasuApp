@@ -6,7 +6,7 @@ import android.widget.Button;
 
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
-import com.abstrack.hanasu.util.Util;
+import com.abstrack.hanasu.Util;
 
 public class AddFriendActivity extends BaseAppActivity {
 

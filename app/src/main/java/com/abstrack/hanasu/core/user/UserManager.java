@@ -1,6 +1,7 @@
 package com.abstrack.hanasu.core.user;
 
-import com.abstrack.hanasu.util.Util;
+import com.abstrack.hanasu.Util;
+import com.abstrack.hanasu.db.FireDB;
 import com.google.firebase.database.DatabaseReference;
 import java.util.Random;
 
@@ -10,14 +11,12 @@ public class UserManager {
 
     public UserManager() {
         String PATH = "users";
-        databaseReference = Util.getFbDatabase().getReference(PATH);
+        databaseReference = FireDB.getFbDatabase().getReference(PATH);
     }
 
     public String generateTag() {
         Random random = new Random();
-
         String tag = String.format("%04d", random.nextInt(10000));
-
         return tag;
     }
 
