@@ -1,14 +1,13 @@
 package com.abstrack.hanasu.activity.landing;
 
+
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.core.chat.Chat;
@@ -89,6 +88,7 @@ public class LandingActivity extends BaseAppActivity {
                 animateOptions();
             }
         });
+
         addChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -29,14 +29,15 @@
             android:exported="false" />
         <activity
             android:name=".activity.auth.LoginActivity"
-            android:noHistory="true"
+            android:exported="false" />
+        <activity
+            android:name=".activity.SetUsernameActivity"
             android:exported="false" />
         <activity
             android:name=".activity.landing.LandingActivity"
             android:exported="false" />
         <activity
             android:name=".activity.auth.RegisterActivity"
-            android:noHistory="true"
             android:exported="false" />
         <activity
             android:name=".activity.LoadingActivity"

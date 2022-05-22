@@ -37,7 +37,5 @@ public class VerifyForgottenPasswordActivity extends BaseAppActivity {
     }
 
 
-    public void changeToLoginActivity(View view) {
-        Util.startNewActivity(this, LoginActivity.class);
-    }
+    public void changeToLastActivity(View view) { finish(); }
 }

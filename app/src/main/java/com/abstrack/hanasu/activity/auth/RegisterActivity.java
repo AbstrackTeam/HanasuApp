@@ -51,7 +51,7 @@ public class RegisterActivity extends BaseAppActivity {
                 });
     }
 
-    public void changeToLastActivity(View view) {
-        finish();
+    public void changeToLoginActivity(View view) {
+        Util.startNewActivity(RegisterActivity.this, LoginActivity.class);
     }
 }
