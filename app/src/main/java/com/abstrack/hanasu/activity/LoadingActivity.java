@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.auth.LoginActivity;
+import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.util.Util;
 

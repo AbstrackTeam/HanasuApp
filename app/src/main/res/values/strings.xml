@@ -42,5 +42,12 @@
     <string name="verify_check">Revise su pestaña de spam o</string>
     <string name="restore_pswd">Restablecimiento de contraseña</string>
     <string name="restore_instruction">Hemos enviado un enlace para el restablecimiento de su contraseña al correo:</string>
-    <string name="restore_instruction2">Debe entrara al enlace para restablecer su contraseña.</string>
+    <string name="restore_instruction2">Debe entrar al enlace para restablecer su contraseña.</string>
+    <string name="username_hashtag">#</string>
+    <string name="add_chat">Añadir un amigo</string>
+    <string name="add_chat_instruction">Ingresa el identificador de la persona que quieres agregar 🌱</string>
+    <string name="username_hint">Usuario</string>
+    <string name="username_tag_hint">Tag</string>
+    <string name="username_btn">Aceptar</string>
+    <string name="add_chat_btn">Agregar</string>
 </resources>

@@ -1,16 +1,12 @@
-package com.abstrack.hanasu.activity;
+package com.abstrack.hanasu.activity.landing;
 
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.animation.Animator;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
@@ -18,6 +14,7 @@ import com.abstrack.hanasu.core.chat.Chat;
 import com.abstrack.hanasu.core.chat.ChatsAdapter;
 import com.abstrack.hanasu.core.story.StoriesAdapter;
 import com.abstrack.hanasu.core.story.Story;
+import com.abstrack.hanasu.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +25,6 @@ public class LandingActivity extends BaseAppActivity {
     private CardView showMoreButton, addChatButton, addGroupsButton, searchButton;
     private ImageView showMoreButtonIcon, addChatButtonIcon, addGroupsButtonIcon, searchButtonIcon;
     private boolean showingMoreOptions;
-    private float showMoreButtonY, addChatButtonY, addGroupsButtonY, searchButtonY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +49,7 @@ public class LandingActivity extends BaseAppActivity {
         addChatButtonIcon = findViewById(R.id.addChatIcon);
         addGroupsButtonIcon = findViewById(R.id.addGroupIcon);
         searchButtonIcon = findViewById(R.id.searchIcon);
+        ;
 
         addChatButton.setVisibility(View.GONE);
         addGroupsButton.setVisibility(View.GONE);
@@ -103,7 +100,7 @@ public class LandingActivity extends BaseAppActivity {
         addChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO
+                Util.startNewActivity(LandingActivity.this, AddChatActivity.class);
             }
         });
     }
@@ -116,6 +113,8 @@ public class LandingActivity extends BaseAppActivity {
             addChatButton.setClickable(false);
             addGroupsButton.setClickable(false);
             searchButton.setClickable(false);
+            showingMoreOptions = true;
+
 
             showMoreButton.postDelayed(new Runnable() {
                 @Override
@@ -124,71 +123,69 @@ public class LandingActivity extends BaseAppActivity {
                     addChatButton.setClickable(true);
                     addGroupsButton.setClickable(true);
                     searchButton.setClickable(true);
-                    showingMoreOptions = true;
                 }
-            }, 900);
+            }, 450);
 
             addChatButton.setVisibility(View.VISIBLE);
             addGroupsButton.setVisibility(View.VISIBLE);
             searchButton.setVisibility(View.VISIBLE);
 
-            addChatButton.setAlpha(0.5f);
+            System.out.println(" PRIMERO ");
+            System.out.println(addChatButton.getTranslationY());
+            System.out.println(addChatButton.getY());
+
             addChatButton.setTranslationY(0);
             addChatButton.setTranslationY(showMoreButton.getY() - addChatButton.getY());
             addChatButton.animate()
-                    .alpha(1.0f).
-                    translationY(0)
-                    .setDuration(300);
-
-            addGroupsButton.setAlpha(0.5f);
+                    .alpha(1.0f)
+                    .translationY(0)
+                    .setDuration(350);
             addGroupsButton.setTranslationY(0);
             addGroupsButton.setTranslationY(showMoreButton.getY() - addGroupsButton.getY());
             addGroupsButton.animate()
                     .alpha(1.0f)
                     .translationY(0)
-                    .setDuration(300);
+                    .setDuration(350);
 
-            searchButton.setAlpha(0.5f);
             searchButton.setTranslationY(0);
             searchButton.setTranslationY(showMoreButton.getY() - searchButton.getY());
             searchButton.animate()
                     .alpha(1.0f)
                     .translationY(0)
-                    .setDuration(300);
-            return;
-        }
-        showMoreButton.setClickable(false);
-        addChatButton.setClickable(false);
-        addGroupsButton.setClickable(false);
-        searchButton.setClickable(false);
-        showMoreButton.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                addChatButton.setVisibility(View.GONE);
-                addGroupsButton.setVisibility(View.GONE);
-                searchButton.setVisibility(View.GONE);
-                showMoreButton.setClickable(true);
-                addChatButton.setClickable(true);
-                addGroupsButton.setClickable(true);
-                searchButton.setClickable(true);
-                showingMoreOptions = false;
-            }
-        }, 900);
+                    .setDuration(350);
+        } else {
+            showMoreButton.setClickable(false);
+            addChatButton.setClickable(false);
+            addGroupsButton.setClickable(false);
+            searchButton.setClickable(false);
+            showMoreButton.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    addChatButton.setVisibility(View.GONE);
+                    addGroupsButton.setVisibility(View.GONE);
+                    searchButton.setVisibility(View.GONE);
+                    showMoreButton.setClickable(true);
+                    addChatButton.setClickable(true);
+                    addGroupsButton.setClickable(true);
+                    searchButton.setClickable(true);
+                    showingMoreOptions = false;
+                }
+            }, 450);
 
-        showMoreButtonIcon.setImageResource(R.drawable.ic_plus);
-        addChatButton.animate()
-                .translationY(showMoreButton.getY() - addChatButton.getY())
-                .setDuration(300);
-        addGroupsButton.animate().
-                translationY(showMoreButton.getY() - addGroupsButton.getY())
-                .setDuration(300);
-        searchButton.animate().
-                alpha(0.0f).
-                setDuration(0);
-        searchButton.animate()
-                .alpha(0.0f).
-                translationY(showMoreButton.getY() - searchButton.getY())
-                .setDuration(300);
+            showMoreButtonIcon.setImageResource(R.drawable.ic_plus);
+            addChatButton.animate()
+                    .translationY(showMoreButton.getY() - addChatButton.getY())
+                    .alpha(0.0f)
+                    .setDuration(300);
+            addGroupsButton.animate()
+                    .translationY(showMoreButton.getY() - addGroupsButton.getY())
+                    .alpha(0.0f)
+                    .setDuration(300);
+            searchButton.animate()
+                    .alpha(0.0f)
+                    .translationY(showMoreButton.getY() - searchButton.getY())
+                    .setDuration(300);
+        }
     }
 
 }
