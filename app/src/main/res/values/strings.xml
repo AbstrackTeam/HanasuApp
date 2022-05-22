@@ -20,10 +20,7 @@
     <string name="user_icon">User icon</string>
     <string name="landing_title">Chats</string>
     <string name="story_icon_description">Story icon</string>
-    <string name="add_chat_icon">Add chat icon</string>
-    <string name="add_group_icon">Add group icon</string>
-    <string name="search_icon">Search icon</string>
-    <string name="plus_icon">Show less options icon</string>
+
     <string name="loading_message">from Abstrack &amp; CBTIS 051</string>
     <string name="login_msg">¡Hola! Que gusto tenerte de vuelta.</string>
     <string name="password_txt">Introduce tu contraseña</string>
@@ -45,6 +42,8 @@
     <string name="restore_instruction2">Debe entrara al enlace para restablecer su contraseña.</string>
     <string name="username_title">Nombre de usuario</string>
     <string name="username_instruction">¡Ingresa el nombre con el que podrán contactarte otros usuarios!</string>
+    <string name="add_chat">Añadir un amigo</string>
+    <string name="add_chat_instruction">Ingresa el identificador de la persona que quieres agregar 🌱</string>
     <string name="username_hashtag">#</string>
     <string name="username_hint">Usuario</string>
     <string name="username_tag_hint">Tag</string>
@@ -57,4 +56,10 @@
     <string name="welcome_terms">Lee nuestras</string>
     <string name="welcome_terms_2"><u>políticas de privacidad.</u></string>
     <string name="a">Presiona el siguiente botón para aceptar nuestros términos y condiciones.</string>
+    <string name="add_friend_btn">Agregar</string>
+    <string name="add_friend_icon">Add chat icon</string>
+    <string name="username_title">Nombre de usuario</string>
+    <string name="search_icon">Search icon</string>
+    <string name="plus_icon">Show more options icon</string>
+    <string name="add_group_icon">Add groups icon</string>
 </resources>

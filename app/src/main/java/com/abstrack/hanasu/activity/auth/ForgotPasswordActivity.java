@@ -43,7 +43,7 @@ public class ForgotPasswordActivity extends BaseAppActivity {
                 });
     }
 
-    public void changeToLastActivity(View view) {
-        finish();
+    public void changeToLoginActivity(View view) {
+        Util.startNewActivity(ForgotPasswordActivity.this, LoginActivity.class);
     }
 }

@@ -3,6 +3,7 @@ package com.abstrack.hanasu.util;
 import android.content.Intent;
 import android.view.Window;
 import com.abstrack.hanasu.BaseAppActivity;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
 
@@ -18,6 +19,10 @@ public class Util {
     public static void hideActionBar(BaseAppActivity baseAppActivity){
         baseAppActivity.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(baseAppActivity.getSupportActionBar()).hide();
+    }
+
+    public static FirebaseDatabase getFbDatabase(){
+        return FirebaseDatabase.getInstance();
     }
 
 }

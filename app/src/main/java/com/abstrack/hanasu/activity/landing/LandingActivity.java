@@ -1,17 +1,13 @@
-package com.abstrack.hanasu.activity;
+package com.abstrack.hanasu.activity.landing;
 
-import androidx.appcompat.widget.AppCompatImageView;
+
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.animation.Animator;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.core.chat.Chat;
@@ -26,9 +22,8 @@ public class LandingActivity extends BaseAppActivity {
 
     private RecyclerView storiesBar, chatsListView;
     private CardView showMoreButton, addChatButton, addGroupsButton, searchButton;
-    private ImageView showMoreButtonIcon, addChatButtonIcon, addGroupsButtonIcon, searchButtonIcon;
+    private ImageView showMoreButtonIcon;
     private boolean showingMoreOptions;
-    private float showMoreButtonY, addChatButtonY, addGroupsButtonY, searchButtonY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +33,9 @@ public class LandingActivity extends BaseAppActivity {
     }
 
     private void init() {
-        // Recycler views
         storiesBar = findViewById(R.id.storiesBar);
         chatsListView = findViewById(R.id.chatsListView);
-        // More options views
+
         showMoreButton = findViewById(R.id.showMoreOptions);
         addChatButton = findViewById(R.id.addChat);
         addGroupsButton = findViewById(R.id.addGroup);
@@ -50,14 +44,10 @@ public class LandingActivity extends BaseAppActivity {
         showingMoreOptions = false;
 
         showMoreButtonIcon = findViewById(R.id.moreOptionsIcon);
-        addChatButtonIcon = findViewById(R.id.addChatIcon);
-        addGroupsButtonIcon = findViewById(R.id.addGroupIcon);
-        searchButtonIcon = findViewById(R.id.searchIcon);
 
         addChatButton.setVisibility(View.GONE);
         addGroupsButton.setVisibility(View.GONE);
         searchButton.setVisibility(View.GONE);
-
         List<Story> stories = new ArrayList<>();
         List<Chat> chats = new ArrayList<>();
 
@@ -77,16 +67,16 @@ public class LandingActivity extends BaseAppActivity {
         chats.add(new Chat(false, "Bochin", 0, 7, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
         chats.add(new Chat(false, "Soy una persona insaciable", 0, 4, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
 
-        // Set the stories adapter
         StoriesAdapter storiesAdapter = new StoriesAdapter(stories, storiesBar, this);
         storiesBar.setAdapter(storiesAdapter);
         storiesBar.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
         storiesBar.setItemAnimator(null);
 
-        // Set the chats adapter
         ChatsAdapter chatsAdapter = new ChatsAdapter(chats, this);
         chatsListView.setAdapter((chatsAdapter));
         chatsListView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+
+        addChatButton = findViewById(R.id.addChat);
 
         buildOptionsListeners();
     }
@@ -99,13 +89,17 @@ public class LandingActivity extends BaseAppActivity {
             }
         });
 
-
         addChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO
+                addFriend();
             }
         });
+    }
+
+    public void addFriend() {
+        // TODO
+        Toast.makeText(this, "add chat button clicked", Toast.LENGTH_SHORT).show();
     }
 
     public void animateOptions() {
@@ -126,7 +120,7 @@ public class LandingActivity extends BaseAppActivity {
                     searchButton.setClickable(true);
                     showingMoreOptions = true;
                 }
-            }, 900);
+            }, 450);
 
             addChatButton.setVisibility(View.VISIBLE);
             addGroupsButton.setVisibility(View.VISIBLE);
@@ -173,7 +167,7 @@ public class LandingActivity extends BaseAppActivity {
                 searchButton.setClickable(true);
                 showingMoreOptions = false;
             }
-        }, 900);
+        }, 450);
 
         showMoreButtonIcon.setImageResource(R.drawable.ic_plus);
         addChatButton.animate()
@@ -190,6 +184,4 @@ public class LandingActivity extends BaseAppActivity {
                 translationY(showMoreButton.getY() - searchButton.getY())
                 .setDuration(300);
     }
-
 }
-

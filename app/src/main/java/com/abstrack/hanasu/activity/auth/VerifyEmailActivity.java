@@ -38,6 +38,7 @@ public class VerifyEmailActivity extends BaseAppActivity {
                         }
                     }
                 });
+
     }
 
     public void changeToLoginActivity(View view) {
