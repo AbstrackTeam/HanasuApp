@@ -8,12 +8,12 @@ import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.util.Util;
 
-public class AddChatActivity extends BaseAppActivity {
+public class AddFriendActivity extends BaseAppActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_chat);
+        setContentView(R.layout.activity_add_friend);
         init();
     }
 
@@ -22,7 +22,7 @@ public class AddChatActivity extends BaseAppActivity {
         returnToLandingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.startNewActivity(AddChatActivity.this, LandingActivity.class);
+                Util.startNewActivity(AddFriendActivity.this, LandingActivity.class);
             }
         });
     }

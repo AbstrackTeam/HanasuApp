@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:scrollbarStyle="insideOverlay"
-    tools:context=".activity.landing.AddChatActivity">
+    tools:context=".activity.landing.AddFriendActivity">
 
     <TextView
         android:id="@+id/addChatInstructions"

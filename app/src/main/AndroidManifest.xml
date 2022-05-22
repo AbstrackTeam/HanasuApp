@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Hanasu">
         <activity
-            android:name=".activity.landing.AddChatActivity"
+            android:name=".activity.landing.AddFriendActivity"
             android:noHistory="true"
             android:exported="false" />
         <activity

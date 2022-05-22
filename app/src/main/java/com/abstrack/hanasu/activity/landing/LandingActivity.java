@@ -100,7 +100,7 @@ public class LandingActivity extends BaseAppActivity {
         addChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.startNewActivity(LandingActivity.this, AddChatActivity.class);
+                Util.startNewActivity(LandingActivity.this, AddFriendActivity.class);
             }
         });
     }
