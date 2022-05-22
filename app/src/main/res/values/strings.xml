@@ -61,4 +61,8 @@
     <string name="search_icon">Search icon</string>
     <string name="plus_icon">Show more options icon</string>
     <string name="add_group_icon">Add groups icon</string>
+    <string name="profile_pic_title">Foto de perfil</string>
+    <string name="profile_pic_camera">Cámara</string>
+    <string name="profile_pic_gallery">Galería</string>
+    <string name="profile_pic_trash">Basura</string>
 </resources>
