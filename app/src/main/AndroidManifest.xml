@@ -12,9 +12,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Hanasu">
         <activity
-            android:name=".activity.landing.AddFriendActivity"
-            android:noHistory="true"
+            android:name=".activity.auth.WelcomeActivity"
             android:exported="false" />
+        <activity
+            android:name=".activity.auth.ProfileInfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.landing.AddFriendActivity"
+            android:noHistory="true"/>
         <activity
             android:name=".activity.auth.VerifyEmailActivity"
             android:noHistory="true"
@@ -49,7 +54,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
