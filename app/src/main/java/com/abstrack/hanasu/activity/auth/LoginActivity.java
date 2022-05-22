@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.abstrack.hanasu.activity.LandingActivity;
+import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.activity.SetUsernameActivity;
 import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.BaseAppActivity;

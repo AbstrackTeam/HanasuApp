@@ -27,7 +27,7 @@
             android:name=".activity.auth.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.LandingActivity"
+            android:name=".activity.landing.LandingActivity"
             android:exported="false" />
         <activity
             android:name=".activity.auth.RegisterActivity"

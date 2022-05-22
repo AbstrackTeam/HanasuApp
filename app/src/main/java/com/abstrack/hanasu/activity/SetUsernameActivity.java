@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
+import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.util.Preferences;
 import com.abstrack.hanasu.util.Util;

@@ -1,4 +1,4 @@
-package com.abstrack.hanasu.activity;
+package com.abstrack.hanasu.activity.landing;
 
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
