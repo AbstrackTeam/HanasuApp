@@ -21,7 +21,7 @@ public class User {
         this.name = name;
         this.tag = tag;
         imgKey = getDefaultImageUri();
-        about = "Sin descripción";
+        about = "Hey there, I'm using Hanasu!";
         uid = AuthManager.getFireAuth().getUid();
         identifier = name + tag;
     }

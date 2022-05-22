@@ -1,6 +1,5 @@
 package com.abstrack.hanasu.core.user;
 
-import com.abstrack.hanasu.Util;
 import com.abstrack.hanasu.db.FireDB;
 import com.google.firebase.database.DatabaseReference;
 import java.util.Random;
