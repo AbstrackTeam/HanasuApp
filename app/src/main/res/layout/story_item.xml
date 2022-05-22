@@ -63,14 +63,14 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
-                app:cardCornerRadius="25dp">
+                app:cardCornerRadius="27dp">
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/imageHolder"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    app:cardCornerRadius="25dp"
+                    app:cardCornerRadius="27dp"
                     app:cardElevation="0dp"
                     app:cardMaxElevation="0dp"
                     app:cardPreventCornerOverlap="false">

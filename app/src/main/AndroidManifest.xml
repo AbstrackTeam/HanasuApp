@@ -12,28 +12,35 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Hanasu">
         <activity
-            android:name=".activity.SetUsernameActivity"
+            android:name=".activity.landing.AddFriendActivity"
+            android:noHistory="true"
             android:exported="false" />
         <activity
             android:name=".activity.auth.VerifyEmailActivity"
+            android:noHistory="true"
             android:exported="false" />
         <activity
             android:name=".activity.auth.ForgotPasswordActivity"
+            android:noHistory="true"
             android:exported="false" />
         <activity
             android:name=".activity.auth.VerifyForgottenPasswordActivity"
+            android:noHistory="true"
             android:exported="false" />
         <activity
             android:name=".activity.auth.LoginActivity"
+            android:noHistory="true"
             android:exported="false" />
         <activity
             android:name=".activity.landing.LandingActivity"
             android:exported="false" />
         <activity
             android:name=".activity.auth.RegisterActivity"
+            android:noHistory="true"
             android:exported="false" />
         <activity
             android:name=".activity.LoadingActivity"
+            android:noHistory="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,14 +48,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <service
-            android:name=".firebase.MessagingService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
 
         <meta-data
             android:name="preloaded_fonts"

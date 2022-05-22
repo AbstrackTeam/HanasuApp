@@ -29,7 +29,7 @@
             android:backgroundTint="#00FFFFFF">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/chatIcon"
+                android:id="@+id/addChatIcon"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:background="#00FFFFFF"
@@ -61,7 +61,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/chatTime"
-                app:layout_constraintStart_toEndOf="@+id/chatIcon"
+                app:layout_constraintStart_toEndOf="@+id/addChatIcon"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
