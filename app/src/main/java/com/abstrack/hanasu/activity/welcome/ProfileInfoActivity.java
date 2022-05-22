@@ -22,7 +22,4 @@ public class ProfileInfoActivity extends BaseAppActivity {
         Util.startNewActivity(this, LandingActivity.class);
     }
 
-    public void changeToLastActivity(View view) {
-        finish();
-    }
 }

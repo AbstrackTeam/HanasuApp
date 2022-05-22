@@ -78,21 +78,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btnReturn2"
-        android:layout_width="57dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="@color/background"
-        android:contentDescription="@string/register_btn"
-        android:onClick="changeToLastActivity"
-        app:icon="@mipmap/ic_return_foreground"
-        app:iconSize="30dp"
-        app:iconTint="@color/accent_color"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="DuplicateSpeakableTextCheck" />
-
     <ImageView
         android:id="@+id/imgProfile"
         android:layout_width="wrap_content"
@@ -110,6 +95,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="148dp"
+        android:outlineProvider="none"
         android:foreground="@drawable/ic_camera"
         android:foregroundGravity="center"
         app:cardBackgroundColor="@color/detail_color_primary"

@@ -89,8 +89,4 @@ public class SetUsernameActivity extends BaseAppActivity {
             }
         });
     }
-
-    public void changeToLastActivity(View view) {
-        finish();
-    }
 }
