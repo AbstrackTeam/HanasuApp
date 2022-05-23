@@ -13,12 +13,15 @@
         android:theme="@style/Theme.Hanasu">
         <activity
             android:name=".activity.welcome.WelcomeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true" />
         <activity
             android:name=".activity.welcome.ProfileInfoActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true" />
         <activity
             android:name=".activity.landing.AddFriendActivity"
+            android:exported="false"
             android:noHistory="true" />
         <activity
             android:name=".activity.auth.VerifyEmailActivity"
@@ -37,7 +40,8 @@
             android:exported="false" />
         <activity
             android:name=".activity.welcome.SetUsernameActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true" />
         <activity
             android:name=".activity.landing.LandingActivity"
             android:exported="false" />

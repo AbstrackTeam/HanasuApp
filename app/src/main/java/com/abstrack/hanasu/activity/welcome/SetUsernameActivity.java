@@ -51,6 +51,11 @@ public class SetUsernameActivity extends BaseAppActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        Util.startNewActivity(SetUsernameActivity.this, LandingActivity.class);
+    }
+
     public void submit() {
         name = nameField.getText().toString();
         tag = tagField.getText().toString();

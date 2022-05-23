@@ -2,31 +2,34 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/background"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".activity.welcome.ProfileInfoActivity">
 
-    <Button
-        android:id="@+id/btnContinue"
-        android:layout_width="0dp"
-        android:layout_height="62dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="132dp"
-        android:layout_marginEnd="21dp"
-        android:background="@drawable/round_button"
-        android:backgroundTint="@color/purple_500"
-        android:fontFamily="@font/quicksand_bold"
-        android:onClick="submit"
-        android:text="@string/profile_info_btn"
-        android:textAllCaps="false"
-        android:textSize="20sp"
-        android:textStyle="bold"
+    <LinearLayout
+        android:id="@+id/clickableContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clickable="false"
+        android:elevation="5dp"
+        android:onClick="openCameraOptions"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/cameraOptionsLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtTxtProfileName"
-        tools:ignore="DuplicateSpeakableTextCheck" />
+        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/cameraOptionsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="5dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"></LinearLayout>
 
     <EditText
         android:id="@+id/edtTxtProfileName"
@@ -83,27 +86,52 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
+        android:contentDescription="TODO"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtInstruction"
-        app:srcCompat="@drawable/ic_profile_pic"
-        android:contentDescription="TODO" />
+        app:srcCompat="@drawable/ic_profile_pic" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/crdVCamera"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="148dp"
-        android:outlineProvider="none"
         android:foreground="@drawable/ic_camera"
         android:foregroundGravity="center"
+        android:onClick="openCameraOptions"
+        android:outlineProvider="none"
         app:cardBackgroundColor="@color/detail_color_primary"
         app:cardCornerRadius="100dp"
+        app:cardElevation="0dp"
         app:cardPreventCornerOverlap="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.653"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtInstruction" />
+        app:layout_constraintTop_toBottomOf="@+id/txtInstruction">
+
+    </androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/btnContinue"
+        android:layout_width="0dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="132dp"
+        android:layout_marginEnd="21dp"
+        android:background="@drawable/round_button"
+        android:backgroundTint="@color/purple_500"
+        android:fontFamily="@font/quicksand_bold"
+        android:onClick="submit"
+        android:text="@string/profile_info_btn"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edtTxtProfileName"
+        tools:ignore="DuplicateSpeakableTextCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

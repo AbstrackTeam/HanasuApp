@@ -8,7 +8,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="135dp"
-        android:background="@color/background"
+        android:background="@color/contrast_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -19,7 +19,7 @@
             android:layout_height="53dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="9dp"
-            android:backgroundTint="@color/background"
+            android:backgroundTint="@color/contrast_background"
             android:contentDescription="@string/profile_pic_gallery"
             android:gravity="center"
             app:cornerRadius="100dp"
