@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:outlineProvider="paddedBounds"
-    tools:context=".activity.welcome.ProfileInfoActivity">
+    tools:context=".activity.welcome.SetProfileInfoActivity">
 
     <LinearLayout
         android:id="@+id/layoutPictureOptions"

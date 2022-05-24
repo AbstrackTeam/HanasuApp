@@ -6,22 +6,22 @@ import java.util.Random;
 
 public class UserManager {
 
-    private final DatabaseReference databaseReference;
+    private static User currentUser;
 
-    public UserManager() {
-        String PATH = "users";
-        databaseReference = FireDB.getFbDatabase().getReference(PATH);
+    public static void createCurrentUser(String name, String tag) {
+        currentUser = new User(name, tag);
+        writeNewUser();
     }
 
-    public String generateTag() {
-        Random random = new Random();
-        String tag = String.format("%04d", random.nextInt(10000));
-        return tag;
+    public static void writeNewUser(){
+        FireDB.getDataBaseReferenceWithPath("users").child(currentUser.getIdentifier()).setValue(UserManager.getCurrentUser());
     }
 
-    public void writeNewUser(String name, String tag) {
-        User user = new User(name, tag);
-        databaseReference.child(user.getIdentifier()).setValue(user);
+    public static void uploadUserData(String path, String value) {
+        FireDB.getDataBaseReferenceWithPath("users").child(currentUser.getIdentifier()).child(path).setValue(value);
     }
 
+    public static User getCurrentUser(){
+        return currentUser;
+    }
 }

@@ -1,23 +1,40 @@
 package com.abstrack.hanasu.activity.welcome;
 
 import android.content.Intent;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
+
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
+import com.abstrack.hanasu.auth.AuthManager;
+import com.abstrack.hanasu.core.user.UserManager;
+import com.abstrack.hanasu.db.FireDB;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.util.ImageUtil;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.internal.Storage;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
+
+import java.util.UUID;
 
 import jp.wasabeef.blurry.Blurry;
 
-public class ProfileInfoActivity extends BaseAppActivity {
+public class SetProfileInfoActivity extends BaseAppActivity {
 
     private LinearLayout layoutPictureOptions, clickableContainer;
     private View viewPictureOptions;
@@ -27,6 +44,8 @@ public class ProfileInfoActivity extends BaseAppActivity {
     private static final int IMAGE_CAPTURE_CODE = 1999, IMAGE_PICK_CODE = 2000;
 
     private boolean showPictureOptions = false;
+
+    private StorageTask uploadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +73,7 @@ public class ProfileInfoActivity extends BaseAppActivity {
             return;
         }
 
-        AndroidUtil.startNewActivity(ProfileInfoActivity.this, LandingActivity.class);
+        AndroidUtil.startNewActivity(SetProfileInfoActivity.this, LandingActivity.class);
     }
 
     @Override
@@ -62,33 +81,51 @@ public class ProfileInfoActivity extends BaseAppActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == IMAGE_CAPTURE_CODE && resultCode == RESULT_OK) {
-
-
+            Blurry.delete((ViewGroup) findViewById(R.id.container));
             profilePicImgView.setImageBitmap(ImageUtil.convertPictureDataToBitmap(data));
+            uploadProfilePicture(data.getData(), ImageUtil.getMimeType(this, data.getData()));
 
-            hidePictureOptions();
-            Blurry.delete((ViewGroup) findViewById(R.id.container));
-
-
-        } else if(requestCode == IMAGE_PICK_CODE && resultCode == RESULT_OK) {
-            Blurry.delete((ViewGroup) findViewById(R.id.container));
-
-            if(ImageUtil.getMimeType(this, data.getData()).equals("image/gif")){
-                Glide.with(this).asGif().load(data.getData()).into(profilePicImgView);
-            } else {
-                profilePicImgView.setImageBitmap(ImageUtil.convertPictureStreamToBitmap(this, data));
-
-            }
             Blurry.with(this).radius(25).sampling(2).onto((ViewGroup) findViewById(R.id.container));
             hidePictureOptions();
             Blurry.delete((ViewGroup) findViewById(R.id.container));
+        } else if(requestCode == IMAGE_PICK_CODE && resultCode == RESULT_OK) {
+            Blurry.delete((ViewGroup) findViewById(R.id.container));
 
+            if(ImageUtil.getMimeType(this, data.getData()).equals(".gif")){
+                Glide.with(this).asGif().load(data.getData()).into(profilePicImgView);
+            } else {
+                profilePicImgView.setImageBitmap(ImageUtil.convertPictureStreamToBitmap(this, data));
+            }
+            uploadProfilePicture(data.getData(), ImageUtil.getMimeType(this, data.getData()));
+
+            Blurry.with(this).radius(25).sampling(2).onto((ViewGroup) findViewById(R.id.container));
+            hidePictureOptions();
+            Blurry.delete((ViewGroup) findViewById(R.id.container));
         }
     }
 
     //TODO
     public void submit(View view){
         AndroidUtil.startNewActivity(this, LandingActivity.class);
+    }
+
+    public void uploadProfilePicture(Uri profilePicUri, String imgExtension) {
+        String imgKey = UUID.randomUUID().toString();
+
+        StorageReference profilePicRef = FireDB.getStorageReference().child("image").child(imgKey + imgExtension);
+        profilePicRef.putFile(profilePicUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d("HanasuStorage", "Image uploaded successful");
+                UserManager.uploadUserData("imgKey", imgKey);
+                UserManager.uploadUserData("imgExtension", imgExtension);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("HanasuStorage", "Image failed to upload successfully", uploadTask.getException());
+            }
+        });
     }
 
     public void updatePictureOptions(View view) {
@@ -99,7 +136,6 @@ public class ProfileInfoActivity extends BaseAppActivity {
         }
 
         showPictureOptions();
-
         Blurry.with(this).radius(25).sampling(2).onto((ViewGroup) findViewById(R.id.container));
     }
 
@@ -137,9 +173,11 @@ public class ProfileInfoActivity extends BaseAppActivity {
     }
 
     public void removeProfilePicture(View view){
+        Blurry.delete((ViewGroup) findViewById(R.id.container));
         ImageView profilePicImgView = (ImageView) findViewById(R.id.imgProfile);
         profilePicImgView.setImageBitmap(ImageUtil.convertDrawableToBitmap(this.getDrawable(R.drawable.ic_profile_pic)));
 
+        Blurry.with(this).radius(25).sampling(2).onto((ViewGroup) findViewById(R.id.container));
         hidePictureOptions();
         Blurry.delete((ViewGroup) findViewById(R.id.container));
 

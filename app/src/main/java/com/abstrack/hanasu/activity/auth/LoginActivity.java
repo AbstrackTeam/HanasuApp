@@ -11,6 +11,7 @@ import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.R;
+import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.abstrack.hanasu.db.FireDB;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -68,7 +69,8 @@ public class LoginActivity extends BaseAppActivity {
                                 continue;
                             }
 
-                            if(user.child("identifier").getValue() != null){
+                            if(user.child("identifier").getValue() != null) {
+                                UserManager.createCurrentUser(user.child("name").getValue().toString(), user.child("tag").getValue().toString());
                                 hasIdentifier = true;
                                 break;
                             }

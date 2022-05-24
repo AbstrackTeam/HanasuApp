@@ -28,6 +28,8 @@ public class ImageUtil {
             strMimeType = cursor.getString(0);
         }
 
+        strMimeType = strMimeType.replace("image/", "");
+        strMimeType = "." + strMimeType;
         return strMimeType;
     }
 

@@ -18,7 +18,7 @@
             android:exported="false"
             android:noHistory="true" />
         <activity
-            android:name=".activity.welcome.ProfileInfoActivity"
+            android:name=".activity.welcome.SetProfileInfoActivity"
             android:exported="false" />
         <activity
             android:name=".activity.landing.AddFriendActivity"
