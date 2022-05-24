@@ -2,7 +2,6 @@ package com.abstrack.hanasu.activity;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -16,13 +15,11 @@ import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.auth.LoginActivity;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.auth.AuthManager;
-import com.abstrack.hanasu.core.Preferences;
-import com.abstrack.hanasu.Util;
+import com.abstrack.hanasu.util.AndroidUtil;
 import com.abstrack.hanasu.db.FireDB;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
 
 public class LoadingActivity extends BaseAppActivity {
 
@@ -58,7 +55,7 @@ public class LoadingActivity extends BaseAppActivity {
 
     public void changeActivity(){
         if(!AuthManager.isUserLogged()){
-            Util.startNewActivity(this, LoginActivity.class);
+            AndroidUtil.startNewActivity(this, LoginActivity.class);
             return;
         }
 
@@ -85,17 +82,17 @@ public class LoadingActivity extends BaseAppActivity {
 
                 if(hasIdentifier) {
                     if (AuthManager.getFireAuth().getCurrentUser().isEmailVerified()) {
-                        Util.startNewActivity(LoadingActivity.this, LandingActivity.class);
+                        AndroidUtil.startNewActivity(LoadingActivity.this, LandingActivity.class);
                         return;
                     }
 
                     AuthManager.getFireAuth().signOut();
-                    Util.startNewActivity(LoadingActivity.this, LoginActivity.class);
+                    AndroidUtil.startNewActivity(LoadingActivity.this, LoginActivity.class);
                     return;
                 }
 
                 AuthManager.getFireAuth().signOut();
-                Util.startNewActivity(LoadingActivity.this, LoginActivity.class);
+                AndroidUtil.startNewActivity(LoadingActivity.this, LoginActivity.class);
                 return;
             }
         });

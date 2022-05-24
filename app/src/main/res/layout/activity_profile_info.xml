@@ -14,15 +14,15 @@
         android:layout_height="0dp"
         android:clickable="false"
         android:elevation="5dp"
-        android:onClick="openCameraOptions"
+        android:onClick="updatePictureOptions"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/cameraOptionsLayout"
+        app:layout_constraintBottom_toTopOf="@id/layoutPictureOptions"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"></LinearLayout>
 
     <LinearLayout
-        android:id="@+id/cameraOptionsLayout"
+        android:id="@+id/layoutPictureOptions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="5dp"
@@ -100,7 +100,7 @@
         android:layout_marginTop="148dp"
         android:foreground="@drawable/ic_camera"
         android:foregroundGravity="center"
-        android:onClick="openCameraOptions"
+        android:onClick="updatePictureOptions"
         android:outlineProvider="none"
         app:cardBackgroundColor="@color/detail_color_primary"
         app:cardCornerRadius="100dp"

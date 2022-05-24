@@ -1,28 +1,23 @@
 package com.abstrack.hanasu.activity.auth;
 
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.abstrack.hanasu.activity.welcome.SetUsernameActivity;
 import com.abstrack.hanasu.activity.welcome.WelcomeActivity;
 import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.R;
-import com.abstrack.hanasu.core.Preferences;
-import com.abstrack.hanasu.Util;
+import com.abstrack.hanasu.util.AndroidUtil;
 import com.abstrack.hanasu.db.FireDB;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
 
 public class LoginActivity extends BaseAppActivity {
 
@@ -54,7 +49,7 @@ public class LoginActivity extends BaseAppActivity {
 
                 if(!AuthManager.getFireAuth().getCurrentUser().isEmailVerified()){
                     AuthManager.getFireAuth().signOut();
-                    Util.startNewActivity(LoginActivity.this, VerifyEmailActivity.class);
+                    AndroidUtil.startNewActivity(LoginActivity.this, VerifyEmailActivity.class);
                     return;
                 }
 
@@ -80,11 +75,11 @@ public class LoginActivity extends BaseAppActivity {
                         }
 
                         if(hasIdentifier){
-                            Util.startNewActivity(LoginActivity.this, LandingActivity.class);
+                            AndroidUtil.startNewActivity(LoginActivity.this, LandingActivity.class);
                             return;
                         }
 
-                        Util.startNewActivity(LoginActivity.this, WelcomeActivity.class);
+                        AndroidUtil.startNewActivity(LoginActivity.this, WelcomeActivity.class);
                         return;
                     }
                 });
@@ -93,9 +88,9 @@ public class LoginActivity extends BaseAppActivity {
     }
 
     public void changeToRegisterActivity(View view) {
-        Util.startNewActivity(this, RegisterActivity.class);
+        AndroidUtil.startNewActivity(this, RegisterActivity.class);
     }
     public void changeToForgotPasswordActivity(View view){
-        Util.startNewActivity(this, ForgotPasswordActivity.class);
+        AndroidUtil.startNewActivity(this, ForgotPasswordActivity.class);
     }
 }

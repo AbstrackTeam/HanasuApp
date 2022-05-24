@@ -1,25 +1,36 @@
 package com.abstrack.hanasu.activity.welcome;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
-import com.abstrack.hanasu.Util;
+import com.abstrack.hanasu.util.AndroidUtil;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
+import com.abstrack.hanasu.util.ImageUtil;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import jp.wasabeef.blurry.Blurry;
 
 public class ProfileInfoActivity extends BaseAppActivity {
 
-    private ConstraintLayout container;
-    private LinearLayout cameraOptionLayout, clickableLayout;
-    private View pictureOptionView;
+    private LinearLayout layoutPictureOptions, clickableContainer;
+    private View viewPictureOptions;
+
+    private static final int IMAGE_CAPTURE_CODE = 1999, IMAGE_PICK_CODE = 2000;
+
     private boolean showPictureOptions = false;
 
     @Override
@@ -27,44 +38,99 @@ public class ProfileInfoActivity extends BaseAppActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_info);
 
-        container = findViewById(R.id.container);
-        clickableLayout = findViewById(R.id.clickableContainer);
+        clickableContainer = findViewById(R.id.clickableContainer);
 
-        cameraOptionLayout = findViewById(R.id.cameraOptionsLayout);
-        pictureOptionView = LayoutInflater.from(this).inflate(R.layout.select_profile_picture,null, false);
-        pictureOptionView.setVisibility(View.GONE);
-        cameraOptionLayout.addView(pictureOptionView);
+        layoutPictureOptions = findViewById(R.id.layoutPictureOptions);
+
+        viewPictureOptions = LayoutInflater.from(this).inflate(R.layout.select_profile_picture,null, false);
+        viewPictureOptions.setVisibility(View.GONE);
+
+        layoutPictureOptions.addView(viewPictureOptions);
     }
 
     @Override
     public void onBackPressed() {
         if(showPictureOptions){
-            clickableLayout.setClickable(false);
+            hidePictureOptions();
             Blurry.delete((ViewGroup) findViewById(R.id.container));
-            pictureOptionView.setVisibility(View.GONE);
-            showPictureOptions = false;
             return;
         }
 
-        Util.startNewActivity(ProfileInfoActivity.this, LandingActivity.class);
+        AndroidUtil.startNewActivity(ProfileInfoActivity.this, LandingActivity.class);
     }
 
-    public void openCameraOptions(View view) {
-        if(showPictureOptions) {
-            clickableLayout.setClickable(false);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == IMAGE_CAPTURE_CODE && resultCode == RESULT_OK) {
+            ImageView profilePicImgView = (ImageView) findViewById(R.id.imgProfile);
+            profilePicImgView.setImageBitmap(ImageUtil.convertPictureDataToBitmap(data));
+
+            hidePictureOptions();
             Blurry.delete((ViewGroup) findViewById(R.id.container));
-            pictureOptionView.setVisibility(View.GONE);
-            showPictureOptions = false;
-        } else {
-            clickableLayout.setClickable(true);
-            Blurry.with(this).radius(25).sampling(2).onto((ViewGroup) findViewById(R.id.container));
-            pictureOptionView.setVisibility(View.VISIBLE);
-            showPictureOptions = true;
+        } else if(requestCode == IMAGE_PICK_CODE && resultCode == RESULT_OK) {
+            ImageView profilePicImgView = (ImageView) findViewById(R.id.imgProfile);
+            profilePicImgView.setImageBitmap(ImageUtil.convertPictureStreamToBitmap(this, data));
+
+            hidePictureOptions();
+            Blurry.delete((ViewGroup) findViewById(R.id.container));
         }
     }
 
     //TODO
     public void submit(View view){
-        Util.startNewActivity(this, LandingActivity.class);
+        AndroidUtil.startNewActivity(this, LandingActivity.class);
+    }
+
+    public void updatePictureOptions(View view) {
+        if(showPictureOptions) {
+            hidePictureOptions();
+            Blurry.delete((ViewGroup) findViewById(R.id.container));
+            return;
+        }
+
+        showPictureOptions();
+        Blurry.with(this).radius(25).sampling(2).onto((ViewGroup) findViewById(R.id.container));
+    }
+
+    public void showPictureOptions(){
+        clickableContainer.setClickable(true);
+        viewPictureOptions.setVisibility(View.VISIBLE);
+        showPictureOptions = true;
+    }
+
+    public void hidePictureOptions(){
+        clickableContainer.setClickable(false);
+        viewPictureOptions.setVisibility(View.GONE);
+        showPictureOptions = false;
+    }
+
+    public void openCamera(View view){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, IMAGE_CAPTURE_CODE);
+        }
+    }
+
+    public void openGallery(View view){
+        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        getIntent.setType("image/*");
+
+        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickIntent.setType("image/*");
+
+        Intent chooserIntent = Intent.createChooser(getIntent, "Select a Profile Picture");
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+
+        startActivityForResult(chooserIntent, IMAGE_PICK_CODE);
+    }
+
+    public void removeProfilePicture(View view){
+        ImageView profilePicImgView = (ImageView) findViewById(R.id.imgProfile);
+        profilePicImgView.setImageBitmap(ImageUtil.convertDrawableToBitmap(this.getDrawable(R.drawable.ic_profile_pic)));
+
+        hidePictureOptions();
+        Blurry.delete((ViewGroup) findViewById(R.id.container));
     }
 }

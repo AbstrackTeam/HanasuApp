@@ -12,8 +12,7 @@ import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.core.user.UserManager;
-import com.abstrack.hanasu.core.Preferences;
-import com.abstrack.hanasu.Util;
+import com.abstrack.hanasu.util.AndroidUtil;
 import com.abstrack.hanasu.db.FireDB;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -53,7 +52,7 @@ public class SetUsernameActivity extends BaseAppActivity {
 
     @Override
     public void onBackPressed() {
-        Util.startNewActivity(SetUsernameActivity.this, LandingActivity.class);
+        AndroidUtil.startNewActivity(SetUsernameActivity.this, LandingActivity.class);
     }
 
     public void submit() {
@@ -89,7 +88,7 @@ public class SetUsernameActivity extends BaseAppActivity {
                 }
                 else{
                     userManager.writeNewUser(name, tag);
-                    Util.startNewActivity(SetUsernameActivity.this, ProfileInfoActivity.class);
+                    AndroidUtil.startNewActivity(SetUsernameActivity.this, ProfileInfoActivity.class);
                 }
             }
         });

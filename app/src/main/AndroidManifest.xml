@@ -3,6 +3,8 @@
     package="com.abstrack.hanasu">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -17,8 +19,7 @@
             android:noHistory="true" />
         <activity
             android:name=".activity.welcome.ProfileInfoActivity"
-            android:exported="false"
-            android:noHistory="true" />
+            android:exported="false" />
         <activity
             android:name=".activity.landing.AddFriendActivity"
             android:exported="false"

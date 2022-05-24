@@ -5,7 +5,7 @@ import android.view.View;
 
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
-import com.abstrack.hanasu.Util;
+import com.abstrack.hanasu.util.AndroidUtil;
 
 public class WelcomeActivity extends BaseAppActivity {
 
@@ -16,6 +16,6 @@ public class WelcomeActivity extends BaseAppActivity {
     }
 
     public void changeToSetUsernameActivity(View view) {
-        Util.startNewActivity(this, SetUsernameActivity.class);
+        AndroidUtil.startNewActivity(this, SetUsernameActivity.class);
     }
 }

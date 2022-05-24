@@ -3,7 +3,7 @@ package com.abstrack.hanasu.auth;
 import android.text.TextUtils;
 import android.util.Patterns;
 
-import com.abstrack.hanasu.Util;
+import com.abstrack.hanasu.util.AndroidUtil;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 public class AuthManager {
 
     private static FirebaseAuth fireAuth = FirebaseAuth.getInstance();
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$");
 
     public static boolean validateRegisterForm(TextInputLayout emailTextInput, TextInputLayout passwordTextInput, TextInputLayout confirmPasswordTextInput) {
         String passwordText = passwordTextInput.getEditText().getText().toString();
@@ -58,7 +59,7 @@ public class AuthManager {
             return false;
         }
 
-        Matcher matcher = Util.PASSWORD_PATTERN.matcher(passwordText);
+        Matcher matcher = PASSWORD_PATTERN.matcher(passwordText);
 
         if(!matcher.matches()){
             passwordTextInput.setError("Your password needs to include both lower and uppercase characters, and be at least 6 characters long.");
