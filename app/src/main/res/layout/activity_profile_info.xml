@@ -6,20 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
+    android:outlineProvider="paddedBounds"
     tools:context=".activity.welcome.ProfileInfoActivity">
-
-    <LinearLayout
-        android:id="@+id/clickableContainer"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:clickable="false"
-        android:elevation="5dp"
-        android:onClick="updatePictureOptions"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/layoutPictureOptions"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
 
     <LinearLayout
         android:id="@+id/layoutPictureOptions"
@@ -41,6 +29,8 @@
         android:backgroundTint="@color/white"
         android:ems="10"
         android:fontFamily="@font/asap"
+        android:foregroundGravity="center_horizontal"
+        android:gravity="center_horizontal"
         android:hint="@string/profile_info_name_hint"
         android:inputType="textPersonName"
         android:minHeight="48dp"
@@ -81,23 +71,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imgProfile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_marginTop="12dp"
         android:contentDescription="TODO"
-        android:src="@drawable/ic_profile_pic"
+        android:elevation="0dp"
+        android:outlineProvider="background"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
+
+
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtInstruction" />
+        app:layout_constraintTop_toBottomOf="@+id/txtInstruction"
+        app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+        app:srcCompat="@drawable/ic_profile_pic" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/crdVCamera"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginTop="148dp"
+        android:layout_marginTop="160dp"
         android:foreground="@drawable/ic_camera"
         android:foregroundGravity="center"
         android:onClick="updatePictureOptions"
@@ -105,9 +101,10 @@
         app:cardBackgroundColor="@color/detail_color_primary"
         app:cardCornerRadius="100dp"
         app:cardElevation="0dp"
+        app:cardMaxElevation="0dp"
         app:cardPreventCornerOverlap="false"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.653"
+        app:layout_constraintHorizontal_bias="0.67"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtInstruction">
 
@@ -133,5 +130,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edtTxtProfileName"
         tools:ignore="DuplicateSpeakableTextCheck" />
+
+    <LinearLayout
+        android:id="@+id/clickableContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clickable="false"
+        android:elevation="10dp"
+        android:onClick="updatePictureOptions"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/layoutPictureOptions"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

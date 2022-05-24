@@ -1,9 +1,6 @@
 package com.abstrack.hanasu.activity.welcome;
 
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -37,6 +34,7 @@ public class ProfileInfoActivity extends BaseAppActivity {
         setContentView(R.layout.activity_profile_info);
 
         clickableContainer = findViewById(R.id.clickableContainer);
+        clickableContainer.setClickable(false);
 
         layoutPictureOptions = findViewById(R.id.layoutPictureOptions);
 
@@ -64,19 +62,27 @@ public class ProfileInfoActivity extends BaseAppActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == IMAGE_CAPTURE_CODE && resultCode == RESULT_OK) {
+
+
             profilePicImgView.setImageBitmap(ImageUtil.convertPictureDataToBitmap(data));
 
             hidePictureOptions();
             Blurry.delete((ViewGroup) findViewById(R.id.container));
+
+
         } else if(requestCode == IMAGE_PICK_CODE && resultCode == RESULT_OK) {
+            Blurry.delete((ViewGroup) findViewById(R.id.container));
+
             if(ImageUtil.getMimeType(this, data.getData()).equals("image/gif")){
                 Glide.with(this).asGif().load(data.getData()).into(profilePicImgView);
             } else {
                 profilePicImgView.setImageBitmap(ImageUtil.convertPictureStreamToBitmap(this, data));
-            }
 
+            }
+            Blurry.with(this).radius(25).sampling(2).onto((ViewGroup) findViewById(R.id.container));
             hidePictureOptions();
             Blurry.delete((ViewGroup) findViewById(R.id.container));
+
         }
     }
 
@@ -93,8 +99,10 @@ public class ProfileInfoActivity extends BaseAppActivity {
         }
 
         showPictureOptions();
+
         Blurry.with(this).radius(25).sampling(2).onto((ViewGroup) findViewById(R.id.container));
     }
+
 
     public void showPictureOptions(){
         clickableContainer.setClickable(true);
@@ -104,7 +112,7 @@ public class ProfileInfoActivity extends BaseAppActivity {
 
     public void hidePictureOptions(){
         clickableContainer.setClickable(false);
-        viewPictureOptions.setVisibility(View.GONE);
+        viewPictureOptions.setVisibility(View.INVISIBLE);
         showPictureOptions = false;
     }
 
@@ -134,5 +142,6 @@ public class ProfileInfoActivity extends BaseAppActivity {
 
         hidePictureOptions();
         Blurry.delete((ViewGroup) findViewById(R.id.container));
+
     }
 }
