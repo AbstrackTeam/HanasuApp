@@ -1,11 +1,9 @@
 package com.abstrack.hanasu.activity.welcome;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -18,9 +16,7 @@ import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.util.ImageUtil;
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import com.bumptech.glide.Glide;
 
 import jp.wasabeef.blurry.Blurry;
 
@@ -28,6 +24,8 @@ public class ProfileInfoActivity extends BaseAppActivity {
 
     private LinearLayout layoutPictureOptions, clickableContainer;
     private View viewPictureOptions;
+
+    private ImageView profilePicImgView;
 
     private static final int IMAGE_CAPTURE_CODE = 1999, IMAGE_PICK_CODE = 2000;
 
@@ -42,10 +40,12 @@ public class ProfileInfoActivity extends BaseAppActivity {
 
         layoutPictureOptions = findViewById(R.id.layoutPictureOptions);
 
-        viewPictureOptions = LayoutInflater.from(this).inflate(R.layout.select_profile_picture,null, false);
+        viewPictureOptions = LayoutInflater.from(this).inflate(R.layout.select_picture_option,null, false);
         viewPictureOptions.setVisibility(View.GONE);
 
         layoutPictureOptions.addView(viewPictureOptions);
+
+        profilePicImgView = findViewById(R.id.imgProfile);
     }
 
     @Override
@@ -64,14 +64,16 @@ public class ProfileInfoActivity extends BaseAppActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == IMAGE_CAPTURE_CODE && resultCode == RESULT_OK) {
-            ImageView profilePicImgView = (ImageView) findViewById(R.id.imgProfile);
             profilePicImgView.setImageBitmap(ImageUtil.convertPictureDataToBitmap(data));
 
             hidePictureOptions();
             Blurry.delete((ViewGroup) findViewById(R.id.container));
         } else if(requestCode == IMAGE_PICK_CODE && resultCode == RESULT_OK) {
-            ImageView profilePicImgView = (ImageView) findViewById(R.id.imgProfile);
-            profilePicImgView.setImageBitmap(ImageUtil.convertPictureStreamToBitmap(this, data));
+            if(ImageUtil.getMimeType(this, data.getData()).equals("image/gif")){
+                Glide.with(this).asGif().load(data.getData()).into(profilePicImgView);
+            } else {
+                profilePicImgView.setImageBitmap(ImageUtil.convertPictureStreamToBitmap(this, data));
+            }
 
             hidePictureOptions();
             Blurry.delete((ViewGroup) findViewById(R.id.container));
