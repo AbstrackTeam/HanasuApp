@@ -1,18 +1,22 @@
 package com.abstrack.hanasu.util;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.ImageDecoder;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class ImageUtil {
@@ -43,7 +47,7 @@ public class ImageUtil {
         return profilePicBitmap;
     }
 
-    public static Bitmap convertPictureStreamToBitmap(Context ctx, Intent data) {
+ /**   public static Bitmap convertPictureStreamToBitmap(Context ctx, Intent data) {
         try {
             InputStream inputStream = ctx.getContentResolver().openInputStream(data.getData());
             Bitmap profilePicBitmap = BitmapFactory.decodeStream(inputStream);
@@ -53,7 +57,7 @@ public class ImageUtil {
         }
 
         return null;
-    }
+    } **/
 
     public static Bitmap convertDrawableToBitmap(Drawable drawable) {
         Bitmap bitmap = null;
@@ -75,6 +79,23 @@ public class ImageUtil {
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
         return bitmap;
+    }
+
+    public static Bitmap convertUriToBitmap(Context ctx, Uri uri){
+        Bitmap bitmap = null;
+        ContentResolver contentResolver = ctx.getContentResolver();
+        try {
+            if(Build.VERSION.SDK_INT < 28) {
+                bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri);
+            } else {
+                ImageDecoder.Source source = ImageDecoder.createSource(contentResolver, uri);
+                bitmap = ImageDecoder.decodeBitmap(source);
+            }
+            return bitmap;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

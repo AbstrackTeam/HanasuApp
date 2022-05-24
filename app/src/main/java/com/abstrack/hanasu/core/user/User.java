@@ -10,12 +10,10 @@ import java.util.Random;
 
 public class User {
 
-    private String name, tag, imgKey, imgExtension, about, identifier, uid;
+    private String name, tag, imgKey, imgExtension, about, identifier, uid, displayName;
     private ConnectionStatus connectionStatus;
     private ArrayList<String> contactsUid;
     private ArrayList<Story> stories;
-
-    public User(){}
 
     public User(String name, String tag) {
         this.name = name;
@@ -25,6 +23,34 @@ public class User {
         about = "Hey there, I'm using Hanasu!";
         uid = AuthManager.getFireAuth().getUid();
         identifier = name + tag;
+        displayName = "";
+    }
+
+    public User(String displayName, String name, String tag, String imgKey, String imgExtension, String about, String identifier) {
+        this.displayName = displayName;
+        this.name = name;
+        this.tag = tag;
+        this.imgKey = imgKey;
+        this.imgExtension = imgExtension;
+        this.about = about;
+        this.uid = AuthManager.getFireAuth().getUid();
+        this.identifier = name + tag;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public void setImgExtension(String imgExtension) {
+        this.imgExtension = imgExtension;
+    }
+
+    public String getImgExtension() {
+        return imgExtension;
     }
 
     public String getUid() {

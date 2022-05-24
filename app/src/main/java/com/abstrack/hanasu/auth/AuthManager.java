@@ -2,6 +2,7 @@ package com.abstrack.hanasu.auth;
 
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.widget.EditText;
 
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.google.android.material.textfield.TextInputLayout;
@@ -86,7 +87,7 @@ public class AuthManager {
         return true;
     }
 
-    protected static boolean validateTextField(TextInputLayout textInput){
+    public static boolean validateTextField(TextInputLayout textInput){
         String textValue = textInput.getEditText().getText().toString();
 
         if (TextUtils.isEmpty(textValue)) {
@@ -95,6 +96,18 @@ public class AuthManager {
         }
 
         textInput.setError(null);
+        return true;
+    }
+
+    public static boolean validateTextField(EditText editText){
+        String textValue = editText.getText().toString();
+
+        if (TextUtils.isEmpty(textValue)) {
+            editText.setError("Field cannot be left blank.");
+            return false;
+        }
+
+        editText.setError(null);
         return true;
     }
 

@@ -17,7 +17,7 @@ public class UserManager {
         FireDB.getDataBaseReferenceWithPath("users").child(currentUser.getIdentifier()).setValue(UserManager.getCurrentUser());
     }
 
-    public static void uploadUserData(String path, String value) {
+    public static void updateUserData(String path, String value) {
         FireDB.getDataBaseReferenceWithPath("users").child(currentUser.getIdentifier()).child(path).setValue(value);
     }
 
