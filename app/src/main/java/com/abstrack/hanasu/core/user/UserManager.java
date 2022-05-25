@@ -20,7 +20,7 @@ public class UserManager {
 
     private static User currentUser;
 
-    public static void fetchUserData() {
+    public static void fetchInitialUserData() {
         FireDB.getFbDatabase().getReference().child("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
