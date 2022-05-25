@@ -82,12 +82,11 @@
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
 
-
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtInstruction"
         app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-        app:srcCompat="@drawable/ic_profile_pic" />
+        app:srcCompat="@drawable/ic_profile_pic"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/crdVCamera"
