@@ -1,12 +1,23 @@
 package com.abstrack.hanasu.core.user;
 
+import android.net.Uri;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.core.story.Story;
+import com.abstrack.hanasu.db.FireDB;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.UUID;
 
 public class User {
 
@@ -36,6 +47,8 @@ public class User {
         this.uid = AuthManager.getFireAuth().getUid();
         this.identifier = name + tag;
     }
+
+
 
     public String getDisplayName() {
         return displayName;
