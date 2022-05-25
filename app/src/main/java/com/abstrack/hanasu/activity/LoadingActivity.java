@@ -15,6 +15,7 @@ import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.auth.LoginActivity;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.auth.AuthManager;
+import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.abstrack.hanasu.db.FireDB;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,8 +40,6 @@ public class LoadingActivity extends BaseAppActivity {
             }
 
         }, 4000);
-
-
     }
 
     public void animateContent() {

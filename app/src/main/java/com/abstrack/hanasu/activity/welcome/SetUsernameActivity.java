@@ -86,7 +86,7 @@ public class SetUsernameActivity extends BaseAppActivity {
                 if(task.getResult().getValue() != null){
                     Toast.makeText(SetUsernameActivity.this, "Este nombre de usuario ya existe, puedes cambiar el nombre o id", Toast.LENGTH_SHORT).show();
                 } else{
-                    UserManager.createCurrentUser(name, tag);
+                    UserManager.writeNewUser(name, tag);
                     AndroidUtil.startNewActivity(SetUsernameActivity.this, SetProfileInfoActivity.class);
                 }
             }

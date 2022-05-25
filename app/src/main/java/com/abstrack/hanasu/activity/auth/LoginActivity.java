@@ -70,13 +70,12 @@ public class LoginActivity extends BaseAppActivity {
                             }
 
                             if(user.child("identifier").getValue() != null) {
-                                UserManager.createCurrentUser(user.child("name").getValue().toString(), user.child("tag").getValue().toString());
                                 hasIdentifier = true;
                                 break;
                             }
                         }
 
-                        if(hasIdentifier){
+                        if(hasIdentifier) {
                             AndroidUtil.startNewActivity(LoginActivity.this, LandingActivity.class);
                             return;
                         }

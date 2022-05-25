@@ -14,6 +14,7 @@ import com.abstrack.hanasu.core.chat.Chat;
 import com.abstrack.hanasu.core.chat.ChatsAdapter;
 import com.abstrack.hanasu.core.story.StoriesAdapter;
 import com.abstrack.hanasu.core.story.Story;
+import com.abstrack.hanasu.core.user.UserManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,8 @@ public class LandingActivity extends BaseAppActivity {
     }
 
     private void init() {
+        UserManager.fetchUserData();
+
         storiesBar = findViewById(R.id.storiesBar);
         chatsListView = findViewById(R.id.chatsListView);
 
