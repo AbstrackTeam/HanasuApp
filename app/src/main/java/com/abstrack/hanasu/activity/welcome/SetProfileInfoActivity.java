@@ -1,19 +1,15 @@
 package com.abstrack.hanasu.activity.welcome;
 
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
 import androidx.annotation.NonNull;
-
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
@@ -28,10 +24,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import java.util.UUID;
-
-import jp.wasabeef.blurry.Blurry;
 
 public class SetProfileInfoActivity extends BaseAppActivity {
 
@@ -51,6 +44,7 @@ public class SetProfileInfoActivity extends BaseAppActivity {
 
         clickableContainer = findViewById(R.id.clickableContainer);
         clickableContainer.setClickable(false);
+        clickableContainer.setVisibility(View.INVISIBLE);
 
         layoutPictureOptions = findViewById(R.id.layoutPictureOptions);
 
@@ -118,20 +112,19 @@ public class SetProfileInfoActivity extends BaseAppActivity {
     }
 
     public void removeProfilePicture(View view) {
-        Blurry.delete((ViewGroup) findViewById(R.id.container));
         ImageView profilePicImgView = (ImageView) findViewById(R.id.imgProfile);
         profilePicImgView.setImageBitmap(ImageUtil.convertDrawableToBitmap(this.getDrawable(R.drawable.ic_profile_pic)));
-
-        Blurry.with(this).radius(25).sampling(2).onto((ViewGroup) findViewById(R.id.container));
         hidePictureOptions();
-        Blurry.delete((ViewGroup) findViewById(R.id.container));
     }
 
     @Override
     public void onBackPressed() {
         if (showPictureOptions) {
             hidePictureOptions();
-            Blurry.delete((ViewGroup) findViewById(R.id.container));
+            return;
+        }
+
+        if (!AuthManager.validateTextField(edtTxtProfileName)) {
             return;
         }
 
@@ -141,23 +134,22 @@ public class SetProfileInfoActivity extends BaseAppActivity {
     public void updatePictureOptions(View view) {
         if (showPictureOptions) {
             hidePictureOptions();
-            Blurry.delete((ViewGroup) findViewById(R.id.container));
             return;
         }
 
         showPictureOptions();
-        Blurry.with(this).radius(25).sampling(2).onto((ViewGroup) findViewById(R.id.container));
     }
-
 
     private void showPictureOptions() {
         clickableContainer.setClickable(true);
+        clickableContainer.setVisibility(View.VISIBLE);
         viewPictureOptions.setVisibility(View.VISIBLE);
         showPictureOptions = true;
     }
 
     private void hidePictureOptions() {
         clickableContainer.setClickable(false);
+        clickableContainer.setVisibility(View.INVISIBLE);
         viewPictureOptions.setVisibility(View.INVISIBLE);
         showPictureOptions = false;
     }
@@ -167,7 +159,6 @@ public class SetProfileInfoActivity extends BaseAppActivity {
             return;
         }
 
-        UserManager.getCurrentUser().setDisplayName(edtTxtProfileName.getText().toString());
         UserManager.updateUserData("displayName", edtTxtProfileName.getText().toString());
         AndroidUtil.startNewActivity(this, LandingActivity.class);
     }
