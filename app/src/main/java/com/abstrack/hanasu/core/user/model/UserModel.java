@@ -2,9 +2,12 @@ package com.abstrack.hanasu.core.user.model;
 
 import com.abstrack.hanasu.auth.AuthManager;
 
+import java.util.HashMap;
+
 public class UserModel {
 
     private String name, tag, imgKey, imgExtension, about, identifier, uid, displayName;
+    private HashMap<String, String> contacts;
 
     public UserModel(String name, String tag) {
         this.name = name;
@@ -15,6 +18,8 @@ public class UserModel {
         uid = AuthManager.getFireAuth().getUid();
         identifier = name + tag;
         displayName = "";
+        contacts = new HashMap<String, String>();
+        contacts.put("identifier", "");
     }
 
     public String getName() {
@@ -79,5 +84,13 @@ public class UserModel {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    public HashMap<String, String> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(HashMap<String, String> contacts) {
+        this.contacts = contacts;
     }
 }

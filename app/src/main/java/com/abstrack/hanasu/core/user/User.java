@@ -2,9 +2,12 @@ package com.abstrack.hanasu.core.user;
 
 import com.abstrack.hanasu.auth.AuthManager;
 
+import java.util.HashMap;
+
 public class User {
 
     public String name, tag, imgKey, imgExtension, about, identifier, uid, displayName, connectionStatus;
+    private HashMap<String, String> contacts;
 
     public User(String name, String tag) {
         this.name = name;
@@ -16,9 +19,10 @@ public class User {
         uid = AuthManager.getFireAuth().getUid();
         displayName = "";
         connectionStatus = "";
+        contacts = new HashMap<String, String>();
     }
 
-    public User(String name, String tag, String imgKey, String imgExtension, String about, String identifier, String uid, String displayName) {
+    public User(String name, String tag, String imgKey, String imgExtension, String about, String identifier, String uid, String displayName, HashMap<String, String> contacts) {
         this.name = name;
         this.tag = tag;
         this.imgKey = imgKey;
@@ -27,6 +31,7 @@ public class User {
         this.identifier = identifier;
         this.uid = uid;
         this.displayName = displayName;
+        this.contacts = contacts;
     }
 
     public String getName() {
@@ -59,5 +64,9 @@ public class User {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public HashMap<String, String> getContacts() {
+        return contacts;
     }
 }

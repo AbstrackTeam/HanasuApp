@@ -5,11 +5,9 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
+
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.core.chat.Chat;
@@ -17,6 +15,8 @@ import com.abstrack.hanasu.core.chat.ChatsAdapter;
 import com.abstrack.hanasu.core.story.StoriesAdapter;
 import com.abstrack.hanasu.core.story.Story;
 import com.abstrack.hanasu.core.user.UserManager;
+import com.abstrack.hanasu.core.user.UserService;
+import com.abstrack.hanasu.util.AndroidUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,13 +36,14 @@ public class LandingActivity extends BaseAppActivity {
     }
 
     private void init() {
-        UserManager.fetchInitialUserData();
+        UserService userService = new UserService();
+        userService.start();
 
         storiesBar = findViewById(R.id.storiesBar);
         chatsListView = findViewById(R.id.chatsListView);
 
         showMoreButton = findViewById(R.id.showMoreOptions);
-        addChatButton = findViewById(R.id.addChat);
+        addChatButton = findViewById(R.id.addFriend);
         addGroupsButton = findViewById(R.id.addGroup);
         searchButton = findViewById(R.id.search);
 
@@ -81,7 +82,7 @@ public class LandingActivity extends BaseAppActivity {
         chatsListView.setAdapter((chatsAdapter));
         chatsListView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
-        addChatButton = findViewById(R.id.addChat);
+        addChatButton = findViewById(R.id.addFriend);
 
         buildOptionsListeners();
     }
@@ -103,8 +104,7 @@ public class LandingActivity extends BaseAppActivity {
     }
 
     public void addFriend() {
-        // TODO
-        Toast.makeText(this, "add chat button clicked", Toast.LENGTH_SHORT).show();
+        AndroidUtil.startNewActivity(LandingActivity.this, AddFriendActivity.class);
     }
 
     public void animateOptions() {

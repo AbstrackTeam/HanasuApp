@@ -1,17 +1,16 @@
 package com.abstrack.hanasu.core.user;
 
 import android.util.Log;
-
 import androidx.annotation.NonNull;
-
 import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.core.user.model.UserModel;
 import com.abstrack.hanasu.db.FireDatabase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
+import java.util.HashMap;
 
-public class UserManager {
+public class UserManager{
 
     private static User currentUser;
 
@@ -23,7 +22,6 @@ public class UserManager {
                     Log.e("firebase", "Error getting data", task.getException());
                     return;
                 }
-
                 for(DataSnapshot user : task.getResult().getChildren()){
                     if(!user.child("uid").getValue().equals(AuthManager.getFireAuth().getCurrentUser().getUid())){
                         continue;
@@ -37,8 +35,9 @@ public class UserManager {
                     String identifier = name + tag;
                     String uid = AuthManager.getFireAuth().getUid();
                     String displayName = (String) user.child("displayName").getValue();
+                    HashMap<String, String> contacts = (HashMap<String, String>) user.child("contacts").getValue();
 
-                    currentUser = new User(name, tag, imgKey, imgExtension, about, identifier, uid, displayName);
+                    currentUser = new User(name, tag, imgKey, imgExtension, about, identifier, uid, displayName, contacts);
                 }
             }
         });
@@ -58,7 +57,19 @@ public class UserManager {
         }
     }
 
+    public static void addToUserContacts(String contactIdentifier){
+        if(currentUser != null) {
+            HashMap currentContacts = getCurrentUser().getContacts();
+
+            currentContacts.put(contactIdentifier, "friend");
+
+            FireDatabase.getDataBaseReferenceWithPath("users").child(currentUser.getIdentifier()).child("contacts").setValue(currentContacts);
+        }
+    }
+
     public static User getCurrentUser(){
         return currentUser;
     }
+
+    public static void setCurrentUser(User user) { currentUser = user; }
 }
