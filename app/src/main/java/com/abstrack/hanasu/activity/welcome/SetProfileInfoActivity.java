@@ -15,7 +15,7 @@ import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.core.user.UserManager;
-import com.abstrack.hanasu.db.FireDB;
+import com.abstrack.hanasu.db.FireDatabase;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.abstrack.hanasu.util.ImageUtil;
 import com.bumptech.glide.Glide;
@@ -74,7 +74,7 @@ public class SetProfileInfoActivity extends BaseAppActivity {
         String imgKey = UUID.randomUUID().toString();
         final boolean[] progressFirstRun = {false};
 
-        StorageReference imageStorageReference = FireDB.getStorageReference().child("image").child(imgKey + imgExtension);
+        StorageReference imageStorageReference = FireDatabase.getStorageReference().child("image").child(imgKey + imgExtension);
         imageStorageReference.putFile(imgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

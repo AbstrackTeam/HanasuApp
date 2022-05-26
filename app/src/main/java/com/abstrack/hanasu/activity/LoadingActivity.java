@@ -15,9 +15,8 @@ import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.auth.LoginActivity;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.auth.AuthManager;
-import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.util.AndroidUtil;
-import com.abstrack.hanasu.db.FireDB;
+import com.abstrack.hanasu.db.FireDatabase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -58,7 +57,7 @@ public class LoadingActivity extends BaseAppActivity {
             return;
         }
 
-        FireDB.getFbDatabase().getReference().child("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        FireDatabase.getFbDatabase().getReference().child("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 boolean hasIdentifier = false;

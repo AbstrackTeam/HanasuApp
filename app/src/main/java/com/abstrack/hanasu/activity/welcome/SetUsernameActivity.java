@@ -13,7 +13,7 @@ import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.util.AndroidUtil;
-import com.abstrack.hanasu.db.FireDB;
+import com.abstrack.hanasu.db.FireDatabase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -23,7 +23,6 @@ public class SetUsernameActivity extends BaseAppActivity {
 
     public EditText nameField, tagField;
     public Button submitButton;
-    public UserManager userManager;
     public String tag, identifier, name;
 
 
@@ -38,8 +37,6 @@ public class SetUsernameActivity extends BaseAppActivity {
         nameField = findViewById(R.id.editTextUsername); // editTextUsername
         tagField = findViewById(R.id.editTextTag); // editTextTag
         submitButton = findViewById(R.id.btnSubmit); // btnSubmit
-
-        userManager = new UserManager();
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +71,7 @@ public class SetUsernameActivity extends BaseAppActivity {
             return;
         }
 
-        DatabaseReference databaseReference = FireDB.getFbDatabase().getReference();
+        DatabaseReference databaseReference = FireDatabase.getFbDatabase().getReference();
         databaseReference.child("users").child(identifier).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
