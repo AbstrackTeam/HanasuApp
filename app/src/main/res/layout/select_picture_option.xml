@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="135dp"
+        android:background="@color/contrast_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/btnGallery"
+            android:layout_width="42dp"
+            android:layout_height="53dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="9dp"
+            android:backgroundTint="@color/contrast_background"
+            android:contentDescription="@string/profile_pic_gallery"
+            android:gravity="center"
+            android:onClick="openGallery"
+            app:cornerRadius="100dp"
+            app:icon="@drawable/ic_gallery"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="20dp"
+            app:layout_constraintStart_toEndOf="@+id/btnCamera"
+            app:layout_constraintTop_toBottomOf="@+id/txtProfilePicture"
+            app:strokeColor="@color/detail_color_secondary"
+            app:strokeWidth="1dp"
+            tools:ignore="TouchTargetSizeCheck,TouchTargetSizeCheck" />
+
+        <TextView
+            android:id="@+id/txtCamera2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="34dp"
+            android:fontFamily="@font/asap"
+            android:text="@string/profile_pic_gallery"
+            android:textColor="@color/instruction_color"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/txtCamera"
+            app:layout_constraintTop_toBottomOf="@+id/btnCamera" />
+
+        <TextView
+            android:id="@+id/txtProfilePicture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/quicksand_bold"
+            android:text="@string/profile_pic_title"
+            android:textColor="@color/accent_color"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txtCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:fontFamily="@font/asap"
+            android:text="@string/profile_pic_camera"
+            android:textColor="@color/instruction_color"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnCamera" />
+
+        <Button
+            android:id="@+id/btnTrash"
+            android:layout_width="20dp"
+            android:layout_height="27dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginEnd="21dp"
+            android:backgroundTint="@color/background"
+            android:contentDescription="@string/profile_pic_trash"
+            android:onClick="removeProfilePicture"
+            app:icon="@drawable/ic_trash_can"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TouchTargetSizeCheck,TouchTargetSizeCheck" />
+
+        <Button
+            android:id="@+id/btnCamera"
+            android:layout_width="42dp"
+            android:layout_height="53dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="9dp"
+            android:backgroundTint="@color/background"
+            android:contentDescription="@string/profile_pic_camera"
+            android:gravity="center"
+            android:onClick="openCamera"
+            app:cornerRadius="100dp"
+            app:icon="@drawable/ic_camera"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtProfilePicture"
+            app:strokeColor="@color/detail_color_secondary"
+            app:strokeWidth="1dp"
+            tools:ignore="TouchTargetSizeCheck,TouchTargetSizeCheck" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="3dp"
+            app:cardBackgroundColor="@color/accent_color"
+            app:layout_constraintEnd_toStartOf="@+id/btnTrash"
+            app:layout_constraintStart_toEndOf="@+id/txtProfilePicture"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

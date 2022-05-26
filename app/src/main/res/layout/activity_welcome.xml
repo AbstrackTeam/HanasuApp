@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".activity.auth.WelcomeActivity">
+    tools:context=".activity.welcome.WelcomeActivity">
 
     <Button
         android:id="@+id/btnContinue"
@@ -17,6 +17,7 @@
         android:background="@drawable/round_button"
         android:backgroundTint="@color/purple_500"
         android:fontFamily="@font/quicksand_bold"
+        android:onClick="changeToSetUsernameActivity"
         android:text="@string/profile_info_btn"
         android:textAllCaps="false"
         android:textSize="20sp"
@@ -67,21 +68,6 @@
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/txtInstruction1"
         app:layout_constraintTop_toBottomOf="@+id/imgLogo" />
-
-    <Button
-        android:id="@+id/btnReturn"
-        android:layout_width="57dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="@color/background"
-        android:contentDescription="@string/register_btn"
-        android:onClick="changeToLastActivity"
-        app:icon="@mipmap/ic_return_foreground"
-        app:iconSize="30dp"
-        app:iconTint="@color/accent_color"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="DuplicateSpeakableTextCheck" />
 
     <ImageView
         android:id="@+id/imgLogo"

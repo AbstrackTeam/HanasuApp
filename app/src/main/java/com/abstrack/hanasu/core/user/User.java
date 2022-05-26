@@ -1,104 +1,63 @@
 package com.abstrack.hanasu.core.user;
 
 import com.abstrack.hanasu.auth.AuthManager;
-import com.abstrack.hanasu.core.story.Story;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import java.util.ArrayList;
-import java.util.Random;
 
 public class User {
 
-    private String name, tag, imgKey, about, identifier, uid;
-    private ConnectionStatus connectionStatus;
-    private ArrayList<String> contactsUid;
-    private ArrayList<Story> stories;
-
-    public User(){}
+    public String name, tag, imgKey, imgExtension, about, identifier, uid, displayName, connectionStatus;
 
     public User(String name, String tag) {
         this.name = name;
         this.tag = tag;
-        imgKey = getDefaultImageUri();
-        about = "Sin descripción";
-        uid = AuthManager.getFireAuth().getUid();
+        imgKey = "";
+        imgExtension = "";
+        about = "";
         identifier = name + tag;
+        uid = AuthManager.getFireAuth().getUid();
+        displayName = "";
+        connectionStatus = "";
     }
 
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
+    public User(String name, String tag, String imgKey, String imgExtension, String about, String identifier, String uid, String displayName) {
+        this.name = name;
+        this.tag = tag;
+        this.imgKey = imgKey;
+        this.imgExtension = imgExtension;
+        this.about = about;
+        this.identifier = identifier;
         this.uid = uid;
-    }
-
-    private String getDefaultImageUri() {
-        return "";
+        this.displayName = displayName;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getTag() {
         return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
     }
 
     public String getImgKey() {
         return imgKey;
     }
 
-    public void setImgKey(String imgKey) {
-        this.imgKey = imgKey;
+    public String getImgExtension() {
+        return imgExtension;
     }
 
     public String getAbout() {
         return about;
     }
 
-    public void setAbout(String about) {
-        this.about = about;
-    }
-
-    public ConnectionStatus getConnectionStatus() {
-        return connectionStatus;
-    }
-
-    public void setConnectionStatus(ConnectionStatus connectionStatus) {
-        this.connectionStatus = connectionStatus;
-    }
-
-    public ArrayList<String> getContactsUid() {
-        return contactsUid;
-    }
-
-    public void setContactsUid(ArrayList<String> contactsUid) {
-        this.contactsUid = contactsUid;
-    }
-
-    public ArrayList<Story> getStories() {
-        return stories;
-    }
-
-    public void setStories(ArrayList<Story> stories) {
-        this.stories = stories;
-    }
-
     public String getIdentifier() {
         return identifier;
     }
 
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
+    public String getUid() {
+        return uid;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 }

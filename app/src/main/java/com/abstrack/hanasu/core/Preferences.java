@@ -1,11 +1,11 @@
-package com.abstrack.hanasu.util;
+package com.abstrack.hanasu.core;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 public class Preferences {
 
-    public static final String PREFERENCES_ID = "hanasu";
+    public static final String PREFERENCES_ID = "Hanasu";
 
     public static String getIdentifier(Context ct) {
         SharedPreferences sharedPref = ct.getSharedPreferences(PREFERENCES_ID, Context.MODE_PRIVATE);

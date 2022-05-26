@@ -51,7 +51,7 @@
     <string name="profile_info_title">Información del perfil</string>
     <string name="profile_info_instruction">Por favor, ingresa un nombre y foto de perfil.</string>
     <string name="profile_info_name_hint">Escribe tu nombre aquí</string>
-    <string name="profile_info_btn">Continuar</string>
+    <string name="profile_info_btn">Aceptar y Continuar</string>
     <string name="welcome_title">¡Bienvenido a Hanasu!</string>
     <string name="welcome_terms">Lee nuestras</string>
     <string name="welcome_terms_2"><u>políticas de privacidad.</u></string>
@@ -61,4 +61,8 @@
     <string name="search_icon">Search icon</string>
     <string name="plus_icon">Show more options icon</string>
     <string name="add_group_icon">Add groups icon</string>
+    <string name="profile_pic_title">Foto de perfil</string>
+    <string name="profile_pic_camera">Cámara</string>
+    <string name="profile_pic_gallery">Galería</string>
+    <string name="profile_pic_trash">Basura</string>
 </resources>

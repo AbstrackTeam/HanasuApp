@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".activity.SetUsernameActivity">
+    tools:context=".activity.welcome.SetUsernameActivity">
 
     <Button
         android:id="@+id/btnSubmit"
@@ -82,21 +82,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgLogo" />
 
-    <Button
-        android:id="@+id/btnReturn"
-        android:layout_width="57dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="@color/background"
-        android:contentDescription="@string/register_btn"
-        android:onClick="changeToLastActivity"
-        app:icon="@mipmap/ic_return_foreground"
-        app:iconSize="30dp"
-        app:iconTint="@color/accent_color"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="DuplicateSpeakableTextCheck" />
-
     <EditText
         android:id="@+id/editTextUsername"
         android:layout_width="188dp"
@@ -126,6 +111,7 @@
         android:fontFamily="@font/asap"
         android:hint="@string/username_tag_hint"
         android:inputType="textPersonName"
+        android:maxLength="4"
         android:textColor="@color/white"
         android:textColorHint="@color/hints"
         android:textSize="20sp"

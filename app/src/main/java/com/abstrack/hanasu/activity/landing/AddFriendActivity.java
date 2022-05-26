@@ -6,7 +6,7 @@ import android.widget.Button;
 
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
-import com.abstrack.hanasu.util.Util;
+import com.abstrack.hanasu.util.AndroidUtil;
 
 public class AddFriendActivity extends BaseAppActivity {
 
@@ -22,7 +22,7 @@ public class AddFriendActivity extends BaseAppActivity {
         returnToLandingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.startNewActivity(AddFriendActivity.this, LandingActivity.class);
+                AndroidUtil.startNewActivity(AddFriendActivity.this, LandingActivity.class);
             }
         });
     }
