@@ -5,6 +5,8 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -14,6 +16,7 @@ import com.abstrack.hanasu.core.chat.Chat;
 import com.abstrack.hanasu.core.chat.ChatsAdapter;
 import com.abstrack.hanasu.core.story.StoriesAdapter;
 import com.abstrack.hanasu.core.story.Story;
+import com.abstrack.hanasu.core.user.UserManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +36,8 @@ public class LandingActivity extends BaseAppActivity {
     }
 
     private void init() {
+        UserManager.fetchInitialUserData();
+
         storiesBar = findViewById(R.id.storiesBar);
         chatsListView = findViewById(R.id.chatsListView);
 

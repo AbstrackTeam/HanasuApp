@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,7 +16,7 @@ import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.core.user.UserManager;
-import com.abstrack.hanasu.db.FireDB;
+import com.abstrack.hanasu.db.FireDatabase;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.abstrack.hanasu.util.ImageUtil;
 import com.bumptech.glide.Glide;
@@ -32,6 +33,7 @@ public class SetProfileInfoActivity extends BaseAppActivity {
     private View viewPictureOptions;
 
     private EditText edtTxtProfileName;
+    private Button btnContinue;
 
     private static final int IMAGE_CAPTURE_CODE = 1999, IMAGE_PICK_CODE = 2000;
 
@@ -54,6 +56,7 @@ public class SetProfileInfoActivity extends BaseAppActivity {
         layoutPictureOptions.addView(viewPictureOptions);
 
         edtTxtProfileName = findViewById(R.id.edtTxtProfileName);
+        btnContinue = findViewById(R.id.btnContinue);
     }
 
     @Override
@@ -74,7 +77,7 @@ public class SetProfileInfoActivity extends BaseAppActivity {
         String imgKey = UUID.randomUUID().toString();
         final boolean[] progressFirstRun = {false};
 
-        StorageReference imageStorageReference = FireDB.getStorageReference().child("image").child(imgKey + imgExtension);
+        StorageReference imageStorageReference = FireDatabase.getStorageReference().child("image").child(imgKey + imgExtension);
         imageStorageReference.putFile(imgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -141,6 +144,7 @@ public class SetProfileInfoActivity extends BaseAppActivity {
     }
 
     private void showPictureOptions() {
+        btnContinue.setClickable(false);
         clickableContainer.setClickable(true);
         clickableContainer.setVisibility(View.VISIBLE);
         viewPictureOptions.setVisibility(View.VISIBLE);
@@ -148,6 +152,7 @@ public class SetProfileInfoActivity extends BaseAppActivity {
     }
 
     private void hidePictureOptions() {
+        btnContinue.setClickable(true);
         clickableContainer.setClickable(false);
         clickableContainer.setVisibility(View.INVISIBLE);
         viewPictureOptions.setVisibility(View.INVISIBLE);

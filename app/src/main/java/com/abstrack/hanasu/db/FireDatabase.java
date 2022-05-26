@@ -5,7 +5,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class FireDB {
+public class FireDatabase {
 
     public static DatabaseReference getDataBaseReferenceWithPath(String path){
         return getFbDatabase().getReference(path);
@@ -15,7 +15,7 @@ public class FireDB {
         return FirebaseDatabase.getInstance();
     }
 
-    public static StorageReference getStorageReference(){
+    public static StorageReference getStorageReference() {
         return FirebaseStorage.getInstance().getReference();
     }
 }
