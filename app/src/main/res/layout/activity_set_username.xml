@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".activity.welcome.SetUsernameActivity">
+
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="0dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="21dp"
+        android:background="@drawable/round_button"
+        android:backgroundTint="@color/purple_500"
+        android:fontFamily="@font/quicksand_bold"
+        android:text="@string/username_btn"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextUsername"
+        tools:ignore="DuplicateSpeakableTextCheck" />
+
+    <TextView
+        android:id="@+id/txtInstruction"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="21dp"
+        android:fontFamily="@font/asap"
+        android:text="@string/username_instruction"
+        android:textColor="@color/instruction_color"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.097"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtUsernameCreate" />
+
+    <TextView
+        android:id="@+id/txtUsernameCreate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/quicksand_bold"
+        android:text="@string/username_title"
+        android:textColor="@color/accent_color"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtHanasu" />
+
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:contentDescription="@string/logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/ic_main_logo_foreground" />
+
+    <TextView
+        android:id="@+id/txtHanasu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/quicksand_bold"
+        android:text="@string/app_name"
+        android:textColor="@color/accent_color"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgLogo" />
+
+    <EditText
+        android:id="@+id/editTextUsername"
+        android:layout_width="188dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="@color/white"
+        android:ems="10"
+        android:fontFamily="@font/asap"
+        android:hint="@string/username_hint"
+        android:inputType="textPersonName"
+        android:textColor="@color/white"
+        android:textColorHint="@color/hints"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtInstruction"
+        tools:ignore="DuplicateSpeakableTextCheck,DuplicateSpeakableTextCheck" />
+
+    <EditText
+        android:id="@+id/editTextTag"
+        android:layout_width="55dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="12dp"
+        android:autofillHints=""
+        android:backgroundTint="@color/white"
+        android:ems="10"
+        android:fontFamily="@font/asap"
+        android:hint="@string/username_tag_hint"
+        android:inputType="textPersonName"
+        android:maxLength="4"
+        android:textColor="@color/white"
+        android:textColorHint="@color/hints"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/txtHashtag"
+        app:layout_constraintTop_toBottomOf="@+id/txtInstruction" />
+
+    <TextView
+        android:id="@+id/txtHashtag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:fontFamily="@font/asap"
+        android:text="@string/username_hashtag"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/editTextUsername"
+        app:layout_constraintTop_toBottomOf="@+id/txtInstruction" />
+</androidx.constraintlayout.widget.ConstraintLayout>

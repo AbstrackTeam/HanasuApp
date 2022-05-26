@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:outlineProvider="paddedBounds"
+    tools:context=".activity.welcome.SetProfileInfoActivity">
+
+    <LinearLayout
+        android:id="@+id/layoutPictureOptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="5dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"></LinearLayout>
+
+    <EditText
+        android:id="@+id/edtTxtProfileName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="42dp"
+        android:backgroundTint="@color/white"
+        android:ems="10"
+        android:fontFamily="@font/asap"
+        android:foregroundGravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:hint="@string/profile_info_name_hint"
+        android:inputType="textPersonName"
+        android:maxLength="32"
+        android:minHeight="48dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/hints"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgProfile"
+        tools:ignore="DuplicateSpeakableTextCheck,DuplicateSpeakableTextCheck" />
+
+    <TextView
+        android:id="@+id/txtInstruction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/asap"
+        android:text="@string/profile_info_instruction"
+        android:textColor="@color/instruction_color"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtProfileInfo" />
+
+    <TextView
+        android:id="@+id/txtProfileInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="90dp"
+        android:fontFamily="@font/quicksand_bold"
+        android:text="@string/profile_info_title"
+        android:textColor="@color/accent_color"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imgProfile"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="12dp"
+        android:contentDescription="TODO"
+        android:elevation="0dp"
+        android:outlineProvider="background"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtInstruction"
+        app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+        app:srcCompat="@drawable/ic_profile_pic"/>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/crdVCamera"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="160dp"
+        android:foreground="@drawable/ic_camera"
+        android:foregroundGravity="center"
+        android:onClick="updatePictureOptions"
+        android:outlineProvider="none"
+        app:cardBackgroundColor="@color/detail_color_primary"
+        app:cardCornerRadius="100dp"
+        app:cardElevation="0dp"
+        app:cardMaxElevation="0dp"
+        app:cardPreventCornerOverlap="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.67"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtInstruction">
+
+    </androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/btnContinue"
+        android:layout_width="0dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="132dp"
+        android:layout_marginEnd="21dp"
+        android:background="@drawable/round_button"
+        android:backgroundTint="@color/purple_500"
+        android:fontFamily="@font/quicksand_bold"
+        android:onClick="submit"
+        android:text="@string/profile_info_btn"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edtTxtProfileName"
+        tools:ignore="DuplicateSpeakableTextCheck" />
+
+    <LinearLayout
+        android:id="@+id/clickableContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#3E000000"
+        android:clickable="false"
+        android:elevation="10dp"
+        android:onClick="updatePictureOptions"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/layoutPictureOptions"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
