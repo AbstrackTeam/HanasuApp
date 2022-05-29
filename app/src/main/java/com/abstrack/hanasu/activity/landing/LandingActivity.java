@@ -1,13 +1,13 @@
 package com.abstrack.hanasu.activity.landing;
 
-
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.core.chat.Chat;
@@ -16,27 +16,41 @@ import com.abstrack.hanasu.core.story.StoriesAdapter;
 import com.abstrack.hanasu.core.story.Story;
 import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.core.user.UserService;
+import com.abstrack.hanasu.core.user.chat.MessageState;
+import com.abstrack.hanasu.db.FireDatabase;
 import com.abstrack.hanasu.util.AndroidUtil;
-
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class LandingActivity extends BaseAppActivity {
 
-    private RecyclerView storiesBar, chatsListView;
+    private static RecyclerView storiesBar, chatsListView;
+
     private CardView showMoreButton, addChatButton, addGroupsButton, searchButton;
     private ImageView showMoreButtonIcon;
     private boolean showingMoreOptions;
+
+    private List<Story> stories = new ArrayList<>();
+    private static List<Chat> chats = new ArrayList<>();
+
+    UserService userService = new UserService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
         init();
+        load();
     }
 
     private void init() {
-        UserService userService = new UserService();
         userService.start();
 
         storiesBar = findViewById(R.id.storiesBar);
@@ -54,8 +68,6 @@ public class LandingActivity extends BaseAppActivity {
         addChatButton.setVisibility(View.GONE);
         addGroupsButton.setVisibility(View.GONE);
         searchButton.setVisibility(View.GONE);
-        List<Story> stories = new ArrayList<>();
-        List<Chat> chats = new ArrayList<>();
 
         // Testing purposes - WILL REFACTOR
         // Stories
@@ -69,18 +81,10 @@ public class LandingActivity extends BaseAppActivity {
         stories.add(new Story(false));
         stories.add(new Story(false));
 
-        // Chats
-        chats.add(new Chat(false, "Bochin", 0, 7, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
-        chats.add(new Chat(false, "Soy una persona insaciable", 0, 4, "Hola amigo emoticón \uD83D\uDE00 desgraciado", "2:34 AM"));
-
         StoriesAdapter storiesAdapter = new StoriesAdapter(stories, storiesBar, this);
         storiesBar.setAdapter(storiesAdapter);
         storiesBar.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
         storiesBar.setItemAnimator(null);
-
-        ChatsAdapter chatsAdapter = new ChatsAdapter(chats, this);
-        chatsListView.setAdapter((chatsAdapter));
-        chatsListView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
         addChatButton = findViewById(R.id.addFriend);
 
@@ -98,13 +102,118 @@ public class LandingActivity extends BaseAppActivity {
         addChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addFriend();
+                startAddFriendActivity();
             }
         });
     }
 
-    public void addFriend() {
+    public void startAddFriendActivity() {
         AndroidUtil.startNewActivity(LandingActivity.this, AddFriendActivity.class);
+    }
+
+    public void load(){
+        DatabaseReference currentUserRef = FireDatabase.getDataBaseReferenceWithPath("users").child(UserManager.getCurrentUser().getIdentifier()).child("contacts");
+        currentUserRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.w("hanasu-landing", "Loading landing contacts");
+
+                // Load chats by contacts
+                HashMap<String, String> contacts = UserManager.getCurrentUser().getContacts();
+
+                List<String> keys = new ArrayList<>(contacts.keySet());
+
+                // Clear all the chats
+                chats.clear();
+                chatsListView.removeAllViews();
+
+                // Get the chat room
+                for (String identifier : keys){
+                    String chatRoom = contacts.get(identifier);
+                    final boolean[] isSeen = {false};
+
+                    // it will try to get the information with firebase
+                    DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
+
+                    chatRoomRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                            if(!task.isSuccessful()){
+                                return;
+                            }
+                            DataSnapshot result = task.getResult();
+
+                            if(result.getValue() == null) {
+                                return;
+                            };
+
+                            ArrayList<String> users =  (ArrayList<String>) result.child("users").getValue();
+
+                            String userIdentifier = "";
+
+                            for(String currentUser : users) {
+                                if(!currentUser.equals(UserManager.getCurrentUser().getIdentifier())){
+                                    userIdentifier = currentUser;
+                                }
+                            }
+
+                            List<HashMap<String, String>> messagesList = (List<HashMap<String, String>>) result.child("messagesList").getValue();
+                            int messageCount = 0;
+
+                            String sentBy = messagesList.get(messagesList.size() - 1).get("sentBy");
+
+                            if(!sentBy.equals("")) {
+                                if (!sentBy.equals(UserManager.getCurrentUser().getIdentifier())) {
+                                    for(int i = 0; i < messagesList.size(); i++){
+                                        if (messagesList.get(i).get("sentBy").equals(UserManager.getCurrentUser().getIdentifier())) {
+                                            messageCount += 1;
+                                        }
+                                    }
+                                }
+                            }
+
+                            MessageState messageState = MessageState.valueOf(messagesList.get(messagesList.size() - 1).get("messageStatus"));
+
+                            String lastMessage = messagesList.get(messagesList.size() -1).get("text");
+                            String time = messagesList.get(messagesList.size() -1).get("time");
+
+                            DatabaseReference userRef = FireDatabase.getDataBaseReferenceWithPath("users").child(userIdentifier);
+
+                            int finalMessageCount = messageCount;
+
+                            userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                    if (!task.isSuccessful()) {
+                                        return;
+                                    }
+                                    String userIdentifier = task.getResult().child("identifier").getValue(String.class);
+                                    String name = task.getResult().child("displayName").getValue(String.class);
+                                    String imgKey = task.getResult().child("imgKey").getValue(String.class);
+                                    String imgExtension = task.getResult().child("imgExtension").getValue(String.class);
+
+                                    // Finally, add a new chat
+                                    addToChats(new Chat(isSeen[0], name, messageState, finalMessageCount, lastMessage, time, chatRoom, userIdentifier, imgKey, imgExtension));
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                return;
+            }
+        });
+    }
+
+    private void addToChats(Chat chat) {
+        chats.add(chat);
+
+        ChatsAdapter chatsAdapter = new ChatsAdapter(chats, LandingActivity.this);
+        chatsListView.setAdapter((chatsAdapter));
+        chatsListView.setLayoutManager(new LinearLayoutManager(LandingActivity.this, RecyclerView.VERTICAL, false));
     }
 
     public void animateOptions() {

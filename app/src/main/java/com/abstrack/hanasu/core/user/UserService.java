@@ -1,13 +1,12 @@
 package com.abstrack.hanasu.core.user;
 
 import android.util.Log;
-
+import androidx.annotation.NonNull;
 import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.db.FireDatabase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.HashMap;
 
 public class UserService extends Thread{
@@ -26,7 +25,17 @@ public class UserService extends Thread{
                 String displayName = (String) data.child("displayName").getValue();
                 HashMap<String, String> contacts = (HashMap<String, String>) data.child("contacts").getValue();
 
+                // User added a friend
+                if(contacts.size() > UserManager.getCurrentUser().getContacts().size()){
+
+                }
+                // User deleted a friend
+                if(contacts.size() < UserManager.getCurrentUser().getContacts().size()){
+
+                }
+                // User updated some info
                 UserManager.setCurrentUser(new User(name, tag, imgKey, imgExtension, about, identifier, uid, displayName, contacts));
+                Log.w("Hanasu-UserService", "currentUser updated.");
             }
 
             @Override
@@ -35,7 +44,36 @@ public class UserService extends Thread{
             }
         };
 
+        ValueEventListener contactsListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot data) {
+                HashMap<String, String> contacts = (HashMap<String, String>) data.getValue();
+
+                User currentUser = UserManager.getCurrentUser();
+
+                String name = currentUser.getName();
+                String tag = currentUser.getTag();
+                String imgKey = currentUser.getImgKey();
+                String imgExtension = currentUser.getImgExtension();
+                String about = currentUser.getAbout();
+                String identifier = name + tag;
+                String uid = AuthManager.getFireAuth().getUid();
+                String displayName = currentUser.getDisplayName();
+
+                UserManager.setCurrentUser(new User(name, tag, imgKey, imgExtension, about, identifier, uid, displayName, contacts));
+
+                Log.w("Hanasu-UserService", "currentUser contacts updated.");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w("firebase", "loadPost:onCancelled", error.toException());
+
+            }
+        };
+
         String identifier = UserManager.getCurrentUser().getIdentifier();
         FireDatabase.getDataBaseReferenceWithPath("users").child(identifier).addValueEventListener(postListener);
+        FireDatabase.getDataBaseReferenceWithPath("users").child(identifier).child("contacts").addValueEventListener(contactsListener);
     }
 }

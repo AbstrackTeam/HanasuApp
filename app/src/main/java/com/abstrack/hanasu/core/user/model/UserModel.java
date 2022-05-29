@@ -19,7 +19,7 @@ public class UserModel {
         identifier = name + tag;
         displayName = "";
         contacts = new HashMap<String, String>();
-        contacts.put("identifier", "");
+        contacts.put("identifier", "chatRoom");
     }
 
     public String getName() {
