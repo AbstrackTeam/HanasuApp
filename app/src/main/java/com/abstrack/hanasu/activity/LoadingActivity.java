@@ -12,6 +12,7 @@ import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.auth.LoginActivity;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
+import com.abstrack.hanasu.activity.welcome.SetProfileInfoActivity;
 import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.util.AndroidUtil;
@@ -23,7 +24,7 @@ import com.google.firebase.database.DataSnapshot;
 public class LoadingActivity extends BaseAppActivity {
 
     private Animation down_anim;
-    boolean hasIdentifier = false;
+    boolean hasIdentifier = false, hasDisplayName = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,12 @@ public class LoadingActivity extends BaseAppActivity {
                     }
 
                     if(user.child("identifier").getValue() != null){
+                        if(user.child("displayName").getValue() != null){
+                            if(!user.child("displayName").getValue().equals("")){
+                                hasDisplayName = true;
+                            }
+                        }
+
                         hasIdentifier = true;
                         break;
                     }
@@ -84,7 +91,12 @@ public class LoadingActivity extends BaseAppActivity {
 
         if(hasIdentifier) {
             if (AuthManager.getFireAuth().getCurrentUser().isEmailVerified()) {
-                AndroidUtil.startNewActivity(LoadingActivity.this, LandingActivity.class);
+                if(hasDisplayName){
+                    AndroidUtil.startNewActivity(LoadingActivity.this, LandingActivity.class);
+                    return;
+                }
+
+                AndroidUtil.startNewActivity(LoadingActivity.this, SetProfileInfoActivity.class);
                 return;
             }
 
