@@ -19,15 +19,13 @@
             android:id="@+id/imgMsgPicture"
             android:layout_width="300dp"
             android:layout_height="300dp"
-            android:layout_margin="5dp"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
             android:background="@android:drawable/btn_star_big_on"
             android:clipToOutline="true"
             android:elevation="1dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/txtTime"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,16 +34,17 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center|end"
-            android:layout_margin="1dp"
-            android:layout_marginBottom="289dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="5dp"
             android:layout_weight="1"
             android:fontFamily="@font/asap"
             android:text="3:25 AM"
             android:textColor="@color/detail_color_secondary"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imgMsgPicture"
-            tools:layout_editor_absoluteX="310dp" />
+            app:layout_constraintVertical_bias="0.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
