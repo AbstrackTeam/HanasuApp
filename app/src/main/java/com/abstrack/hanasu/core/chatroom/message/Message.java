@@ -1,14 +1,14 @@
-package com.abstrack.hanasu.core.user.model;
+package com.abstrack.hanasu.core.chatroom.message;
 
-import com.abstrack.hanasu.core.user.chat.MessageStatus;
-import com.abstrack.hanasu.core.user.chat.MessageType;
+import com.abstrack.hanasu.core.chatroom.chat.data.MessageStatus;
+import com.abstrack.hanasu.core.chatroom.chat.data.MessageType;
 
-public class MessageModel {
+public class Message {
     public String content, time, sentBy;
     public MessageStatus messageStatus;
     public MessageType messageType;
 
-    public MessageModel(){
+    public Message(){
         this.content = "";
         this.time = "";
         this.sentBy = "";
@@ -16,7 +16,7 @@ public class MessageModel {
         this.messageType = MessageType.TEXT;
     }
 
-    public MessageModel(String content, String time, String sentBy, MessageStatus messageStatus, MessageType messageType) {
+    public Message(String content, String time, String sentBy, MessageStatus messageStatus, MessageType messageType) {
         this.content = content;
         this.time = time;
         this.sentBy = sentBy;

@@ -10,13 +10,13 @@ import android.view.View;
 import android.widget.ImageView;
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
-import com.abstrack.hanasu.core.chat.ChatModel;
-import com.abstrack.hanasu.core.chat.ChatsAdapter;
+import com.abstrack.hanasu.core.chatroom.chat.Chat;
+import com.abstrack.hanasu.core.chatroom.chat.ChatsAdapter;
 import com.abstrack.hanasu.core.story.StoriesAdapter;
 import com.abstrack.hanasu.core.story.Story;
 import com.abstrack.hanasu.core.user.UserManager;
-import com.abstrack.hanasu.core.user.UserService;
-import com.abstrack.hanasu.core.user.chat.MessageStatus;
+import com.abstrack.hanasu.thread.UserService;
+import com.abstrack.hanasu.core.chatroom.chat.data.MessageStatus;
 import com.abstrack.hanasu.db.FireDatabase;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -38,7 +38,7 @@ public class LandingActivity extends BaseAppActivity {
     private boolean showingMoreOptions;
 
     private List<Story> stories = new ArrayList<>();
-    private static List<ChatModel> chats = new ArrayList<>();
+    private static List<Chat> chats = new ArrayList<Chat>();
 
     UserService userService = new UserService();
 
@@ -193,7 +193,7 @@ public class LandingActivity extends BaseAppActivity {
                                     String imgExtension = task.getResult().child("imgExtension").getValue(String.class);
 
                                     // Finally, add a new chat
-                                    addToChats(new ChatModel(isSeen[0], name, messageState, finalMessageCount, lastMessage, time, chatRoom, userIdentifier, imgKey, imgExtension));
+                                    addToChats(new Chat(isSeen[0], name, messageState, finalMessageCount, lastMessage, time, chatRoom, userIdentifier, imgKey, imgExtension));
                                 }
                             });
                         }
@@ -208,7 +208,7 @@ public class LandingActivity extends BaseAppActivity {
         });
     }
 
-    private void addToChats(ChatModel chat) {
+    private void addToChats(Chat chat) {
         chats.add(chat);
 
         ChatsAdapter chatsAdapter = new ChatsAdapter(chats, LandingActivity.this);

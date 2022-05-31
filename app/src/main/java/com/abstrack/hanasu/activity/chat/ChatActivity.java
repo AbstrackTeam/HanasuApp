@@ -14,11 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
-import com.abstrack.hanasu.core.chat.MessageAdapter;
+import com.abstrack.hanasu.core.chatroom.message.MessageAdapter;
 import com.abstrack.hanasu.core.user.UserManager;
-import com.abstrack.hanasu.core.user.chat.MessageStatus;
-import com.abstrack.hanasu.core.user.chat.MessageType;
-import com.abstrack.hanasu.core.user.model.MessageModel;
+import com.abstrack.hanasu.core.chatroom.chat.data.MessageStatus;
+import com.abstrack.hanasu.core.chatroom.chat.data.MessageType;
+import com.abstrack.hanasu.core.chatroom.message.Message;
 import com.abstrack.hanasu.db.FireDatabase;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -36,7 +36,7 @@ public class ChatActivity extends BaseAppActivity {
 
     private String chatRoom;
     private RecyclerView recyclerViewMessage;
-    private List<MessageModel> messageList;
+    private List<Message> messageList;
 
     private TextView txtContactName, txtContactStatus;
     private ImageView imgContactProfilePicture;
@@ -76,7 +76,7 @@ public class ChatActivity extends BaseAppActivity {
                     }
 
                     List<HashMap<String, String>> messagesList = (List<HashMap<String, String>>) task.getResult().getValue();
-                    chatRoomRef.child(String.valueOf(messagesList.size())).setValue(new MessageModel(edtTxtMsg.getText().toString(), "1", UserManager.getCurrentUser().getIdentifier(), MessageStatus.SENDING, MessageType.TEXT));
+                    chatRoomRef.child(String.valueOf(messagesList.size())).setValue(new Message(edtTxtMsg.getText().toString(), "1", UserManager.getCurrentUser().getIdentifier(), MessageStatus.SENDING, MessageType.TEXT));
                     loadChatInformation();
                 }
             });
@@ -104,7 +104,7 @@ public class ChatActivity extends BaseAppActivity {
                     String sentBy = messagesList.get(i).get("sentBy");
                     String time = messagesList.get(i).get("time");
 
-                    MessageModel model = new MessageModel(content, time, sentBy, messageStatus, messageType);
+                    Message model = new Message(content, time, sentBy, messageStatus, messageType);
                     messageList.add(model);
                 }
 

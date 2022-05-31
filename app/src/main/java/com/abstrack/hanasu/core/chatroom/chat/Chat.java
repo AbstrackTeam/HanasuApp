@@ -1,11 +1,8 @@
-package com.abstrack.hanasu.core.chat;
+package com.abstrack.hanasu.core.chatroom.chat;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import com.abstrack.hanasu.core.chatroom.chat.data.MessageStatus;
 
-import com.abstrack.hanasu.core.user.chat.MessageStatus;
-
-public class ChatModel  {
+public class Chat {
     private boolean seen;
     private MessageStatus sentMessageState;
     // Disabled for testing purposes
@@ -13,9 +10,9 @@ public class ChatModel  {
     private int messagesCount;
     private String messages, time, name, chatRoom, userIdentifier, imgKey, imgExtension;
 
-    public ChatModel(boolean seen, String name, MessageStatus sentMessageState, int messagesCount,
-                     String messages, String time, String chatRoom, String userIdentifier,
-                     String imgKey, String imgExtension) {
+    public Chat(boolean seen, String name, MessageStatus sentMessageState, int messagesCount,
+                String messages, String time, String chatRoom, String userIdentifier,
+                String imgKey, String imgExtension) {
         this.seen = seen;
         this.name = name;
         this.sentMessageState = sentMessageState;
@@ -26,7 +23,6 @@ public class ChatModel  {
         this.userIdentifier = userIdentifier;
         this.imgKey = imgKey;
         this.imgExtension = imgExtension;
-
     }
 
     public boolean isSeen() {

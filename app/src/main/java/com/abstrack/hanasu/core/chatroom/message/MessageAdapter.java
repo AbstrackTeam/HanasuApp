@@ -1,6 +1,5 @@
-package com.abstrack.hanasu.core.chat;
+package com.abstrack.hanasu.core.chatroom.message;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,18 +15,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.core.user.UserManager;
-import com.abstrack.hanasu.core.user.chat.MessageType;
-import com.abstrack.hanasu.core.user.model.MessageModel;
+import com.abstrack.hanasu.core.chatroom.chat.data.MessageType;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
 
-    private List<MessageModel> messageList;
+    private List<Message> messageList;
     private Context context;
 
-    public MessageAdapter(List<MessageModel> messageList, Context context) {
+    public MessageAdapter(List<Message> messageList, Context context) {
         this.messageList = messageList;
         this.context = context;
     }
@@ -49,7 +47,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     @Override
     public void onBindViewHolder(@NonNull MessageAdapter.MessageViewHolder holder, int position) {
-        MessageModel messageModel = messageList.get(position);
+        Message messageModel = messageList.get(position);
         boolean messageSendByOther = !messageModel.getSentBy().equals(UserManager.getCurrentUser().getIdentifier());
 
         holder.txtTime.setText(messageModel.getTime());
@@ -80,7 +78,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     @Override
     public int getItemViewType(int position) {
-        MessageModel model = messageList.get(position);
+        Message model = messageList.get(position);
         if(model.getMessageType() == MessageType.IMAGE){
             return 1;
         }

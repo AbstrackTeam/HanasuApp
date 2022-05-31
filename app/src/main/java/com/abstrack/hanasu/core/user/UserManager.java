@@ -3,8 +3,7 @@ package com.abstrack.hanasu.core.user;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import com.abstrack.hanasu.auth.AuthManager;
-import com.abstrack.hanasu.core.user.model.ChatRoomModel;
-import com.abstrack.hanasu.core.user.model.UserModel;
+import com.abstrack.hanasu.core.chatroom.ChatRoom;
 import com.abstrack.hanasu.db.FireDatabase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -50,7 +49,7 @@ public class UserManager{
 
     public static void writeNewUser(String name, String tag) {
         String identifier = name + tag;
-        UserModel userModel = new UserModel(name, tag);
+        User userModel = new User(name, tag);
         currentUser = new User(name, tag);
 
         FireDatabase.getDataBaseReferenceWithPath("users").child(identifier).setValue(userModel);
@@ -104,7 +103,7 @@ public class UserManager{
                     users.add(contactIdentifier);
 
                     currentContacts.put(contactIdentifier, chatRoomKey);
-                    chatRoomsRef.child(chatRoomKey).setValue(new ChatRoomModel(users, chatRoomKey));
+                    chatRoomsRef.child(chatRoomKey).setValue(new ChatRoom(users, chatRoomKey));
                     userRef.child("contacts").setValue(currentContacts);
                 }
             });

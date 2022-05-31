@@ -1,8 +1,10 @@
-package com.abstrack.hanasu.core.user;
+package com.abstrack.hanasu.thread;
 
 import android.util.Log;
 import androidx.annotation.NonNull;
 import com.abstrack.hanasu.auth.AuthManager;
+import com.abstrack.hanasu.core.user.UserManager;
+import com.abstrack.hanasu.core.user.User;
 import com.abstrack.hanasu.db.FireDatabase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

@@ -1,21 +1,23 @@
-package com.abstrack.hanasu.core.user.model;
+package com.abstrack.hanasu.core.chatroom;
+
+import com.abstrack.hanasu.core.chatroom.message.Message;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatRoomModel {
+public class ChatRoom {
     private List<String> users;
-    private List<MessageModel> messagesList;
+    private List<Message> messagesList;
     private String lastMessageTime, chatRoomKey;
 
-    public ChatRoomModel() {
+    public ChatRoom() {
 
     }
 
-    public ChatRoomModel(List<String> users, String chatRoomKey) {
+    public ChatRoom(List<String> users, String chatRoomKey) {
         this.users = users;
         messagesList = new ArrayList<>();
-        messagesList.add(new MessageModel());
+        messagesList.add(new Message());
         lastMessageTime = "";
         this.chatRoomKey = chatRoomKey;
     }
@@ -28,11 +30,11 @@ public class ChatRoomModel {
         this.users = users;
     }
 
-    public List<MessageModel> getMessagesList() {
+    public List<Message> getMessagesList() {
         return messagesList;
     }
 
-    public void setMessagesList(List<MessageModel> messagesList) {
+    public void setMessagesList(List<Message> messagesList) {
         this.messagesList = messagesList;
     }
 

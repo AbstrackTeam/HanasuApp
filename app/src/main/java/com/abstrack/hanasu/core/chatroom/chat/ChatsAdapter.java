@@ -1,4 +1,4 @@
-package com.abstrack.hanasu.core.chat;
+package com.abstrack.hanasu.core.chatroom.chat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,10 +24,10 @@ import java.util.List;
 
 public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHolder> {
     // Store all the chats
-    private List<ChatModel> chats;
+    private List<Chat> chats;
     private Context context;
 
-    public ChatsAdapter(List<ChatModel> chats, Context context){
+    public ChatsAdapter(List<Chat> chats, Context context){
         this.chats = chats;
         this.context = context;
     }
