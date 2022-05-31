@@ -1,8 +1,11 @@
 package com.abstrack.hanasu.core.chat;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.abstrack.hanasu.core.user.chat.MessageStatus;
 
-public class ChatModel {
+public class ChatModel  {
     private boolean seen;
     private MessageStatus sentMessageState;
     // Disabled for testing purposes

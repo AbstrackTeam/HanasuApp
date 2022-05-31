@@ -3,17 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/messageImgLinearLayout"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="10dp"
     android:layout_marginTop="10dp"
-    android:background="@drawable/rounded_message"
+    android:layout_marginRight="10dp"
     android:elevation="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/messageImgConstraintLayout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_message">
 
         <ImageView
             android:id="@+id/imgMsgPicture"

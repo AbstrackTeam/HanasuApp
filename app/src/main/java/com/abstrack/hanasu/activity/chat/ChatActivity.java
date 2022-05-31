@@ -1,8 +1,12 @@
 package com.abstrack.hanasu.activity.chat;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,14 +15,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.core.chat.MessageAdapter;
+import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.core.user.chat.MessageStatus;
 import com.abstrack.hanasu.core.user.chat.MessageType;
 import com.abstrack.hanasu.core.user.model.MessageModel;
 import com.abstrack.hanasu.db.FireDatabase;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,24 +38,53 @@ public class ChatActivity extends BaseAppActivity {
     private RecyclerView recyclerViewMessage;
     private List<MessageModel> messageList;
 
+    private TextView txtContactName, txtContactStatus;
+    private ImageView imgContactProfilePicture;
+    private EditText edtTxtMsg;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        messageList = new ArrayList<>();
-
-        recyclerViewMessage = findViewById(R.id.recyclerViewMessage);
-
         Bundle extras = getIntent().getExtras();
+
         if (extras != null) {
             chatRoom = extras.getString("chatRoom");
         }
 
+        messageList = new ArrayList<>();
+
+        recyclerViewMessage = findViewById(R.id.recyclerViewMessage);
+        txtContactName = findViewById(R.id.txtContactName);
+        txtContactStatus = findViewById(R.id.txtContactStatus);
+        imgContactProfilePicture = findViewById(R.id.imgContactProfilePicture);
+        edtTxtMsg = findViewById(R.id.edtTxtMsg);
+
         loadChatInformation();
+        loadFriendInformation();
+    }
+
+    public void sendMessage(View view) {
+        if (!edtTxtMsg.getText().toString().isEmpty()) {
+            DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom+"/messagesList");
+            chatRoomRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if (!task.isSuccessful()) {
+                        Log.e("HanasuChat", "Error getting values");
+                    }
+
+                    List<HashMap<String, String>> messagesList = (List<HashMap<String, String>>) task.getResult().getValue();
+                    chatRoomRef.child(String.valueOf(messagesList.size())).setValue(new MessageModel(edtTxtMsg.getText().toString(), "1", UserManager.getCurrentUser().getIdentifier(), MessageStatus.SENDING, MessageType.TEXT));
+                    loadChatInformation();
+                }
+            });
+        }
     }
 
     public void loadChatInformation() {
+        edtTxtMsg.setText("");
         messageList.clear();
 
         DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
@@ -59,7 +96,7 @@ public class ChatActivity extends BaseAppActivity {
                 }
 
                 List<HashMap<String, String>> messagesList = (List<HashMap<String, String>>) task.getResult().child("messagesList").getValue();
-                for(int i = 1; i < messagesList.size(); i++){
+                for (int i = 1; i < messagesList.size(); i++) {
 
                     MessageType messageType = MessageType.valueOf(messagesList.get(i).get("messageType"));
                     MessageStatus messageStatus = MessageStatus.valueOf(messagesList.get(i).get("messageStatus"));
@@ -82,11 +119,67 @@ public class ChatActivity extends BaseAppActivity {
         recyclerViewMessage.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
     }
 
-    public void loadUserInformation() {
-
+    public void loadFriendInformation() {
+        DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
+        chatRoomRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("HanasuChat", "Error getting values");
+                }
+                List<String> userList = (List<String>) task.getResult().child("users").getValue();
+                String friendIdentifier = userList.get(1);
+                fetchFriendInformation(friendIdentifier);
+            }
+        });
     }
 
-    public void returnToLastActivity(View view){
+    public void fetchFriendInformation(String friendIdentifier) {
+        FireDatabase.getFbDatabase().getReference().child("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                    return;
+                }
+
+                for (DataSnapshot user : task.getResult().getChildren()) {
+                    if (!user.child("identifier").getValue().equals(friendIdentifier)) {
+                        continue;
+                    }
+
+                    String contactName = (String) user.child("displayName").getValue();
+                    String imgExtension = (String) user.child("imgExtension").getValue();
+                    String imgKey = (String) user.child("imgKey").getValue();
+
+                    txtContactName.setText(contactName);
+                    fetchFriendProfilePicture(imgExtension, imgKey);
+                }
+            }
+        });
+    }
+
+    public void fetchFriendProfilePicture(String imgExtension, String imgKey) {
+        String imagePath = "image/" + imgKey + imgExtension;
+
+        StorageReference imgRef = FirebaseStorage.getInstance().getReference();
+        imgRef.child(imagePath).getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (!task.isSuccessful()) {
+                    return;
+                }
+
+                if (imgExtension.equals(".gif")) {
+                    Glide.with(ChatActivity.this).asGif().load(task.getResult()).into(imgContactProfilePicture);
+                } else {
+                    Glide.with(ChatActivity.this).asBitmap().load(task.getResult()).into(imgContactProfilePicture);
+                }
+            }
+        });
+    }
+
+    public void returnToLastActivity(View view) {
         finish();
     }
 }
