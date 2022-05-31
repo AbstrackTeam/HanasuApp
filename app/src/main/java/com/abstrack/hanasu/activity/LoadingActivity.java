@@ -33,14 +33,7 @@ public class LoadingActivity extends BaseAppActivity {
 
         animateContent();
         load();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                changeActivity(hasIdentifier);
-            }
-
-        }, 4000);
+        changeActivity();
     }
 
     public void animateContent() {
@@ -83,29 +76,35 @@ public class LoadingActivity extends BaseAppActivity {
         });
     }
 
-    public void changeActivity(boolean hasIdentifier){
-        if(!AuthManager.isUserLogged()){
-            AndroidUtil.startNewActivity(this, LoginActivity.class);
-            return;
-        }
-
-        if(hasIdentifier) {
-            if (AuthManager.getFireAuth().getCurrentUser().isEmailVerified()) {
-                if(hasDisplayName){
-                    AndroidUtil.startNewActivity(LoadingActivity.this, LandingActivity.class);
+    public void changeActivity(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(!AuthManager.isUserLogged()){
+                    AndroidUtil.startNewActivity(LoadingActivity.this, LoginActivity.class);
                     return;
                 }
 
-                AndroidUtil.startNewActivity(LoadingActivity.this, SetProfileInfoActivity.class);
-                return;
+                if(hasIdentifier) {
+                    if (AuthManager.getFireAuth().getCurrentUser().isEmailVerified()) {
+                        if(hasDisplayName){
+                            AndroidUtil.startNewActivity(LoadingActivity.this, LandingActivity.class);
+                            return;
+                        }
+
+                        AndroidUtil.startNewActivity(LoadingActivity.this, SetProfileInfoActivity.class);
+                        return;
+                    }
+
+                    AuthManager.getFireAuth().signOut();
+                    AndroidUtil.startNewActivity(LoadingActivity.this, LoginActivity.class);
+                    return;
+                }
+
+                AuthManager.getFireAuth().signOut();
+                AndroidUtil.startNewActivity(LoadingActivity.this, LoginActivity.class);
             }
 
-            AuthManager.getFireAuth().signOut();
-            AndroidUtil.startNewActivity(LoadingActivity.this, LoginActivity.class);
-            return;
-        }
-
-        AuthManager.getFireAuth().signOut();
-        AndroidUtil.startNewActivity(LoadingActivity.this, LoginActivity.class);
+        }, 3000);
     }
 }

@@ -53,12 +53,15 @@
             android:name=".activity.auth.RegisterActivity"
             android:exported="false" />
         <activity
+            android:name=".activity.chat.ChatActivity"
+            android:exported="false"
+            android:noHistory="true"/>
+        <activity
             android:name=".activity.LoadingActivity"
             android:exported="true"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

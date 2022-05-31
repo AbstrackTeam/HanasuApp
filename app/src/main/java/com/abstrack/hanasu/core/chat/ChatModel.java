@@ -1,18 +1,18 @@
 package com.abstrack.hanasu.core.chat;
 
-import com.abstrack.hanasu.core.user.chat.MessageState;
+import com.abstrack.hanasu.core.user.chat.MessageStatus;
 
-public class Chat {
+public class ChatModel {
     private boolean seen;
-    private MessageState sentMessageState;
+    private MessageStatus sentMessageState;
     // Disabled for testing purposes
     // private Bitmap icon;
     private int messagesCount;
     private String messages, time, name, chatRoom, userIdentifier, imgKey, imgExtension;
 
-    public Chat(boolean seen, String name, MessageState sentMessageState, int messagesCount,
-                String messages, String time, String chatRoom, String userIdentifier,
-                String imgKey, String imgExtension) {
+    public ChatModel(boolean seen, String name, MessageStatus sentMessageState, int messagesCount,
+                     String messages, String time, String chatRoom, String userIdentifier,
+                     String imgKey, String imgExtension) {
         this.seen = seen;
         this.name = name;
         this.sentMessageState = sentMessageState;
@@ -42,11 +42,11 @@ public class Chat {
         this.name = name;
     }
 
-    public MessageState getSentMessageState() {
+    public MessageStatus getSentMessageState() {
         return sentMessageState;
     }
 
-    public void setSentMessageState(MessageState sentMessageState) {
+    public void setSentMessageState(MessageStatus sentMessageState) {
         this.sentMessageState = sentMessageState;
     }
 

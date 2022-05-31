@@ -1,36 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/messageImgLinearLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/rounded_message">
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="10dp"
+    android:background="@drawable/rounded_message"
+    android:elevation="0dp">
 
-    <ImageView
-        android:id="@+id/imgPicture"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_margin="5dp"
-        android:background="@drawable/rounded_image"
-        android:clipToOutline="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/messageImgConstraintLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/txtTime"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|end"
-        android:layout_margin="5dp"
-        android:layout_marginEnd="16dp"
-        android:layout_weight="1"
-        android:fontFamily="@font/asap"
-        android:text="3:25 AM"
-        android:textColor="@color/detail_color_secondary"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgSticker" />
+        <ImageView
+            android:id="@+id/imgMsgPicture"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_margin="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@android:drawable/btn_star_big_on"
+            android:clipToOutline="true"
+            android:elevation="1dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/txtTime"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/txtTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|end"
+            android:layout_margin="1dp"
+            android:layout_marginBottom="289dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/asap"
+            android:text="3:25 AM"
+            android:textColor="@color/detail_color_secondary"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgMsgPicture"
+            tools:layout_editor_absoluteX="310dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

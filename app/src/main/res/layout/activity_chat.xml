@@ -9,7 +9,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="70dp"
-        android:background="@color/detail_color_primary"
+        android:background="@color/accent_color"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,6 +24,8 @@
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
             android:backgroundTint="@color/detail_color_primary"
+            android:onClick="returnToLastActivity"
+            android:soundEffectsEnabled="false"
             app:icon="@mipmap/ic_return_foreground"
             app:iconGravity="textStart"
             app:iconPadding="20dp"
@@ -37,8 +39,8 @@
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             android:contentDescription="TODO"
-            android:elevation="0dp"
-            android:outlineProvider="background"
+            android:elevation="1dp"
+            android:outlineProvider="none"
             android:scaleType="centerCrop"
             app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
             tools:srcCompat="@tools:sample/avatars" />
@@ -56,7 +58,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="12dp"
                 android:fontFamily="@font/quicksand_bold"
-                android:text="Oma neno 😎"
+                android:text="Display Name"
                 android:textColor="@color/chat_background"
                 android:textSize="20sp" />
 
@@ -67,7 +69,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/asap"
-                android:text="EN LÍNEA"
+                android:text="STATUS"
                 android:textColor="@color/chat_background"
                 android:textSize="10sp" />
         </LinearLayout>
@@ -86,8 +88,11 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewMessage"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@color/chat_background"
+        android:overScrollMode="never"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

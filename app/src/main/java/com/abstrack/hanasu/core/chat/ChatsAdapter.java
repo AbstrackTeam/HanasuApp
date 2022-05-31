@@ -1,17 +1,19 @@
 package com.abstrack.hanasu.core.chat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.abstrack.hanasu.R;
+import com.abstrack.hanasu.activity.chat.ChatActivity;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,10 +24,10 @@ import java.util.List;
 
 public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHolder> {
     // Store all the chats
-    private List<Chat> chats;
+    private List<ChatModel> chats;
     private Context context;
 
-    public ChatsAdapter(List<Chat> chats, Context context){
+    public ChatsAdapter(List<ChatModel> chats, Context context){
         this.chats = chats;
         this.context = context;
     }
@@ -34,9 +36,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
     public ChatsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.chat_card_item, parent, false);
-        ChatsViewHolder viewHolder = new ChatsViewHolder(view);
-
-        return viewHolder;
+        return new ChatsViewHolder(view);
     }
 
     @Override
@@ -55,8 +55,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
         // If the messages are zero or is seen, hide the notification view.
         if(chats.get(position).getMessagesCount() == 0 || chats.get(position).isSeen()) {
             holder.chatNotification.setVisibility(View.INVISIBLE);
-        }
-        else{
+        } else{
             holder.chatNotification.setVisibility(View.VISIBLE);
         }
 
@@ -72,7 +71,9 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
             @Override
             public void onClick(View view) {
                 // TODO: Being able to open the chat taking into account the chatRoom
-                Toast.makeText(context, "Chat clicked with chatRoom id: " + holder.getChatRoom(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, ChatActivity.class);
+                intent.putExtra("chatRoom", holder.getChatRoom());
+                context.startActivity(intent);
             }
         });
 
