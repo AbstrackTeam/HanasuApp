@@ -55,24 +55,22 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         holder.txtTime.setText(messageModel.getTime());
 
         if (messageModel.getMessageType() == MessageType.IMAGE) {
-            if(messageSendByOther){
-                decorateMessageBox(holder.messageImgLinearLayout, holder.messageImgConstraintLayout);
-            }
-
+            decorateMessageBox(holder.messageImgLinearLayout, holder.messageImgConstraintLayout, messageSendByOther);
             Glide.with(context).asBitmap().load(messageModel.getContent()).into(holder.imgMsgPicture);
             return;
         }
 
-        if(messageSendByOther){
-            decorateMessageBox(holder.messageLinearLayout, holder.messageConstraintLayout);
-        }
-
+        decorateMessageBox(holder.messageLinearLayout, holder.messageConstraintLayout, messageSendByOther);
         holder.txtMsg.setText(messageModel.getContent());
     }
 
-    public void decorateMessageBox(LinearLayout linearLayout, ConstraintLayout constraintLayout){
+    public void decorateMessageBox(LinearLayout linearLayout, ConstraintLayout constraintLayout, boolean messageSendByOther){
+        if(messageSendByOther){
+            constraintLayout.setBackgroundResource(R.drawable.rounded_message_contrast);
+            return;
+        }
+
         linearLayout.setGravity(Gravity.END);
-        constraintLayout.setBackgroundResource(R.drawable.rounded_message_contrast);
     }
 
     @Override
