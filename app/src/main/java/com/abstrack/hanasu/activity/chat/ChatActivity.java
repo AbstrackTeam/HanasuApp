@@ -128,8 +128,13 @@ public class ChatActivity extends BaseAppActivity {
                     Log.e("HanasuChat", "Error getting values");
                 }
                 List<String> userList = (List<String>) task.getResult().child("users").getValue();
-                String friendIdentifier = userList.get(1);
-                fetchFriendInformation(friendIdentifier);
+
+                for(String identifier : userList){
+                    if(!identifier.equals(UserManager.getCurrentUser().getIdentifier())){
+                        fetchFriendInformation(identifier);
+                        break;
+                    }
+                }
             }
         });
     }
@@ -139,7 +144,6 @@ public class ChatActivity extends BaseAppActivity {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
                     return;
                 }
 

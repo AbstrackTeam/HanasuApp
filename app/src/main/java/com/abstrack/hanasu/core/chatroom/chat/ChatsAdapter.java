@@ -67,7 +67,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
         holder.userIcon.setImageResource(R.drawable.ic_profile_pic);
 
         // If the messages are zero or is seen, hide the notification view.
-        if (chats.get(position).getMessagesCount() == 0 || chats.get(position).isSeen()) {
+        if (chats.get(position).getMessagesCount() == 0 || chats.get(position).getMessageState() == MessageStatus.SEEN) {
             holder.chatNotification.setVisibility(View.INVISIBLE);
         } else {
             holder.chatNotification.setVisibility(View.VISIBLE);
@@ -204,6 +204,11 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
                             }
                         }
 
+                        if(messageQuantityValue == 0 ){
+                            messageQuantity.setText(String.valueOf(messageQuantityValue));
+                            chatNotification.setVisibility(View.INVISIBLE);
+                            return;
+                        }
                         messageQuantity.setText(String.valueOf(messageQuantityValue));
                         chatNotification.setVisibility(View.VISIBLE);
                         return;

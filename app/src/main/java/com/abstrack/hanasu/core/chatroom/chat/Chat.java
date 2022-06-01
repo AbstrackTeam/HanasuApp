@@ -3,19 +3,17 @@ package com.abstrack.hanasu.core.chatroom.chat;
 import com.abstrack.hanasu.core.chatroom.chat.data.MessageStatus;
 
 public class Chat {
-    private boolean seen;
-    private MessageStatus sentMessageState;
+    private MessageStatus messageState;
     // Disabled for testing purposes
     // private Bitmap icon;
     private int messagesCount;
     private String messages, time, name, chatRoom, userIdentifier, imgKey, imgExtension;
 
-    public Chat(boolean seen, String name, MessageStatus sentMessageState, int messagesCount,
+    public Chat(String name, MessageStatus sentMessageState, int messagesCount,
                 String messages, String time, String chatRoom, String userIdentifier,
                 String imgKey, String imgExtension) {
-        this.seen = seen;
         this.name = name;
-        this.sentMessageState = sentMessageState;
+        this.messageState = sentMessageState;
         this.messagesCount = messagesCount;
         this.messages = messages;
         this.time = time;
@@ -23,14 +21,6 @@ public class Chat {
         this.userIdentifier = userIdentifier;
         this.imgKey = imgKey;
         this.imgExtension = imgExtension;
-    }
-
-    public boolean isSeen() {
-        return seen;
-    }
-
-    public void setSeen(boolean seen) {
-        this.seen = seen;
     }
 
     public String getName() {
@@ -41,12 +31,12 @@ public class Chat {
         this.name = name;
     }
 
-    public MessageStatus getSentMessageState() {
-        return sentMessageState;
+    public MessageStatus getMessageState() {
+        return messageState;
     }
 
-    public void setSentMessageState(MessageStatus sentMessageState) {
-        this.sentMessageState = sentMessageState;
+    public void setMessageState(MessageStatus messageState) {
+        this.messageState = messageState;
     }
 
     public int getMessagesCount() {

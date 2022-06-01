@@ -205,7 +205,7 @@ public class LandingActivity extends BaseAppActivity {
                                     String imgExtension = task.getResult().child("imgExtension").getValue(String.class);
 
                                     // Finally, add a new chat
-                                    addToChats(new Chat(false, name, messageState, finalMessageCount, lastMessage, time, chatRoom, userIdentifier, imgKey, imgExtension));
+                                    addToChats(new Chat(name, messageState, finalMessageCount, lastMessage, time, chatRoom, userIdentifier, imgKey, imgExtension));
                                 }
                             });
                         }
