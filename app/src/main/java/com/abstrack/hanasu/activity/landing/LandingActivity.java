@@ -81,6 +81,7 @@ public class LandingActivity extends BaseAppActivity {
         stories.add(new Story(false));
         stories.add(new Story(false));
 
+
         StoriesAdapter storiesAdapter = new StoriesAdapter(stories, storiesBar, this);
         storiesBar.setAdapter(storiesAdapter);
         storiesBar.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
@@ -130,7 +131,6 @@ public class LandingActivity extends BaseAppActivity {
                 // Get the chat room
                 for (String identifier : keys){
                     String chatRoom = contacts.get(identifier);
-                    final boolean[] isSeen = {false};
 
                     // it will try to get the information with firebase
                     DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
@@ -138,21 +138,22 @@ public class LandingActivity extends BaseAppActivity {
                     chatRoomRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DataSnapshot> task) {
-                            if(!task.isSuccessful()){
+                            if (!task.isSuccessful()) {
                                 return;
                             }
                             DataSnapshot result = task.getResult();
 
-                            if(result.getValue() == null) {
+                            if (result.getValue() == null) {
                                 return;
-                            };
+                            }
+                            ;
 
-                            ArrayList<String> users =  (ArrayList<String>) result.child("users").getValue();
+                            ArrayList<String> users = (ArrayList<String>) result.child("users").getValue();
 
                             String userIdentifier = "";
 
-                            for(String currentUser : users) {
-                                if(!currentUser.equals(UserManager.getCurrentUser().getIdentifier())){
+                            for (String currentUser : users) {
+                                if (!currentUser.equals(UserManager.getCurrentUser().getIdentifier())) {
                                     userIdentifier = currentUser;
                                 }
                             }
@@ -160,12 +161,24 @@ public class LandingActivity extends BaseAppActivity {
                             List<HashMap<String, String>> messagesList = (List<HashMap<String, String>>) result.child("messagesList").getValue();
                             int messageCount = 0;
 
+
+
                             String sentBy = messagesList.get(messagesList.size() - 1).get("sentBy");
 
+                            /*
+                                For getting the messageQuantity, you have to know if you did see the last message
+                                and if you were the one who sended the message
+                             */
+
                             if(!sentBy.equals("")) {
+                                // If you didn't send the message.
                                 if (!sentBy.equals(UserManager.getCurrentUser().getIdentifier())) {
-                                    for(int i = 0; i < messagesList.size(); i++){
-                                        if (messagesList.get(i).get("sentBy").equals(UserManager.getCurrentUser().getIdentifier())) {
+                                    for(int i = 1; i < messagesList.size(); i++){
+                                        // then we are going to count all the messages that don't have the tag "SEEN"
+                                        if(messagesList.get(i).get("sentBy").equals(UserManager.getCurrentUser().getIdentifier())){
+                                            continue;
+                                        }
+                                        if (MessageStatus.valueOf(messagesList.get(i).get("messageStatus")) != MessageStatus.SEEN)  {
                                             messageCount += 1;
                                         }
                                     }
@@ -174,9 +187,8 @@ public class LandingActivity extends BaseAppActivity {
 
                             MessageStatus messageState = MessageStatus.valueOf(messagesList.get(messagesList.size() - 1).get("messageStatus"));
 
-                            String lastMessage = messagesList.get(messagesList.size() -1).get("text");
+                            String lastMessage = messagesList.get(messagesList.size() -1).get("content");
                             String time = messagesList.get(messagesList.size() -1).get("time");
-
                             DatabaseReference userRef = FireDatabase.getDataBaseReferenceWithPath("users").child(userIdentifier);
 
                             int finalMessageCount = messageCount;
@@ -193,7 +205,7 @@ public class LandingActivity extends BaseAppActivity {
                                     String imgExtension = task.getResult().child("imgExtension").getValue(String.class);
 
                                     // Finally, add a new chat
-                                    addToChats(new Chat(isSeen[0], name, messageState, finalMessageCount, lastMessage, time, chatRoom, userIdentifier, imgKey, imgExtension));
+                                    addToChats(new Chat(false, name, messageState, finalMessageCount, lastMessage, time, chatRoom, userIdentifier, imgKey, imgExtension));
                                 }
                             });
                         }
@@ -203,7 +215,6 @@ public class LandingActivity extends BaseAppActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                return;
             }
         });
     }

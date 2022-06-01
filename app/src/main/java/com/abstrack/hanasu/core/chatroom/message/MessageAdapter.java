@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
@@ -65,10 +64,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public void decorateMessageBox(LinearLayout linearLayout, ConstraintLayout constraintLayout, boolean messageSendByOther){
         if(messageSendByOther){
             constraintLayout.setBackgroundResource(R.drawable.rounded_message_contrast);
-            return;
+            linearLayout.setGravity(Gravity.LEFT);
+        } else {
+            constraintLayout.setBackgroundResource(R.drawable.rounded_message);
+            linearLayout.setGravity(Gravity.END);
         }
-
-        linearLayout.setGravity(Gravity.END);
     }
 
     @Override
