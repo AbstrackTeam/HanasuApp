@@ -37,7 +37,7 @@
 
             android:fontFamily="@font/asap"
             android:text="2:23 AM"
-            android:textColor="@color/detail_color_secondary"
+            android:textColor="@color/purple_200"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="@+id/txtMsg"
             app:layout_constraintTop_toBottomOf="@+id/txtMsg" />

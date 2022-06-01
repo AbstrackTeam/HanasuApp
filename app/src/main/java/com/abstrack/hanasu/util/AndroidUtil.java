@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -35,6 +36,17 @@ public class AndroidUtil {
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
 
         currentActivity.startActivityForResult(chooserIntent, pickCode);
+    }
+
+    public static String getCurrentHour(){
+        Calendar rightNow = Calendar.getInstance();
+        String messageAmPm = "PM";
+
+        if(rightNow.get(Calendar.AM_PM) == Calendar.AM){
+            messageAmPm = "AM";
+        }
+
+        return rightNow.get(Calendar.HOUR) + ":" + rightNow.get(Calendar.MINUTE) + " " + messageAmPm;
     }
 
     public static String takeCameraPhoto(BaseAppActivity currentActivity, int captureCode) {

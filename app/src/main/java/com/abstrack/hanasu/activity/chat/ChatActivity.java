@@ -20,6 +20,7 @@ import com.abstrack.hanasu.core.chatroom.chat.data.MessageStatus;
 import com.abstrack.hanasu.core.chatroom.chat.data.MessageType;
 import com.abstrack.hanasu.core.chatroom.message.Message;
 import com.abstrack.hanasu.db.FireDatabase;
+import com.abstrack.hanasu.util.AndroidUtil;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,7 +29,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -76,7 +81,7 @@ public class ChatActivity extends BaseAppActivity {
                     }
 
                     List<HashMap<String, String>> messagesList = (List<HashMap<String, String>>) task.getResult().getValue();
-                    chatRoomRef.child(String.valueOf(messagesList.size())).setValue(new Message(edtTxtMsg.getText().toString(), "1", UserManager.getCurrentUser().getIdentifier(), MessageStatus.SENDING, MessageType.TEXT));
+                    chatRoomRef.child(String.valueOf(messagesList.size())).setValue(new Message(edtTxtMsg.getText().toString(), AndroidUtil.getCurrentHour(), UserManager.getCurrentUser().getIdentifier(), MessageStatus.SENDING, MessageType.TEXT));
                     loadChatInformation();
                 }
             });
