@@ -8,6 +8,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.auth.LoginActivity;
@@ -15,17 +17,21 @@ import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.activity.welcome.SetProfileInfoActivity;
 import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.core.user.UserManager;
+import com.abstrack.hanasu.core.user.data.ConnectionStatus;
+import com.abstrack.hanasu.thread.UserServiceThread;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.abstrack.hanasu.db.FireDatabase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class LoadingActivity extends BaseAppActivity {
 
     private Animation down_anim;
-    boolean hasIdentifier = false, hasDisplayName = false, hasValidUid = false;
+    boolean hasIdentifier = false, hasDisplayName = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,13 +64,7 @@ public class LoadingActivity extends BaseAppActivity {
                     return;
                 }
 
-                for(DataSnapshot user : task.getResult().getChildren()){
-                    if(user.child("uid").getValue() != null){
-                        hasValidUid = true;
-                    } else {
-                        return;
-                    }
-
+                for(DataSnapshot user : task.getResult().getChildren()) {
                     if(!user.child("uid").getValue().equals(AuthManager.getFireAuth().getCurrentUser().getUid())){
                         continue;
                     }
@@ -88,11 +88,6 @@ public class LoadingActivity extends BaseAppActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(!hasValidUid){
-                    AndroidUtil.startNewActivity(LoadingActivity.this, LoginActivity.class);
-                    return;
-                }
-
                 if(!AuthManager.isUserLogged()){
                     AndroidUtil.startNewActivity(LoadingActivity.this, LoginActivity.class);
                     return;

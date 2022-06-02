@@ -2,6 +2,8 @@ package com.abstrack.hanasu.core.user;
 
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.core.chatroom.ChatRoom;
 import com.abstrack.hanasu.core.user.data.ConnectionStatus;
@@ -9,6 +11,7 @@ import com.abstrack.hanasu.db.FireDatabase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +21,14 @@ import java.util.UUID;
 public class UserManager{
 
     private static User currentUser;
+    private static boolean connectionListenerAdded = false;
+
+    public static void addConnectionListener(){
+        if(!connectionListenerAdded) {
+            FireDatabase.getDataBaseReferenceWithPath("users").child(UserManager.getCurrentUser().getIdentifier()).child("connectionStatus").onDisconnect().setValue(ConnectionStatus.OFFLINE);
+            connectionListenerAdded = true;
+        }
+    }
 
     public static void fetchInitialUserData() {
         FireDatabase.getDataBaseReferenceWithPath("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -57,7 +68,7 @@ public class UserManager{
         FireDatabase.getDataBaseReferenceWithPath("users").child(identifier).setValue(userModel);
     }
 
-    public static void updateUserData(String path, String value) {
+    public static void updateUserData(String path, Object value) {
         if(currentUser != null) {
             FireDatabase.getDataBaseReferenceWithPath("users").child(currentUser.getIdentifier()).child(path).setValue(value);
         }

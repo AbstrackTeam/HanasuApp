@@ -12,7 +12,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 
-public class UserService extends Thread{
+public class UserServiceThread extends Thread{
     @Override
     public void run() {
         ValueEventListener postListener = new ValueEventListener() {
@@ -50,6 +50,7 @@ public class UserService extends Thread{
         ValueEventListener contactsListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot data) {
+                UserManager.updateUserData("connectionStatus", ConnectionStatus.ONLINE);
                 HashMap<String, String> contacts = (HashMap<String, String>) data.getValue();
 
                 User currentUser = UserManager.getCurrentUser();
@@ -65,7 +66,7 @@ public class UserService extends Thread{
                 ConnectionStatus connectionStatus = currentUser.getConnectionStatus();
 
                 UserManager.setCurrentUser(new User(name, tag, imgKey, imgExtension, about, identifier, uid, displayName, contacts, connectionStatus));
-
+                UserManager.addConnectionListener();
                 Log.w("Hanasu-UserService", "currentUser contacts updated.");
             }
 

@@ -15,7 +15,8 @@ import com.abstrack.hanasu.core.chatroom.chat.ChatsAdapter;
 import com.abstrack.hanasu.core.story.StoriesAdapter;
 import com.abstrack.hanasu.core.story.Story;
 import com.abstrack.hanasu.core.user.UserManager;
-import com.abstrack.hanasu.thread.UserService;
+import com.abstrack.hanasu.core.user.data.ConnectionStatus;
+import com.abstrack.hanasu.thread.UserServiceThread;
 import com.abstrack.hanasu.core.chatroom.chat.data.MessageStatus;
 import com.abstrack.hanasu.db.FireDatabase;
 import com.abstrack.hanasu.util.AndroidUtil;
@@ -40,7 +41,7 @@ public class LandingActivity extends BaseAppActivity {
     private List<Story> stories = new ArrayList<>();
     private static List<Chat> chats = new ArrayList<Chat>();
 
-    UserService userService = new UserService();
+    UserServiceThread userService = new UserServiceThread();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
