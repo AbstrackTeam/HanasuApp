@@ -13,9 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
@@ -30,7 +28,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import java.io.File;
 import java.util.UUID;
 
@@ -44,7 +41,7 @@ public class SetProfileInfoActivity extends BaseAppActivity {
 
     private static final int IMAGE_CAPTURE_CODE = 1999, IMAGE_PICK_CODE = 2000;
 
-    private boolean showPictureOptions = false;
+    private boolean showPictureOptions = false, progressFirstRun = false;
     private String tempCameraImagePath = "";
 
     @SuppressLint("InflateParams")
@@ -106,10 +103,57 @@ public class SetProfileInfoActivity extends BaseAppActivity {
         uploadPhoto(imageUri, ".jpg");
     }
 
-    public void uploadPhoto(Uri imgUri, String imgExtension){
+    public void uploadPhoto(Uri imgUri, String imgExtension) {
         String imgKey = UUID.randomUUID().toString();
-        final boolean[] progressFirstRun = {false};
 
+        if(imgExtension.equals(".gif")){
+            uploadByFile(imgUri, imgKey, imgExtension);
+            return;
+        }
+        // Compress and reduce image weight
+        byte[] compressedImgBytes = ImageUtil.compressImage(imgExtension, imgUri, getContentResolver());
+        uploadByBytes(compressedImgBytes, imgUri, imgKey, imgExtension);
+    }
+
+    public void fetchProfilePic(Uri imgUri, String imgExtension) {
+        ImageView profilePicImgView = findViewById(R.id.imgProfile);
+
+        if (imgExtension.equals(".gif")) {
+            Glide.with(this).asGif().load(imgUri).into(profilePicImgView);
+        } else {
+            Glide.with(this).asBitmap().load(imgUri).into(profilePicImgView);
+        }
+    }
+
+    public void uploadByBytes(byte[] bytes, Uri imgUri, String imgKey, String imgExtension){
+        StorageReference imageStorageReference = FireDatabase.getStorageReference().child("image").child(imgKey + imgExtension);
+        imageStorageReference.putBytes(bytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d("HanasuStorage", "Image uploaded successfully");
+
+                UserManager.updateUserData("imgKey", imgKey);
+                UserManager.updateUserData("imgExtension", imgExtension);
+
+                fetchProfilePic(imgUri, imgExtension);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("HanasuStorage", "Image failed to upload", e);
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                if(!progressFirstRun) {
+                    updatePictureOptions(findViewById(android.R.id.content).getRootView());
+                    progressFirstRun = true;
+                }
+            }
+        });
+    }
+
+    public void  uploadByFile(Uri imgUri, String imgKey, String imgExtension) {
         StorageReference imageStorageReference = FireDatabase.getStorageReference().child("image").child(imgKey + imgExtension);
         imageStorageReference.putFile(imgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -129,22 +173,12 @@ public class SetProfileInfoActivity extends BaseAppActivity {
         }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                if(!progressFirstRun[0]) {
+                if(!progressFirstRun) {
                     updatePictureOptions(findViewById(android.R.id.content).getRootView());
-                    progressFirstRun[0] = true;
+                    progressFirstRun = true;
                 }
             }
         });
-    }
-
-    public void fetchProfilePic(Uri imgUri, String imgExtension) {
-        ImageView profilePicImgView = findViewById(R.id.imgProfile);
-
-        if (imgExtension.equals(".gif")) {
-            Glide.with(this).asGif().load(imgUri).into(profilePicImgView);
-        } else {
-            Glide.with(this).asBitmap().load(imgUri).into(profilePicImgView);
-        }
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
