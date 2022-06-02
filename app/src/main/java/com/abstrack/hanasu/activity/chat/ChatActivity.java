@@ -52,6 +52,8 @@ public class ChatActivity extends BaseAppActivity {
 
     private Animation down_anim;
 
+    private List<Message> messageList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +70,8 @@ public class ChatActivity extends BaseAppActivity {
         txtContactStatus = findViewById(R.id.txtContactStatus);
         imgContactProfilePicture = findViewById(R.id.imgContactProfilePicture);
         edtTxtMsg = findViewById(R.id.edtTxtMsg);
+
+        messageList = new ArrayList<Message>();
 
         loadChatInformation();
         loadFriendInformation();
@@ -93,31 +97,29 @@ public class ChatActivity extends BaseAppActivity {
     }
 
     public void syncMessages() {
-        // Reference
         DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
-        // Creating the listener
         chatRoomRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot data) {
-                Log.d("HanasuTest", "Error");
-                // Get the list of messages
+
                 List<HashMap<String, String>> messagesList = (List<HashMap<String, String>>) data.child("messagesList").getValue();
-                // Get the lastMessage
-                HashMap<String, String> lastMessage = messagesList.get(messagesList.size() - 1);
+                if ((messagesList.size() - 1) != messageList.size()) {
+                    HashMap<String, String> lastMessage = messagesList.get(messagesList.size() - 1);
 
-                MessageAdapter adapter = (MessageAdapter) recyclerViewMessage.getAdapter();
-                if(adapter != null) {
-                    MessageType messageType = MessageType.valueOf(lastMessage.get("messageType"));
-                    MessageStatus messageStatus = MessageStatus.valueOf(lastMessage.get("messageStatus"));
-                    String content = lastMessage.get("content");
-                    String sentBy = lastMessage.get("sentBy");
-                    String time = lastMessage.get("time");
+                    MessageAdapter adapter = (MessageAdapter) recyclerViewMessage.getAdapter();
+                    if (adapter != null) {
+                        MessageType messageType = MessageType.valueOf(lastMessage.get("messageType"));
+                        MessageStatus messageStatus = MessageStatus.valueOf(lastMessage.get("messageStatus"));
+                        String content = lastMessage.get("content");
+                        String sentBy = lastMessage.get("sentBy");
+                        String time = lastMessage.get("time");
 
-                    Message message = new Message(content, time, sentBy, messageStatus, messageType);
-                    adapter.addNewMessage(message);
+                        Message message = new Message(content, time, sentBy, messageStatus, messageType);
+                        adapter.addNewMessage(message);
 
-                    if(sentBy.equals(UserManager.getCurrentUser().getIdentifier())) {
-                        recyclerViewMessage.scrollToPosition(adapter.getItemCount() - 1);
+                        if (sentBy.equals(UserManager.getCurrentUser().getIdentifier())) {
+                            recyclerViewMessage.smoothScrollToPosition(adapter.getItemCount() - 1);
+                        }
                     }
                 }
             }
@@ -139,7 +141,6 @@ public class ChatActivity extends BaseAppActivity {
                 }
 
                 List<HashMap<String, String>> messagesList = (List<HashMap<String, String>>) task.getResult().child("messagesList").getValue();
-                List<Message> messageList = new ArrayList<Message>();
 
                 for (int i = 1; i < messagesList.size(); i++) {
 
@@ -162,6 +163,7 @@ public class ChatActivity extends BaseAppActivity {
         MessageAdapter messageAdapter = new MessageAdapter(messageList, ChatActivity.this);
         recyclerViewMessage.setAdapter((messageAdapter));
         recyclerViewMessage.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        recyclerViewMessage.scrollToPosition(messageAdapter.getItemCount() - 1);
     }
 
     public void loadFriendInformation() {
