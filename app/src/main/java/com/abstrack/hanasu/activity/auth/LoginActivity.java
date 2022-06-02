@@ -55,6 +55,7 @@ public class LoginActivity extends BaseAppActivity {
                     return;
                 }
 
+
                 FireDatabase.getDataBaseReferenceWithPath("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {

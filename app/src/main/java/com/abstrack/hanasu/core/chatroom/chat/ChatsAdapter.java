@@ -3,7 +3,6 @@ package com.abstrack.hanasu.core.chatroom.chat;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.chat.ChatActivity;
-import com.abstrack.hanasu.core.chatroom.chat.data.MessageStatus;
+import com.abstrack.hanasu.core.chatroom.message.data.MessageStatus;
 import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.db.FireDatabase;
 import com.bumptech.glide.Glide;

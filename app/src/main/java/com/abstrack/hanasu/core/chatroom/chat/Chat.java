@@ -1,6 +1,6 @@
 package com.abstrack.hanasu.core.chatroom.chat;
 
-import com.abstrack.hanasu.core.chatroom.chat.data.MessageStatus;
+import com.abstrack.hanasu.core.chatroom.message.data.MessageStatus;
 
 public class Chat {
     private MessageStatus messageState;

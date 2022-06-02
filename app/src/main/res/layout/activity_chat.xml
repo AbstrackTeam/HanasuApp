@@ -70,9 +70,9 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/asap"
-                android:text="STATUS"
+                android:text="Status"
                 android:textColor="@color/chat_background"
-                android:textSize="10sp" />
+                android:textSize="14sp" />
         </LinearLayout>
 
         <Button

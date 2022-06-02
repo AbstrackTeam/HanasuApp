@@ -1,7 +1,7 @@
 package com.abstrack.hanasu.core.chatroom.message;
 
-import com.abstrack.hanasu.core.chatroom.chat.data.MessageStatus;
-import com.abstrack.hanasu.core.chatroom.chat.data.MessageType;
+import com.abstrack.hanasu.core.chatroom.message.data.MessageStatus;
+import com.abstrack.hanasu.core.chatroom.message.data.MessageType;
 
 public class Message {
     public String content, time, sentBy;

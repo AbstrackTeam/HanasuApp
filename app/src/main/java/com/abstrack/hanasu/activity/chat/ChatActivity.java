@@ -2,6 +2,7 @@ package com.abstrack.hanasu.activity.chat;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -16,10 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
+import com.abstrack.hanasu.auth.AuthManager;
+import com.abstrack.hanasu.core.chatroom.chat.Chat;
 import com.abstrack.hanasu.core.chatroom.message.MessageAdapter;
 import com.abstrack.hanasu.core.user.UserManager;
-import com.abstrack.hanasu.core.chatroom.chat.data.MessageStatus;
-import com.abstrack.hanasu.core.chatroom.chat.data.MessageType;
+import com.abstrack.hanasu.core.chatroom.message.data.MessageStatus;
+import com.abstrack.hanasu.core.chatroom.message.data.MessageType;
 import com.abstrack.hanasu.core.chatroom.message.Message;
 import com.abstrack.hanasu.core.user.data.ConnectionStatus;
 import com.abstrack.hanasu.db.FireDatabase;
@@ -28,16 +31,13 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.net.ConnectException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -45,7 +45,6 @@ public class ChatActivity extends BaseAppActivity {
 
     private String chatRoom;
     private RecyclerView recyclerViewMessage;
-    private List<Message> messageList;
 
     private TextView txtContactName, txtContactStatus;
     private ImageView imgContactProfilePicture;
@@ -64,8 +63,6 @@ public class ChatActivity extends BaseAppActivity {
             chatRoom = extras.getString("chatRoom");
         }
 
-        messageList = new ArrayList<>();
-
         recyclerViewMessage = findViewById(R.id.recyclerViewMessage);
         txtContactName = findViewById(R.id.txtContactName);
         txtContactStatus = findViewById(R.id.txtContactStatus);
@@ -74,6 +71,7 @@ public class ChatActivity extends BaseAppActivity {
 
         loadChatInformation();
         loadFriendInformation();
+        syncMessages();
     }
 
     public void sendMessage(View view) {
@@ -88,16 +86,50 @@ public class ChatActivity extends BaseAppActivity {
 
                     List<HashMap<String, String>> messagesList = (List<HashMap<String, String>>) task.getResult().getValue();
                     chatRoomRef.child(String.valueOf(messagesList.size())).setValue(new Message(edtTxtMsg.getText().toString(), AndroidUtil.getCurrentHour(), UserManager.getCurrentUser().getIdentifier(), MessageStatus.SENDING, MessageType.TEXT));
-                    loadChatInformation();
+                    edtTxtMsg.setText("");
                 }
             });
         }
     }
 
-    public void loadChatInformation() {
-        edtTxtMsg.setText("");
-        messageList.clear();
+    public void syncMessages() {
+        // Reference
+        DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
+        // Creating the listener
+        chatRoomRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot data) {
+                Log.d("HanasuTest", "Error");
+                // Get the list of messages
+                List<HashMap<String, String>> messagesList = (List<HashMap<String, String>>) data.child("messagesList").getValue();
+                // Get the lastMessage
+                HashMap<String, String> lastMessage = messagesList.get(messagesList.size() - 1);
 
+                MessageAdapter adapter = (MessageAdapter) recyclerViewMessage.getAdapter();
+                if(adapter != null) {
+                    MessageType messageType = MessageType.valueOf(lastMessage.get("messageType"));
+                    MessageStatus messageStatus = MessageStatus.valueOf(lastMessage.get("messageStatus"));
+                    String content = lastMessage.get("content");
+                    String sentBy = lastMessage.get("sentBy");
+                    String time = lastMessage.get("time");
+
+                    Message message = new Message(content, time, sentBy, messageStatus, messageType);
+                    adapter.addNewMessage(message);
+
+                    if(sentBy.equals(UserManager.getCurrentUser().getIdentifier())) {
+                        recyclerViewMessage.scrollToPosition(adapter.getItemCount() - 1);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void loadChatInformation() {
         DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
         chatRoomRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -107,6 +139,8 @@ public class ChatActivity extends BaseAppActivity {
                 }
 
                 List<HashMap<String, String>> messagesList = (List<HashMap<String, String>>) task.getResult().child("messagesList").getValue();
+                List<Message> messageList = new ArrayList<Message>();
+
                 for (int i = 1; i < messagesList.size(); i++) {
 
                     MessageType messageType = MessageType.valueOf(messagesList.get(i).get("messageType"));
@@ -115,16 +149,16 @@ public class ChatActivity extends BaseAppActivity {
                     String sentBy = messagesList.get(i).get("sentBy");
                     String time = messagesList.get(i).get("time");
 
-                    Message model = new Message(content, time, sentBy, messageStatus, messageType);
-                    messageList.add(model);
+                    Message message = new Message(content, time, sentBy, messageStatus, messageType);
+                    messageList.add(message);
                 }
 
-                buildMessageRecyclerView();
+                buildMessageRecyclerView(messageList);
             }
         });
     }
 
-    public void buildMessageRecyclerView() {
+    public void buildMessageRecyclerView(List<Message> messageList) {
         MessageAdapter messageAdapter = new MessageAdapter(messageList, ChatActivity.this);
         recyclerViewMessage.setAdapter((messageAdapter));
         recyclerViewMessage.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
