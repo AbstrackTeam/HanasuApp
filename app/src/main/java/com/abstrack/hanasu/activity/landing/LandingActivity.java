@@ -15,6 +15,7 @@ import com.abstrack.hanasu.core.chatroom.chat.ChatsAdapter;
 import com.abstrack.hanasu.core.story.StoriesAdapter;
 import com.abstrack.hanasu.core.story.Story;
 import com.abstrack.hanasu.core.user.UserManager;
+import com.abstrack.hanasu.notification.NotificationBuilder;
 import com.abstrack.hanasu.thread.UserServiceThread;
 import com.abstrack.hanasu.core.chatroom.message.data.MessageStatus;
 import com.abstrack.hanasu.db.FireDatabase;
@@ -51,6 +52,7 @@ public class LandingActivity extends BaseAppActivity {
     }
 
     private void init() {
+        NotificationBuilder.createNotificationChannel(this);
         userService.start();
 
         storiesBar = findViewById(R.id.storiesBar);

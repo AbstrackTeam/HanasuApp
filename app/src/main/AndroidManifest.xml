@@ -68,6 +68,9 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@mipmap/ic_main_hanasu" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.abstrack.hanasu.android.fileprovider"
