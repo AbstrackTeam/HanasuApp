@@ -71,8 +71,7 @@ public class SetUsernameActivity extends BaseAppActivity {
             return;
         }
 
-        DatabaseReference databaseReference = FireDatabase.getFbDatabase().getReference();
-        databaseReference.child("users").child(identifier).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        FireDatabase.getDataBaseReferenceWithPath("users").child(identifier).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
 

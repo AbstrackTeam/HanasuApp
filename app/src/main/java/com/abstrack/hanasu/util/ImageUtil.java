@@ -1,5 +1,6 @@
 package com.abstrack.hanasu.util;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,11 +14,16 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.webkit.MimeTypeMap;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ImageUtil {
 
@@ -43,21 +49,25 @@ public class ImageUtil {
         }
 
         Bundle extras = data.getExtras();
-        Bitmap profilePicBitmap = (Bitmap) extras.get("data");
-        return profilePicBitmap;
+        return (Bitmap) extras.get("data");
     }
 
- /**   public static Bitmap convertPictureStreamToBitmap(Context ctx, Intent data) {
-        try {
-            InputStream inputStream = ctx.getContentResolver().openInputStream(data.getData());
-            Bitmap profilePicBitmap = BitmapFactory.decodeStream(inputStream);
-            return profilePicBitmap;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+    public static File createImageFile() throws IOException {
+        @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        return File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+    }
 
-        return null;
-    } **/
+    private String getFileExt(Context ctx, Uri contentUri) {
+        ContentResolver c = ctx.getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(c.getType(contentUri));
+    }
 
     public static Bitmap convertDrawableToBitmap(Drawable drawable) {
         Bitmap bitmap = null;

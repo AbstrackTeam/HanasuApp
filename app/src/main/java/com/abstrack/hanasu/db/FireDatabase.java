@@ -8,11 +8,9 @@ import com.google.firebase.storage.StorageReference;
 public class FireDatabase {
 
     public static DatabaseReference getDataBaseReferenceWithPath(String path){
-        return getFbDatabase().getReference(path);
-    }
-
-    public static FirebaseDatabase getFbDatabase(){
-        return FirebaseDatabase.getInstance();
+        DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference(path);
+        dbReference.keepSynced(true);
+        return dbReference;
     }
 
     public static StorageReference getStorageReference() {
