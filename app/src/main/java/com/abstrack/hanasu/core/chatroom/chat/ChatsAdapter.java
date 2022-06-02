@@ -1,7 +1,9 @@
 package com.abstrack.hanasu.core.chatroom.chat;
 
+import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.chat.ChatActivity;
+import com.abstrack.hanasu.core.chatroom.message.Message;
 import com.abstrack.hanasu.core.chatroom.message.data.MessageStatus;
 import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.db.FireDatabase;
@@ -65,15 +68,26 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
         // Set placeholder icon
         holder.userIcon.setImageResource(R.drawable.ic_profile_pic);
 
-        // If the messages are zero or is seen, hide the notification view.
-        if (chats.get(position).getMessagesCount() == 0 || chats.get(position).getMessageState() == MessageStatus.SEEN) {
-            holder.chatNotification.setVisibility(View.INVISIBLE);
-        } else {
-            holder.chatNotification.setVisibility(View.VISIBLE);
+        // If the messages are zero
+        if (chats.get(position).getMessagesCount() == 0) {
+            MessageStatus messageStatus = chats.get(position).getMessageState();
+            holder.clearNotifications();
+            if (messageStatus == MessageStatus.SEEN) {
+                holder.messageQuantity.setBackgroundResource(R.drawable.seen);
+            }
+            if (messageStatus == MessageStatus.NOT_SEEN) {
+                holder.messageQuantity.setBackgroundResource(R.drawable.not_seen);
+            }
+            if (messageStatus == MessageStatus.SENDING) {
+                holder.messageQuantity.setBackgroundResource(R.drawable.sended);
+            }
         }
-        // Set the notification icon quantity and value
-        holder.messageQuantity.setText(String.valueOf(chats.get(position).getMessagesCount()));
-        holder.messageQuantityValue = chats.get(position).getMessagesCount();
+        else{
+            // Set the notification icon quantity and value
+            holder.messageQuantity.setText(String.valueOf(chats.get(position).getMessagesCount()));
+            holder.messageQuantityValue = chats.get(position).getMessagesCount();
+        }
+
 
         // Set the provided time
         holder.chatTime.setText(chats.get(position).getTime());
@@ -160,11 +174,11 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
             chatRoomRef.child("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    if(!task.isSuccessful()){
+                    if (!task.isSuccessful()) {
                         return;
                     }
-                    for(DataSnapshot user : task.getResult().getChildren()){
-                        if(!user.getValue().toString().equals(UserManager.getCurrentUser().getIdentifier())){
+                    for (DataSnapshot user : task.getResult().getChildren()) {
+                        if (!user.getValue().toString().equals(UserManager.getCurrentUser().getIdentifier())) {
                             syncUserInfo(user.getValue().toString());
                         }
                     }
@@ -172,7 +186,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
             });
         }
 
-        public void syncMessages(){
+        public void syncMessages() {
             // Reference
             DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
             // Creating the listener
@@ -186,14 +200,30 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
                     // Assign all the properties
                     chatTime.setText(lastMessage.get("time"));
                     previewMessage.setText(lastMessage.get("content"));
-                    messageQuantityValue = 0;
 
-                    if(MessageStatus.valueOf(lastMessage.get("messageStatus")) == MessageStatus.SEEN){
-                        chatNotification.setVisibility(View.INVISIBLE);
-                        return;
+                    // First check if you were the last message
+                    if (lastMessage.get("sentBy").equals(UserManager.getCurrentUser().getIdentifier())) {
+                        // If so, now validate the three types of states
+                        MessageStatus messageStatus = MessageStatus.valueOf(lastMessage.get("messageStatus"));
+
+                        clearNotifications();
+                        if (messageStatus == MessageStatus.SEEN) {
+                            System.out.println("SEEN");
+                            messageQuantity.setBackgroundResource(R.drawable.seen);
+                            return;
+                        }
+                        if (messageStatus == MessageStatus.NOT_SEEN) {
+                            System.out.println("NOT_SEEN");
+
+                            messageQuantity.setBackgroundResource(R.drawable.not_seen);
+                            return;
+                        }
+                        if (messageStatus == MessageStatus.SENDING) {
+                            System.out.println("SENDING");
+                            messageQuantity.setBackgroundResource(R.drawable.sended);
+                        }
                     }
-
-                    if (!lastMessage.get("sentBy").equals(UserManager.getCurrentUser().getIdentifier())) {
+                    else{
                         for (int i = 1; i < messagesList.size(); i++) {
                             if (messagesList.get(i).get("sentBy").equals(UserManager.getCurrentUser().getIdentifier())) {
                                 continue;
@@ -203,17 +233,10 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
                             }
                         }
 
-                        if(messageQuantityValue == 0 ){
-                            messageQuantity.setText(String.valueOf(messageQuantityValue));
-                            chatNotification.setVisibility(View.INVISIBLE);
-                            return;
-                        }
                         messageQuantity.setText(String.valueOf(messageQuantityValue));
-                        chatNotification.setVisibility(View.VISIBLE);
-                        return;
+                        messageQuantity.setBackground(null);
+                        chatNotification.setCardBackgroundColor(itemView.getResources().getColor(R.color.detail_color_secondary));
                     }
-                    messageQuantity.setText(String.valueOf(messageQuantityValue));
-                    chatNotification.setVisibility(View.INVISIBLE);
                 }
 
                 @Override
@@ -225,7 +248,17 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
             chatRoomRef.addValueEventListener(syncMessages);
         }
 
-        public void syncUserInfo(String identifier){
+        public void clearNotifications() {
+            messageQuantityValue = 0;
+            // Clear the message
+            messageQuantity.setText("");
+            // clear the background
+            // Translucent
+            chatNotification.setCardBackgroundColor(null);
+            messageQuantity.setBackground(null);
+        }
+
+        public void syncUserInfo(String identifier) {
             // References
             DatabaseReference userImgKeyRef = FireDatabase.getDataBaseReferenceWithPath("users").child(identifier).child("imgKey");
             DatabaseReference userImgExtensionRef = FireDatabase.getDataBaseReferenceWithPath("users").child(identifier).child("imgExtension");
@@ -239,7 +272,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
                     userImgExtensionRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DataSnapshot> task) {
-                            if(!task.isSuccessful()){
+                            if (!task.isSuccessful()) {
                                 return;
                             }
 
