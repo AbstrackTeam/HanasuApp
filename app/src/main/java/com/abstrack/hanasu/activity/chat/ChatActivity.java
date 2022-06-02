@@ -76,6 +76,7 @@ public class ChatActivity extends BaseAppActivity {
         loadChatInformation();
         loadFriendInformation();
         syncMessages();
+        syncFriendInformation();
     }
 
     public void sendMessage(View view) {
@@ -94,6 +95,28 @@ public class ChatActivity extends BaseAppActivity {
                 }
             });
         }
+    }
+
+    public void syncFriendInformation(){
+        DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
+        chatRoomRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot data) {
+                List<String> userList = (List<String>) data.child("users").getValue();
+
+                for(String identifier : userList){
+                    if(!identifier.equals(UserManager.getCurrentUser().getIdentifier())){
+                        fetchFriendInformation(identifier);
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     public void syncMessages() {
