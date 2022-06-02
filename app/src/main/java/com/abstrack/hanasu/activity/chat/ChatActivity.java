@@ -2,13 +2,13 @@ package com.abstrack.hanasu.activity.chat;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,8 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
-import com.abstrack.hanasu.auth.AuthManager;
-import com.abstrack.hanasu.core.chatroom.chat.Chat;
 import com.abstrack.hanasu.core.chatroom.message.MessageAdapter;
 import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.core.chatroom.message.data.MessageStatus;
@@ -50,7 +48,8 @@ public class ChatActivity extends BaseAppActivity {
     private ImageView imgContactProfilePicture;
     private EditText edtTxtMsg;
 
-    private Animation down_anim;
+    private Animation down_anim, up_anim;
+    private boolean firstAnimationRun = true;
 
     private List<Message> messageList;
 
@@ -76,7 +75,6 @@ public class ChatActivity extends BaseAppActivity {
         loadChatInformation();
         loadFriendInformation();
         syncMessages();
-        syncFriendInformation();
     }
 
     public void sendMessage(View view) {
@@ -95,28 +93,6 @@ public class ChatActivity extends BaseAppActivity {
                 }
             });
         }
-    }
-
-    public void syncFriendInformation(){
-        DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
-        chatRoomRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot data) {
-                List<String> userList = (List<String>) data.child("users").getValue();
-
-                for(String identifier : userList){
-                    if(!identifier.equals(UserManager.getCurrentUser().getIdentifier())){
-                        fetchFriendInformation(identifier);
-                        break;
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
 
     public void syncMessages() {
@@ -141,7 +117,14 @@ public class ChatActivity extends BaseAppActivity {
                         adapter.addNewMessage(message);
 
                         if (sentBy.equals(UserManager.getCurrentUser().getIdentifier())) {
-                            recyclerViewMessage.smoothScrollToPosition(adapter.getItemCount() - 1);
+                            recyclerViewMessage.smoothScrollToPosition(adapter.getItemCount());
+                        } else {
+                            if(recyclerViewMessage.getScrollState() == RecyclerView.SCROLL_STATE_IDLE) {
+                                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerViewMessage.getLayoutManager();
+                                if((messagesList.size() - 1) == (linearLayoutManager.findLastCompletelyVisibleItemPosition() + 2)) {
+                                    recyclerViewMessage.smoothScrollToPosition(adapter.getItemCount());
+                                }
+                            }
                         }
                     }
                 }
@@ -197,14 +180,37 @@ public class ChatActivity extends BaseAppActivity {
                 if (!task.isSuccessful()) {
                     Log.e("HanasuChat", "Error getting values");
                 }
+
                 List<String> userList = (List<String>) task.getResult().child("users").getValue();
 
                 for(String identifier : userList){
                     if(!identifier.equals(UserManager.getCurrentUser().getIdentifier())){
-                        fetchFriendInformation(identifier);
+                        syncFriendInformation(identifier);
                         break;
                     }
                 }
+            }
+        });
+    }
+
+    public void syncFriendInformation(String friendIdentifier) {
+        FireDatabase.getDataBaseReferenceWithPath("users").child(friendIdentifier).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot user) {
+                String contactName = (String) user.child("displayName").getValue();
+                String imgExtension = (String) user.child("imgExtension").getValue();
+                String imgKey = (String) user.child("imgKey").getValue();
+                ConnectionStatus connectionStatus = ConnectionStatus.valueOf(user.child("connectionStatus").getValue().toString());
+
+                txtContactName.setText(contactName);
+
+                decorateConnectionStatus(connectionStatus);
+                fetchFriendProfilePicture(imgExtension, imgKey);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }
@@ -240,10 +246,16 @@ public class ChatActivity extends BaseAppActivity {
         if(connectionStatus == ConnectionStatus.ONLINE){
             down_anim = AnimationUtils.loadAnimation(ChatActivity.this, R.anim.down_movement);
             txtContactStatus.setVisibility(View.VISIBLE);
-            txtContactStatus.setText("En línea");
             txtContactStatus.setAnimation(down_anim);
+            firstAnimationRun = false;
         } else {
-            txtContactStatus.setVisibility(View.INVISIBLE);
+            if(!firstAnimationRun) {
+                up_anim = AnimationUtils.loadAnimation(ChatActivity.this, R.anim.slide_to_right_movement);
+                txtContactStatus.setVisibility(View.INVISIBLE);
+                txtContactStatus.setAnimation(up_anim);
+            }
+
+            firstAnimationRun = false;
         }
     }
 

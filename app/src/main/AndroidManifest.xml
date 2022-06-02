@@ -54,8 +54,7 @@
             android:exported="false" />
         <activity
             android:name=".activity.chat.ChatActivity"
-            android:exported="false"
-            android:noHistory="true"/>
+            android:exported="false" />
         <activity
             android:name=".activity.LoadingActivity"
             android:exported="true"

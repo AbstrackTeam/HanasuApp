@@ -70,9 +70,10 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/asap"
-                android:text="Status"
+                android:text="En línea"
                 android:textColor="@color/chat_background"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:visibility="invisible" />
         </LinearLayout>
 
         <Button
