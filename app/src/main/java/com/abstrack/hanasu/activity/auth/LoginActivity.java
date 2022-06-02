@@ -6,6 +6,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.abstrack.hanasu.activity.welcome.SetProfileInfoActivity;
 import com.abstrack.hanasu.activity.welcome.WelcomeActivity;
 import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.BaseAppActivity;
@@ -18,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends BaseAppActivity {
 
@@ -53,10 +55,11 @@ public class LoginActivity extends BaseAppActivity {
                     return;
                 }
 
-                FireDatabase.getFbDatabase().getReference().child("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+
+                FireDatabase.getDataBaseReferenceWithPath("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        boolean hasIdentifier = false;
+                        boolean hasIdentifier = false, hasDisplayName = false;
 
                         if (!task.isSuccessful()) {
                             Log.e("HanasuFirebase", "Error getting data", task.getException());
@@ -68,19 +71,28 @@ public class LoginActivity extends BaseAppActivity {
                                 continue;
                             }
 
-                            if(user.child("identifier").getValue() != null) {
+                            if(user.child("identifier").getValue() != null){
+                                if(user.child("displayName").getValue() != null){
+                                    if(!user.child("displayName").getValue().equals("")){
+                                        hasDisplayName = true;
+                                    }
+                                }
+
                                 hasIdentifier = true;
                                 break;
                             }
                         }
 
                         if(hasIdentifier) {
-                            AndroidUtil.startNewActivity(LoginActivity.this, LandingActivity.class);
+                            if(hasDisplayName){
+                                AndroidUtil.startNewActivity(LoginActivity.this, LandingActivity.class);
+                                return;
+                            }
+                            AndroidUtil.startNewActivity(LoginActivity.this, SetProfileInfoActivity.class);
                             return;
                         }
 
                         AndroidUtil.startNewActivity(LoginActivity.this, WelcomeActivity.class);
-                        return;
                     }
                 });
             }

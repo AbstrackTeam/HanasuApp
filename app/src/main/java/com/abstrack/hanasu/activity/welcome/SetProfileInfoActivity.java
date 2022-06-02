@@ -1,6 +1,8 @@
 package com.abstrack.hanasu.activity.welcome;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
@@ -25,11 +28,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import java.io.File;
 import java.util.UUID;
 
 public class SetProfileInfoActivity extends BaseAppActivity {
 
-    private LinearLayout layoutPictureOptions, clickableContainer;
+    private LinearLayout clickableContainer;
     private View viewPictureOptions;
 
     private EditText edtTxtProfileName;
@@ -37,8 +41,10 @@ public class SetProfileInfoActivity extends BaseAppActivity {
 
     private static final int IMAGE_CAPTURE_CODE = 1999, IMAGE_PICK_CODE = 2000;
 
-    private boolean showPictureOptions = false;
+    private boolean showPictureOptions = false, progressFirstRun = false;
+    private String tempCameraImagePath = "";
 
+    @SuppressLint("InflateParams")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +54,7 @@ public class SetProfileInfoActivity extends BaseAppActivity {
         clickableContainer.setClickable(false);
         clickableContainer.setVisibility(View.INVISIBLE);
 
-        layoutPictureOptions = findViewById(R.id.layoutPictureOptions);
+        LinearLayout layoutPictureOptions = findViewById(R.id.layoutPictureOptions);
 
         viewPictureOptions = LayoutInflater.from(this).inflate(R.layout.select_picture_option, null, false);
         viewPictureOptions.setVisibility(View.INVISIBLE);
@@ -64,7 +70,8 @@ public class SetProfileInfoActivity extends BaseAppActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case IMAGE_CAPTURE_CODE:
-                    //Issue with camera
+                    fetchCameraPhoto();
+                    break;
                 case IMAGE_PICK_CODE:
                     uploadPhoto(data.getData(), ImageUtil.getMimeType(this, data.getData()));
                     break;
@@ -73,10 +80,80 @@ public class SetProfileInfoActivity extends BaseAppActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void uploadPhoto(Uri imgUri, String imgExtension){
-        String imgKey = UUID.randomUUID().toString();
-        final boolean[] progressFirstRun = {false};
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == IMAGE_CAPTURE_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                tempCameraImagePath = AndroidUtil.takeCameraPhoto(this, IMAGE_CAPTURE_CODE);
+            } else {
+                Toast.makeText(this, "Camera Permission is Required to Use camera.", Toast.LENGTH_SHORT).show();
+            }
+        }
 
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    public void fetchCameraPhoto() {
+        File f = new File(tempCameraImagePath);
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        Uri imageUri = Uri.fromFile(f);
+        mediaScanIntent.setData(imageUri);
+        this.sendBroadcast(mediaScanIntent);
+
+        uploadPhoto(imageUri, ".jpg");
+    }
+
+    public void uploadPhoto(Uri imgUri, String imgExtension) {
+        String imgKey = UUID.randomUUID().toString();
+
+        if(imgExtension.equals(".gif")){
+            uploadByFile(imgUri, imgKey, imgExtension);
+            return;
+        }
+        // Compress and reduce image weight
+        byte[] compressedImgBytes = ImageUtil.compressImage(imgExtension, imgUri, getContentResolver());
+        uploadByBytes(compressedImgBytes, imgUri, imgKey, imgExtension);
+    }
+
+    public void fetchProfilePic(Uri imgUri, String imgExtension) {
+        ImageView profilePicImgView = findViewById(R.id.imgProfile);
+
+        if (imgExtension.equals(".gif")) {
+            Glide.with(this).asGif().load(imgUri).into(profilePicImgView);
+        } else {
+            Glide.with(this).asBitmap().load(imgUri).into(profilePicImgView);
+        }
+    }
+
+    public void uploadByBytes(byte[] bytes, Uri imgUri, String imgKey, String imgExtension){
+        StorageReference imageStorageReference = FireDatabase.getStorageReference().child("image").child(imgKey + imgExtension);
+        imageStorageReference.putBytes(bytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d("HanasuStorage", "Image uploaded successfully");
+
+                UserManager.updateUserData("imgKey", imgKey);
+                UserManager.updateUserData("imgExtension", imgExtension);
+
+                fetchProfilePic(imgUri, imgExtension);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("HanasuStorage", "Image failed to upload", e);
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                if(!progressFirstRun) {
+                    updatePictureOptions(findViewById(android.R.id.content).getRootView());
+                    progressFirstRun = true;
+                }
+            }
+        });
+    }
+
+    public void  uploadByFile(Uri imgUri, String imgKey, String imgExtension) {
         StorageReference imageStorageReference = FireDatabase.getStorageReference().child("image").child(imgKey + imgExtension);
         imageStorageReference.putFile(imgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -96,27 +173,18 @@ public class SetProfileInfoActivity extends BaseAppActivity {
         }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                if(!progressFirstRun[0]) {
+                if(!progressFirstRun) {
                     updatePictureOptions(findViewById(android.R.id.content).getRootView());
-                    progressFirstRun[0] = true;
+                    progressFirstRun = true;
                 }
             }
         });
     }
 
-    public void fetchProfilePic(Uri imgUri, String imgExtension) {
-        ImageView profilePicImgView = (ImageView) findViewById(R.id.imgProfile);
-
-        if (imgExtension.equals(".gif")) {
-            Glide.with(this).asGif().load(imgUri).into(profilePicImgView);
-        } else {
-            Glide.with(this).asBitmap().load(imgUri).into(profilePicImgView);
-        }
-    }
-
+    @SuppressLint("UseCompatLoadingForDrawables")
     public void removeProfilePicture(View view) {
-        ImageView profilePicImgView = (ImageView) findViewById(R.id.imgProfile);
-        profilePicImgView.setImageBitmap(ImageUtil.convertDrawableToBitmap(this.getDrawable(R.drawable.ic_profile_pic)));
+        ImageView profilePicImgView = findViewById(R.id.imgProfile);
+        profilePicImgView.setImageBitmap(ImageUtil.convertDrawableToBitmap(getDrawable(R.drawable.ic_profile_pic)));
         hidePictureOptions();
     }
 
@@ -169,10 +237,10 @@ public class SetProfileInfoActivity extends BaseAppActivity {
     }
 
     public void openCamera(View view) {
-        AndroidUtil.openCamera(this, IMAGE_CAPTURE_CODE);
+        tempCameraImagePath = AndroidUtil.takeCameraPhoto(this, IMAGE_CAPTURE_CODE);
     }
 
     public void openGallery(View view) {
-        AndroidUtil.openGallery(this, IMAGE_PICK_CODE);
+        AndroidUtil.chooseGalleryPhoto(this, IMAGE_PICK_CODE);
     }
 }
