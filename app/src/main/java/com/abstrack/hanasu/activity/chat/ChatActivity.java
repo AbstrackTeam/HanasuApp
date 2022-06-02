@@ -4,6 +4,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,6 +21,7 @@ import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.core.chatroom.chat.data.MessageStatus;
 import com.abstrack.hanasu.core.chatroom.chat.data.MessageType;
 import com.abstrack.hanasu.core.chatroom.message.Message;
+import com.abstrack.hanasu.core.user.data.ConnectionStatus;
 import com.abstrack.hanasu.db.FireDatabase;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.bumptech.glide.Glide;
@@ -29,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.net.ConnectException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,6 +50,8 @@ public class ChatActivity extends BaseAppActivity {
     private TextView txtContactName, txtContactStatus;
     private ImageView imgContactProfilePicture;
     private EditText edtTxtMsg;
+
+    private Animation down_anim;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,7 +151,7 @@ public class ChatActivity extends BaseAppActivity {
     }
 
     public void fetchFriendInformation(String friendIdentifier) {
-        FireDatabase.getFbDatabase().getReference().child("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        FireDatabase.getDataBaseReferenceWithPath("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
@@ -160,12 +166,26 @@ public class ChatActivity extends BaseAppActivity {
                     String contactName = (String) user.child("displayName").getValue();
                     String imgExtension = (String) user.child("imgExtension").getValue();
                     String imgKey = (String) user.child("imgKey").getValue();
+                    ConnectionStatus connectionStatus = (ConnectionStatus) user.child("connectionStatus").getValue();
 
                     txtContactName.setText(contactName);
+
+                    decorateConnectionStatus(connectionStatus);
                     fetchFriendProfilePicture(imgExtension, imgKey);
                 }
             }
         });
+    }
+
+    public void decorateConnectionStatus(ConnectionStatus connectionStatus){
+        if(connectionStatus == ConnectionStatus.ONLINE){
+            down_anim = AnimationUtils.loadAnimation(ChatActivity.this, R.anim.down_movement);
+            txtContactStatus.setVisibility(View.VISIBLE);
+            txtContactStatus.setText("En línea");
+            txtContactStatus.setAnimation(down_anim);
+        } else {
+            txtContactStatus.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void fetchFriendProfilePicture(String imgExtension, String imgKey) {

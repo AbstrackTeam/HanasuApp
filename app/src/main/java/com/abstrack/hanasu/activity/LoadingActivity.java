@@ -20,16 +20,18 @@ import com.abstrack.hanasu.db.FireDatabase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LoadingActivity extends BaseAppActivity {
 
     private Animation down_anim;
-    boolean hasIdentifier = false, hasDisplayName = false;
+    boolean hasIdentifier = false, hasDisplayName = false, hasValidUid = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         animateContent();
         load();
@@ -48,7 +50,7 @@ public class LoadingActivity extends BaseAppActivity {
 
     public void load(){
         UserManager.fetchInitialUserData();
-        FireDatabase.getFbDatabase().getReference().child("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        FireDatabase.getDataBaseReferenceWithPath("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if(!task.isSuccessful()){
@@ -57,6 +59,12 @@ public class LoadingActivity extends BaseAppActivity {
                 }
 
                 for(DataSnapshot user : task.getResult().getChildren()){
+                    if(user.child("uid").getValue() != null){
+                        hasValidUid = true;
+                    } else {
+                        return;
+                    }
+
                     if(!user.child("uid").getValue().equals(AuthManager.getFireAuth().getCurrentUser().getUid())){
                         continue;
                     }
@@ -80,6 +88,11 @@ public class LoadingActivity extends BaseAppActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                if(!hasValidUid){
+                    AndroidUtil.startNewActivity(LoadingActivity.this, LoginActivity.class);
+                    return;
+                }
+
                 if(!AuthManager.isUserLogged()){
                     AndroidUtil.startNewActivity(LoadingActivity.this, LoginActivity.class);
                     return;

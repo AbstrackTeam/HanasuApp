@@ -1,12 +1,15 @@
 package com.abstrack.hanasu.core.user;
 
 import com.abstrack.hanasu.auth.AuthManager;
+import com.abstrack.hanasu.core.user.data.ConnectionStatus;
 
+import java.net.ConnectException;
 import java.util.HashMap;
 
 public class User {
 
     private String name, tag, imgKey, imgExtension, about, identifier, uid, displayName;
+    private ConnectionStatus connectionStatus;
     private HashMap<String, String> contacts;
 
     public User(String name, String tag) {
@@ -20,9 +23,10 @@ public class User {
         displayName = "";
         contacts = new HashMap<String, String>();
         contacts.put("identifier", "chatRoom");
+        connectionStatus = ConnectionStatus.OFFLINE;
     }
 
-    public User(String name, String tag, String imgKey, String imgExtension, String about, String identifier, String uid, String displayName, HashMap<String, String> contacts) {
+    public User(String name, String tag, String imgKey, String imgExtension, String about, String identifier, String uid, String displayName, HashMap<String, String> contacts, ConnectionStatus connectionStatus) {
         this.name = name;
         this.tag = tag;
         this.imgKey = imgKey;
@@ -32,6 +36,15 @@ public class User {
         this.uid = uid;
         this.displayName = displayName;
         this.contacts = contacts;
+        this.connectionStatus = connectionStatus;
+    }
+
+    public ConnectionStatus getConnectionStatus() {
+        return connectionStatus;
+    }
+
+    public void setConnectionStatus(ConnectionStatus connectionStatus) {
+        this.connectionStatus = connectionStatus;
     }
 
     public String getName() {

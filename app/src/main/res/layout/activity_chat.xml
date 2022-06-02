@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -130,14 +131,14 @@
             android:layout_marginTop="0dp"
             android:layout_marginEnd="0dp"
             android:layout_weight="1"
+            android:autofillHints=""
             android:background="@drawable/rounded_chat"
             android:ems="10"
+            android:hint="@string/msg_hint"
             android:inputType="textPersonName"
             android:paddingStart="10dp"
-            android:hint="@string/msg_hint"
             android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:autofillHints="" />
+            android:textColorHint="@color/black" />
 
         <Button
             android:id="@+id/btnSend"

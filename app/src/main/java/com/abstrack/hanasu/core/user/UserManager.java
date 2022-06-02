@@ -4,6 +4,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.core.chatroom.ChatRoom;
+import com.abstrack.hanasu.core.user.data.ConnectionStatus;
 import com.abstrack.hanasu.db.FireDatabase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -19,7 +20,7 @@ public class UserManager{
     private static User currentUser;
 
     public static void fetchInitialUserData() {
-        FireDatabase.getFbDatabase().getReference().child("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        FireDatabase.getDataBaseReferenceWithPath("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if(!task.isSuccessful()){
@@ -40,8 +41,9 @@ public class UserManager{
                     String uid = AuthManager.getFireAuth().getUid();
                     String displayName = (String) user.child("displayName").getValue();
                     HashMap<String, String> contacts = (HashMap<String, String>) user.child("contacts").getValue();
+                    ConnectionStatus connectionStatus = ConnectionStatus.valueOf(user.child("connectionStatus").getValue().toString());
 
-                    currentUser = new User(name, tag, imgKey, imgExtension, about, identifier, uid, displayName, contacts);
+                    currentUser = new User(name, tag, imgKey, imgExtension, about, identifier, uid, displayName, contacts, connectionStatus);
                 }
             }
         });

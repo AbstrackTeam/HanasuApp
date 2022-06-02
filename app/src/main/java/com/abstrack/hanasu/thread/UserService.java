@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.core.user.User;
+import com.abstrack.hanasu.core.user.data.ConnectionStatus;
 import com.abstrack.hanasu.db.FireDatabase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,7 +27,7 @@ public class UserService extends Thread{
                 String uid = AuthManager.getFireAuth().getUid();
                 String displayName = (String) data.child("displayName").getValue();
                 HashMap<String, String> contacts = (HashMap<String, String>) data.child("contacts").getValue();
-
+                ConnectionStatus connectionStatus = ConnectionStatus.valueOf(data.child("connectionStatus").getValue().toString());
                 // User added a friend
                 if(contacts.size() > UserManager.getCurrentUser().getContacts().size()){
 
@@ -36,7 +37,7 @@ public class UserService extends Thread{
 
                 }
                 // User updated some info
-                UserManager.setCurrentUser(new User(name, tag, imgKey, imgExtension, about, identifier, uid, displayName, contacts));
+                UserManager.setCurrentUser(new User(name, tag, imgKey, imgExtension, about, identifier, uid, displayName, contacts, connectionStatus));
                 Log.w("Hanasu-UserService", "currentUser updated.");
             }
 
@@ -61,8 +62,9 @@ public class UserService extends Thread{
                 String identifier = name + tag;
                 String uid = AuthManager.getFireAuth().getUid();
                 String displayName = currentUser.getDisplayName();
+                ConnectionStatus connectionStatus = currentUser.getConnectionStatus();
 
-                UserManager.setCurrentUser(new User(name, tag, imgKey, imgExtension, about, identifier, uid, displayName, contacts));
+                UserManager.setCurrentUser(new User(name, tag, imgKey, imgExtension, about, identifier, uid, displayName, contacts, connectionStatus));
 
                 Log.w("Hanasu-UserService", "currentUser contacts updated.");
             }
