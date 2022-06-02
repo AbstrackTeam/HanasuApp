@@ -1,4 +1,4 @@
-package com.abstrack.hanasu.core.user.data;
+package com.abstrack.hanasu.core.user.chat;
 
 public enum ConnectionStatus {
     ONLINE, OFFLINE

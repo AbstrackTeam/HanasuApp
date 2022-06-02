@@ -65,5 +65,4 @@
     <string name="profile_pic_camera">Cámara</string>
     <string name="profile_pic_gallery">Galería</string>
     <string name="profile_pic_trash">Basura</string>
-    <string name="msg_hint">Mensaje</string>
 </resources>
