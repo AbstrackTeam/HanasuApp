@@ -166,7 +166,7 @@ public class ChatActivity extends BaseAppActivity {
                     String contactName = (String) user.child("displayName").getValue();
                     String imgExtension = (String) user.child("imgExtension").getValue();
                     String imgKey = (String) user.child("imgKey").getValue();
-                    ConnectionStatus connectionStatus = (ConnectionStatus) user.child("connectionStatus").getValue();
+                    ConnectionStatus connectionStatus = ConnectionStatus.valueOf(user.child("connectionStatus").getValue().toString());
 
                     txtContactName.setText(contactName);
 
