@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.ImageDecoder;
 import android.graphics.drawable.BitmapDrawable;
@@ -16,12 +15,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.webkit.MimeTypeMap;
-
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -108,4 +106,30 @@ public class ImageUtil {
         return null;
     }
 
+    public static byte[] compressImage(String imgExtension, Uri imgUri, ContentResolver contentResolver){
+        Bitmap bitmapImg = null;
+
+        try {
+            bitmapImg = MediaStore.Images.Media.getBitmap(contentResolver, imgUri);
+        }
+        catch (IOException e){
+            Log.e("Hanasu-SetProfileInfo", "Error while compressing image");
+        }
+
+        int nh = (int) ( bitmapImg.getHeight() * (512.0 / bitmapImg.getWidth()));
+
+        Bitmap scaledBitmapImg = Bitmap.createScaledBitmap(bitmapImg, 512, nh, true);
+
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+
+
+        if (".png".equals(imgExtension)) {
+            scaledBitmapImg.compress(Bitmap.CompressFormat.PNG, 35, bytes);
+        }
+        else {
+            scaledBitmapImg.compress(Bitmap.CompressFormat.JPEG, 35, bytes);
+        }
+
+        return bytes.toByteArray();
+    }
 }
