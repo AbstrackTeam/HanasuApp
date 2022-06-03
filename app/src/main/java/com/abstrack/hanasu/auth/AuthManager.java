@@ -121,6 +121,10 @@ public class AuthManager {
     }
 
     public static FirebaseAuth getFireAuth() {
-        return fireAuth;
+        if(fireAuth != null) {
+            return fireAuth;
+        }
+
+        return null;
     }
 }

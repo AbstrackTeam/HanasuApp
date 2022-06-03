@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -24,6 +25,11 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class AndroidUtil {
+
+    public static boolean isNetworkConnected(Context ctx) {
+        ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
+    }
 
     public static void chooseGalleryPhoto(BaseAppActivity currentActivity, int pickCode){
         Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);

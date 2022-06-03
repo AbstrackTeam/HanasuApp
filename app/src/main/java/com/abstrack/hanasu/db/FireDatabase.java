@@ -13,6 +13,12 @@ public class FireDatabase {
         return dbReference;
     }
 
+    public static DatabaseReference getDataBaseReferenceWithPath(String path, boolean synced){
+        DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference(path);
+        dbReference.keepSynced(synced);
+        return dbReference;
+    }
+
     public static StorageReference getStorageReference() {
         return FirebaseStorage.getInstance().getReference();
     }

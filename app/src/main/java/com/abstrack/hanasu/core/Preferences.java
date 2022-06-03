@@ -7,15 +7,15 @@ public class Preferences {
 
     public static final String PREFERENCES_ID = "Hanasu";
 
-    public static String getIdentifier(Context ct) {
-        SharedPreferences sharedPref = ct.getSharedPreferences(PREFERENCES_ID, Context.MODE_PRIVATE);
-        return sharedPref.getString("identifier", "");
+    public static String getValue(String key, Context ctx) {
+        SharedPreferences sharedPref = ctx.getSharedPreferences(PREFERENCES_ID, Context.MODE_PRIVATE);
+        return sharedPref.getString(key, "");
     }
 
-    public static void setIdentifier(String value, Context ct){
-        SharedPreferences sharedPreferences = ct.getSharedPreferences(PREFERENCES_ID, Context.MODE_PRIVATE);
+    public static void setStringValue(String key, String value, Context ctx) {
+        SharedPreferences sharedPreferences = ctx.getSharedPreferences(PREFERENCES_ID, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("identifier", value);
+        editor.putString(key, value);
         editor.apply();
     }
 }
