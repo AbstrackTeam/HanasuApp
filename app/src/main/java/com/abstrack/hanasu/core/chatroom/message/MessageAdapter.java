@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.abstrack.hanasu.R;
+import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.core.chatroom.message.data.MessageType;
 import com.bumptech.glide.Glide;
@@ -54,7 +55,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public void onBindViewHolder(@NonNull MessageAdapter.MessageViewHolder holder, int position) {
         Message messageModel = messageList.get(position);
-        boolean messageSendByOther = !messageModel.getSentBy().equals(UserManager.getCurrentUser().getIdentifier());
+        boolean messageSendByOther = !messageModel.getSentBy().equals(Flame.getFireAuth().getCurrentUser().getUid());
 
         holder.txtTime.setText(messageModel.getTime());
 

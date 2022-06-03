@@ -113,15 +113,15 @@ public class LandingActivity extends BaseAppActivity {
         AndroidUtil.startNewActivity(LandingActivity.this, AddFriendActivity.class);
     }
 
-    public void load(){
-        DatabaseReference currentUserRef = Flame.getDataBaseReferenceWithPath("users").child(UserManager.getCurrentUser().getIdentifier()).child("contacts");
+   public void load(){
+        DatabaseReference currentUserRef = Flame.getDataBaseReferenceWithPath("users").child(Flame.getFireAuth().getUid()).child("contacts");
         currentUserRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Log.w("hanasu-landing", "Loading landing contacts");
 
                 // Load chats by contacts
-                HashMap<String, String> contacts = UserManager.getCurrentUser().getContacts();
+               HashMap<String, String> contacts = UserManager.getCurrentPrivateUser().getContacts();
 
                 List<String> keys = new ArrayList<>(contacts.keySet());
 
@@ -154,7 +154,7 @@ public class LandingActivity extends BaseAppActivity {
                             String userIdentifier = "";
 
                             for (String currentUser : users) {
-                                if (!currentUser.equals(UserManager.getCurrentUser().getIdentifier())) {
+                                if (!currentUser.equals(Flame.getFireAuth().getCurrentUser().getUid())) {
                                     userIdentifier = currentUser;
                                 }
                             }
@@ -173,10 +173,10 @@ public class LandingActivity extends BaseAppActivity {
 
                             if(!sentBy.equals("")) {
                                 // If you didn't send the message.
-                                if (!sentBy.equals(UserManager.getCurrentUser().getIdentifier())) {
+                                if (!sentBy.equals(Flame.getFireAuth().getCurrentUser().getUid())) {
                                     for(int i = 1; i < messagesList.size(); i++){
                                         // then we are going to count all the messages that don't have the tag "SEEN"
-                                        if(messagesList.get(i).get("sentBy").equals(UserManager.getCurrentUser().getIdentifier())){
+                                        if(messagesList.get(i).get("sentBy").equals(Flame.getFireAuth().getCurrentUser().getUid())){
                                             continue;
                                         }
                                         if (MessageStatus.valueOf(messagesList.get(i).get("messageStatus")) != MessageStatus.SEEN)  {

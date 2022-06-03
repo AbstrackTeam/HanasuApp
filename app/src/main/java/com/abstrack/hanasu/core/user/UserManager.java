@@ -17,112 +17,37 @@ import java.util.UUID;
 
 public class UserManager{
 
-    private static User currentUser;
-    private static boolean connectionListenerAdded = false;
+    private static PublicUser currentPublicUser;
+    private static PrivateUser currentPrivateUser;
 
-    public static void addConnectionListener(){
-        if(!connectionListenerAdded) {
-            Flame.getDataBaseReferenceWithPath("users").child(UserManager.getCurrentUser().getIdentifier()).child("connectionStatus").onDisconnect().setValue(ConnectionStatus.OFFLINE);
-            connectionListenerAdded = true;
-        }
+    public static void writeNewUser(String identifier) {
+        PrivateUser newPrivateUser = new PrivateUser();
+        PublicUser newPublicUser = new PublicUser(identifier);
+
+        currentPrivateUser = newPrivateUser;
+        currentPublicUser = newPublicUser;
+
+        Flame.getDataBaseReferenceWithPath("public").child(Flame.getFireAuth().getUid()).setValue(currentPublicUser);
+        Flame.getDataBaseReferenceWithPath("private").child(Flame.getFireAuth().getUid()).setValue(currentPrivateUser);
     }
 
-    public static void fetchInitialUserData() {
-        Flame.getDataBaseReferenceWithPath("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(!task.isSuccessful()){
-                    Log.e("firebase", "Error getting data", task.getException());
-                    return;
-                }
-                for(DataSnapshot user : task.getResult().getChildren()){
-                    if(!user.child("uid").getValue().equals(Flame.getFireAuth().getCurrentUser().getUid())){
-                        continue;
-                    }
-
-                    String name = (String) user.child("name").getValue();
-                    String tag = (String) user.child("tag").getValue();
-                    String imgKey = (String) user.child("imgKey").getValue();
-                    String imgExtension = (String) user.child("imgExtension").getValue();
-                    String about = (String) user.child("about").getValue();
-                    String identifier = name + tag;
-                    String uid = Flame.getFireAuth().getUid();
-                    String displayName = (String) user.child("displayName").getValue();
-                    HashMap<String, String> contacts = (HashMap<String, String>) user.child("contacts").getValue();
-                    ConnectionStatus connectionStatus = ConnectionStatus.valueOf(user.child("connectionStatus").getValue().toString());
-
-                    currentUser = new User(name, tag, imgKey, imgExtension, about, identifier, uid, displayName, contacts, connectionStatus);
-                }
-            }
-        });
+    public static void updateUserData(String side, String path, Object value) {
+        Flame.getDataBaseReferenceWithPath(side).child(Flame.getFireAuth().getUid()).child(path).setValue(value);
     }
 
-    public static void writeNewUser(String name, String tag) {
-        String identifier = name + tag;
-        User userModel = new User(name, tag);
-        currentUser = new User(name, tag);
-
-        Flame.getDataBaseReferenceWithPath("users").child(identifier).setValue(userModel);
+    public static PublicUser getCurrentPublicUser(){
+        return currentPublicUser;
     }
 
-    public static void updateUserData(String path, Object value) {
-        if(currentUser != null) {
-            Flame.getDataBaseReferenceWithPath("users").child(currentUser.getIdentifier()).child(path).setValue(value);
-        }
+    public static PrivateUser getCurrentPrivateUser(){
+        return currentPrivateUser;
     }
 
-    public static void addToUserContacts(String contactIdentifier){
-        if(currentUser != null) {
-            HashMap<String, String> currentContacts = getCurrentUser().getContacts();
-            DatabaseReference userRef = Flame.getDataBaseReferenceWithPath("users").child(currentUser.getIdentifier());
-            DatabaseReference chatRoomsRef = Flame.getDataBaseReferenceWithPath("chat-rooms");
-
-            // Check if you haven't been added by that person.
-            chatRoomsRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                boolean hasChatRoom = false;
-                String chatRoomKey = UUID.randomUUID().toString();
-                String ownIdentifier = UserManager.getCurrentUser().getIdentifier();
-
-                @Override
-                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    if(!task.isSuccessful()){
-                        Log.e("firebase", "Error getting data", task.getException());
-                        return;
-                    }
-
-                    for (DataSnapshot chatRoom : task.getResult().getChildren()){
-                        if(((List<?>) chatRoom.child("users").getValue()).contains(ownIdentifier)){
-                            if(((List<?>) chatRoom.child("users").getValue()).contains(contactIdentifier)){
-                                hasChatRoom = true;
-                                chatRoomKey = chatRoom.child("chatRoomKey").getValue().toString();
-                                break;
-                            }
-                        }
-                    }
-
-                    if(hasChatRoom){
-                        currentContacts.put(contactIdentifier, chatRoomKey);
-                        userRef.child("contacts").setValue(currentContacts);
-                        return;
-                    }
-
-                    // Create chat room
-                    List<String> users = new ArrayList<String>();
-
-                    users.add(ownIdentifier);
-                    users.add(contactIdentifier);
-
-                    currentContacts.put(contactIdentifier, chatRoomKey);
-                    chatRoomsRef.child(chatRoomKey).setValue(new ChatRoom(users, chatRoomKey));
-                    userRef.child("contacts").setValue(currentContacts);
-                }
-            });
-        }
+    public static void setCurrentPublicUser(PublicUser publicUser) {
+        currentPublicUser = publicUser;
     }
 
-    public static User getCurrentUser(){
-        return currentUser;
+    public static void setCurrentPrivateUser(PrivateUser privateUser){
+        privateUser = privateUser;
     }
-
-    public static void setCurrentUser(User user) { currentUser = user; }
 }

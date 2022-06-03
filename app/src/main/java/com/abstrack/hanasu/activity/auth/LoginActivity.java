@@ -64,6 +64,10 @@ public class LoginActivity extends BaseAppActivity {
         AndroidUtil.startNewActivity(this, RegisterActivity.class);
     }
 
+    public void goToSetProfileInfoActivity() {
+        AndroidUtil.startNewActivity(LoginActivity.this, SetProfileInfoActivity.class);
+    }
+
     public void goToForgotPasswordActivity() {
         Intent forgotPasswordActivityIntent = new Intent(this, ForgotPasswordActivity.class);
         forgotPasswordActivityIntent.putExtra("userCachedEmail", emailInputText.getEditText().getText().toString());
@@ -91,7 +95,7 @@ public class LoginActivity extends BaseAppActivity {
     }
 
     public void changeActivityViaData() {
-        Flame.getDataBaseReferenceWithPath("users").child(Flame.getFireAuth().getUid()).child("public").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        Flame.getDataBaseReferenceWithPath("public").child(Flame.getFireAuth().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
@@ -103,16 +107,24 @@ public class LoginActivity extends BaseAppActivity {
                     return;
                 }
 
-                if (Flame.getFireAuth().getCurrentUser().isEmailVerified()) {
-                    if (task.getResult().child("displayName").getValue() != null) {
-                        goToLandingActivity();
-                    }
+                if (!Flame.getFireAuth().getCurrentUser().isEmailVerified()) {
+                    goToVerifyEmailActivity();
+                    return;
+                }
 
+                if (task.getResult().child("identifier").getValue() == null) {
                     goToWelcomeActivity();
                     return;
                 }
 
-                goToVerifyEmailActivity();
+                String displayName = task.getResult().child("displayName").getValue(String.class);
+
+                if (!displayName.isEmpty()) {
+                    goToLandingActivity();
+                    return;
+                }
+
+                goToSetProfileInfoActivity();
             }
         });
     }

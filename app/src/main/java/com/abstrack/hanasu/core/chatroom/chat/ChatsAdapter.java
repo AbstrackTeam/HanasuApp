@@ -175,7 +175,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
                         return;
                     }
                     for (DataSnapshot user : task.getResult().getChildren()) {
-                        if (!user.getValue().toString().equals(UserManager.getCurrentUser().getIdentifier())) {
+                        if (!user.getValue().toString().equals(Flame.getFireAuth().getCurrentUser().getUid())) {
                             syncUserInfo(user.getValue().toString());
                         }
                     }
@@ -199,7 +199,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
                     previewMessage.setText(lastMessage.get("content"));
 
                     // First check if you were the last message
-                    if (lastMessage.get("sentBy").equals(UserManager.getCurrentUser().getIdentifier())) {
+                    if (lastMessage.get("sentBy").equals(Flame.getFireAuth().getCurrentUser().getUid())) {
                         // If so, now validate the three types of states
                         MessageStatus messageStatus = MessageStatus.valueOf(lastMessage.get("messageStatus"));
 
@@ -222,7 +222,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
                     }
                     else{
                         for (int i = 1; i < messagesList.size(); i++) {
-                            if (messagesList.get(i).get("sentBy").equals(UserManager.getCurrentUser().getIdentifier())) {
+                            if (messagesList.get(i).get("sentBy").equals(Flame.getFireAuth().getCurrentUser().getUid())) {
                                 continue;
                             }
                             if (MessageStatus.valueOf(messagesList.get(i).get("messageStatus")) != MessageStatus.SEEN) {

@@ -14,11 +14,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
-import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.core.Flame;
+import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.abstrack.hanasu.util.ImageUtil;
 import com.abstrack.hanasu.util.TextUtil;
@@ -39,170 +41,110 @@ public class SetProfileInfoActivity extends BaseAppActivity {
     private EditText edtTxtProfileName;
     private Button btnContinue;
 
+    private String tempCameraImagePath = "";
+    private boolean showPictureOptions = false, progressFirstRun = false;
+
     private static final int IMAGE_CAPTURE_CODE = 1999, IMAGE_PICK_CODE = 2000;
 
-    private boolean showPictureOptions = false, progressFirstRun = false;
-    private String tempCameraImagePath = "";
-
-    @SuppressLint("InflateParams")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_info);
+        setContentView(R.layout.activity_set_profile_info);
 
+        init();
+        buildProfilePictureOptions();
+        setOnClickListeners();
+    }
+
+    public void init(){
         clickableContainer = findViewById(R.id.clickableContainer);
         clickableContainer.setClickable(false);
         clickableContainer.setVisibility(View.INVISIBLE);
-
-        LinearLayout layoutPictureOptions = findViewById(R.id.layoutPictureOptions);
-
-        viewPictureOptions = LayoutInflater.from(this).inflate(R.layout.select_picture_option, null, false);
-        viewPictureOptions.setVisibility(View.INVISIBLE);
-
-        layoutPictureOptions.addView(viewPictureOptions);
 
         edtTxtProfileName = findViewById(R.id.edtTxtProfileName);
         btnContinue = findViewById(R.id.btnContinue);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case IMAGE_CAPTURE_CODE:
-                    fetchCameraPhoto();
-                    break;
-                case IMAGE_PICK_CODE:
-                    uploadPhoto(data.getData(), ImageUtil.getMimeType(this, data.getData()));
-                    break;
+    public void buildProfilePictureOptions(){
+        LinearLayout layoutPictureOptions = findViewById(R.id.layoutPictureOptions);
+        viewPictureOptions = LayoutInflater.from(this).inflate(R.layout.select_picture_option, null, false);
+        viewPictureOptions.setVisibility(View.INVISIBLE);
+        layoutPictureOptions.addView(viewPictureOptions);
+    }
+
+    public void setOnClickListeners(){
+        clickableContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updatePictureOptions();
             }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
+        });
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == IMAGE_CAPTURE_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                tempCameraImagePath = AndroidUtil.takeCameraPhoto(this, IMAGE_CAPTURE_CODE);
-            } else {
-                Toast.makeText(this, "Camera Permission is Required to Use camera.", Toast.LENGTH_SHORT).show();
+        btnContinue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                submit();
             }
-        }
+        });
 
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        CardView crdVCamera = findViewById(R.id.crdVCamera);
+        crdVCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updatePictureOptions();
+            }
+        });
+
+        Button btnCamera = viewPictureOptions.findViewById(R.id.btnCamera);
+        btnCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openCamera();
+            }
+        });
+
+        Button btnGallery = viewPictureOptions.findViewById(R.id.btnGallery);
+        btnGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openGallery();
+            }
+        });
+
+        Button btnTrash = viewPictureOptions.findViewById(R.id.btnTrash);
+        btnTrash.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                removeProfilePicture();
+            }
+        });
     }
 
-    public void fetchCameraPhoto() {
-        File f = new File(tempCameraImagePath);
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        Uri imageUri = Uri.fromFile(f);
-        mediaScanIntent.setData(imageUri);
-        this.sendBroadcast(mediaScanIntent);
-
-        uploadPhoto(imageUri, ".jpg");
-    }
-
-    public void uploadPhoto(Uri imgUri, String imgExtension) {
-        String imgKey = UUID.randomUUID().toString();
-
-        if(imgExtension.equals(".gif")){
-            uploadByFile(imgUri, imgKey, imgExtension);
+    public void submit() {
+        if (!TextUtil.validateTextField(edtTxtProfileName)) {
             return;
         }
-        // Compress and reduce image weight
-        byte[] compressedImgBytes = ImageUtil.compressImage(imgExtension, imgUri, getContentResolver());
-        uploadByBytes(compressedImgBytes, imgUri, imgKey, imgExtension);
+
+        UserManager.updateUserData("public", "displayName", edtTxtProfileName.getText().toString());
+        AndroidUtil.startNewActivity(this, LandingActivity.class);
     }
 
-    public void fetchProfilePic(Uri imgUri, String imgExtension) {
-        ImageView profilePicImgView = findViewById(R.id.imgProfile);
-
-        if (imgExtension.equals(".gif")) {
-            Glide.with(this).asGif().load(imgUri).into(profilePicImgView);
-        } else {
-            Glide.with(this).asBitmap().load(imgUri).into(profilePicImgView);
-        }
+    public void openGallery() {
+        AndroidUtil.chooseGalleryPhoto(this, IMAGE_PICK_CODE);
     }
 
-    public void uploadByBytes(byte[] bytes, Uri imgUri, String imgKey, String imgExtension){
-        StorageReference imageStorageReference = Flame.getStorageReference().child("image").child(imgKey + imgExtension);
-        imageStorageReference.putBytes(bytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Log.d("HanasuStorage", "Image uploaded successfully");
-
-                UserManager.updateUserData("imgKey", imgKey);
-                UserManager.updateUserData("imgExtension", imgExtension);
-
-                fetchProfilePic(imgUri, imgExtension);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("HanasuStorage", "Image failed to upload", e);
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                if(!progressFirstRun) {
-                    updatePictureOptions(findViewById(android.R.id.content).getRootView());
-                    progressFirstRun = true;
-                }
-            }
-        });
-    }
-
-    public void  uploadByFile(Uri imgUri, String imgKey, String imgExtension) {
-        StorageReference imageStorageReference = Flame.getStorageReference().child("image").child(imgKey + imgExtension);
-        imageStorageReference.putFile(imgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Log.d("HanasuStorage", "Image uploaded successfully");
-
-                UserManager.updateUserData("imgKey", imgKey);
-                UserManager.updateUserData("imgExtension", imgExtension);
-
-                fetchProfilePic(imgUri, imgExtension);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("HanasuStorage", "Image failed to upload", e);
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                if(!progressFirstRun) {
-                    updatePictureOptions(findViewById(android.R.id.content).getRootView());
-                    progressFirstRun = true;
-                }
-            }
-        });
+    public void openCamera() {
+        tempCameraImagePath = AndroidUtil.openCameraAndTakePhoto(this, IMAGE_CAPTURE_CODE);
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    public void removeProfilePicture(View view) {
+    public void removeProfilePicture() {
         ImageView profilePicImgView = findViewById(R.id.imgProfile);
         profilePicImgView.setImageBitmap(ImageUtil.convertDrawableToBitmap(getDrawable(R.drawable.ic_profile_pic)));
         hidePictureOptions();
     }
 
-    @Override
-    public void onBackPressed() {
-        if (showPictureOptions) {
-            hidePictureOptions();
-            return;
-        }
-
-        if (!TextUtil.validateTextField(edtTxtProfileName)) {
-            return;
-        }
-
-        AndroidUtil.startNewActivity(SetProfileInfoActivity.this, LandingActivity.class);
-    }
-
-    public void updatePictureOptions(View view) {
+    public void updatePictureOptions() {
         if (showPictureOptions) {
             hidePictureOptions();
             return;
@@ -227,20 +169,106 @@ public class SetProfileInfoActivity extends BaseAppActivity {
         showPictureOptions = false;
     }
 
-    public void submit(View view) {
+    @Override
+    public void onBackPressed() {
+        if (showPictureOptions) {
+            hidePictureOptions();
+            return;
+        }
+
         if (!TextUtil.validateTextField(edtTxtProfileName)) {
             return;
         }
 
-        UserManager.updateUserData("displayName", edtTxtProfileName.getText().toString());
-        AndroidUtil.startNewActivity(this, LandingActivity.class);
+        AndroidUtil.startNewActivity(SetProfileInfoActivity.this, LandingActivity.class);
     }
 
-    public void openCamera(View view) {
-        tempCameraImagePath = AndroidUtil.takeCameraPhoto(this, IMAGE_CAPTURE_CODE);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case IMAGE_CAPTURE_CODE:
+                    uploadPhoto(AndroidUtil.getPhotoUriViaFile(this, tempCameraImagePath), ".jpg");
+                    break;
+                case IMAGE_PICK_CODE:
+                    uploadPhoto(data.getData(), ImageUtil.getMimeType(this, data.getData()));
+                    break;
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void openGallery(View view) {
-        AndroidUtil.chooseGalleryPhoto(this, IMAGE_PICK_CODE);
+    public void uploadPhoto(Uri imgUri, String imgExtension) {
+        String imgKey = UUID.randomUUID().toString();
+
+        if(imgExtension.equals(".gif")){
+            uploadByFile(imgUri, imgKey, imgExtension);
+            return;
+        }
+        // Compress and reduce image weight
+        byte[] compressedImgBytes = ImageUtil.compressImage(imgExtension, imgUri, getContentResolver());
+        uploadByBytes(compressedImgBytes, imgUri, imgKey, imgExtension);
+    }
+
+    public void  uploadByFile(Uri imgUri, String imgKey, String imgExtension) {
+        StorageReference imageStorageReference = Flame.getStorageReference().child("image").child(imgKey + imgExtension);
+        imageStorageReference.putFile(imgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d("Hanasu-SetProfileInfo", "Image uploaded successfully");
+                UserManager.updateUserData("public","imgKey", imgKey + imgExtension);
+
+                updateProfilePicImgView(imgUri, imgExtension);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("Hanasu-SetProfileInfo", "Image failed to upload", e);
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                if(!progressFirstRun) {
+                    updatePictureOptions();
+                    progressFirstRun = true;
+                }
+            }
+        });
+    }
+
+    public void uploadByBytes(byte[] bytes, Uri imgUri, String imgKey, String imgExtension){
+        StorageReference imageStorageReference = Flame.getStorageReference().child("image").child(imgKey + imgExtension);
+        imageStorageReference.putBytes(bytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d("Hanasu-SetProfileInfo", "Image uploaded successfully");
+                UserManager.updateUserData("public","imgKey", imgKey + imgExtension);
+
+                updateProfilePicImgView(imgUri, imgExtension);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("Hanasu-SetProfileInfo", "Image failed to upload", e);
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                if(!progressFirstRun) {
+                    updatePictureOptions();
+                    progressFirstRun = true;
+                }
+            }
+        });
+    }
+
+    public void updateProfilePicImgView(Uri imgUri, String imgExtension) {
+        ImageView profilePicImgView = findViewById(R.id.imgProfile);
+
+        if (imgExtension.equals(".gif")) {
+            Glide.with(this).asGif().load(imgUri).into(profilePicImgView);
+        } else {
+            Glide.with(this).asBitmap().load(imgUri).into(profilePicImgView);
+        }
     }
 }

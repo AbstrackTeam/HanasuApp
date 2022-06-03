@@ -88,7 +88,7 @@ public class ChatActivity extends BaseAppActivity {
                     }
 
                     List<HashMap<String, String>> messagesList = (List<HashMap<String, String>>) task.getResult().getValue();
-                    chatRoomRef.child(String.valueOf(messagesList.size())).setValue(new Message(edtTxtMsg.getText().toString(), AndroidUtil.getCurrentHour(), UserManager.getCurrentUser().getIdentifier(), MessageStatus.SENDING, MessageType.TEXT));
+                    //chatRoomRef.child(String.valueOf(messagesList.size())).setValue(new Message(edtTxtMsg.getText().toString(), AndroidUtil.getCurrentHour(), UserManager.getCurrentUser().getIdentifier(), MessageStatus.SENDING, MessageType.TEXT));
                     edtTxtMsg.setText("");
                 }
             });
@@ -118,7 +118,7 @@ public class ChatActivity extends BaseAppActivity {
 
                         NotificationBuilder.notifyMessage(ChatActivity.this, sentBy, content, R.mipmap.ic_main_hanasu);
 
-                        if (sentBy.equals(UserManager.getCurrentUser().getIdentifier())) {
+                        /** if (sentBy.equals(UserManager.getCurrentUser().getIdentifier())) {
                             recyclerViewMessage.smoothScrollToPosition(adapter.getItemCount());
                         } else {
                             if(recyclerViewMessage.getScrollState() == RecyclerView.SCROLL_STATE_IDLE) {
@@ -127,7 +127,7 @@ public class ChatActivity extends BaseAppActivity {
                                     recyclerViewMessage.smoothScrollToPosition(adapter.getItemCount());
                                 }
                             }
-                        }
+                        } **/
                     }
                 }
             }
@@ -186,10 +186,10 @@ public class ChatActivity extends BaseAppActivity {
                 List<String> userList = (List<String>) task.getResult().child("users").getValue();
 
                 for(String identifier : userList){
-                    if(!identifier.equals(UserManager.getCurrentUser().getIdentifier())){
+                 /**   if(!identifier.equals(UserManager.getCurrentUser().getIdentifier())){
                         syncFriendInformation(identifier);
                         break;
-                    }
+                    } **/
                 }
             }
         });

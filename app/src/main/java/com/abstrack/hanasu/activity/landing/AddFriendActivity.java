@@ -59,7 +59,7 @@ public class AddFriendActivity extends BaseAppActivity {
         String name = nameField.getText().toString();
         String tag = tagField.getText().toString();
         String identifier = name + tag;
-        String ownIdentifier = UserManager.getCurrentUser().getIdentifier();
+        // String ownIdentifier = UserManager.getCurrentUser().getIdentifier();
 
         if(name.length() == 0){
             Toast.makeText(this, "Ingresa un nombre", Toast.LENGTH_SHORT).show();
@@ -85,11 +85,11 @@ public class AddFriendActivity extends BaseAppActivity {
                 }
 
                 if(task.getResult().getValue() != null){
-                    if(task.getResult().child("identifier").getValue().toString().equals(ownIdentifier)){
+                 /**   if(task.getResult().child("identifier").getValue().toString().equals(ownIdentifier)){
                         Toast.makeText(AddFriendActivity.this, "No puedes agregarte a ti mismo XD", Toast.LENGTH_SHORT).show();
                         return;
-                    }
-                    UserManager.addToUserContacts(identifier);
+                    } **/
+                   // UserManager.addToUserContacts(identifier);
                     Toast.makeText(AddFriendActivity.this, "Has agregado a " + name, Toast.LENGTH_SHORT).show();
                     return;
                 }
