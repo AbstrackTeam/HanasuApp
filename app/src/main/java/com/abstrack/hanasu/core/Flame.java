@@ -8,6 +8,10 @@ import com.google.firebase.storage.StorageReference;
 
 public class Flame {
 
+    public static FirebaseDatabase getFireDatabase(){
+        return FirebaseDatabase.getInstance();
+    }
+
     public static DatabaseReference getDataBaseReferenceWithPath(String path){
         DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference(path);
         dbReference.keepSynced(true);

@@ -13,6 +13,7 @@ import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.activity.welcome.SetProfileInfoActivity;
+import com.abstrack.hanasu.activity.welcome.WelcomeActivity;
 import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.abstrack.hanasu.util.TextUtil;
@@ -96,20 +97,19 @@ public class LoginActivity extends BaseAppActivity {
                 if (!task.isSuccessful()) {
                     Log.e("Hanasu-Login", "Error getting data", task.getException());
 
-                    if(!Flame.getFireAuth().getCurrentUser().isEmailVerified()){
+                    if (!Flame.getFireAuth().getCurrentUser().isEmailVerified()) {
                         goToVerifyEmailActivity();
                     }
                     return;
                 }
 
-                String displayName = task.getResult().child("public").child("displayName").getValue().toString();
-
-                if(Flame.getFireAuth().getCurrentUser().isEmailVerified()) {
-                    if(!displayName.isEmpty()) {
+                if (Flame.getFireAuth().getCurrentUser().isEmailVerified()) {
+                    if (task.getResult().child("public").child("displayName").getValue() != null) {
                         goToLandingActivity();
                     }
 
-                    goToSetProfileInfoActivity();
+                    goToWelcomeActivity();
+                    return;
                 }
 
                 goToVerifyEmailActivity();
@@ -117,15 +117,15 @@ public class LoginActivity extends BaseAppActivity {
         });
     }
 
-    public void goToLandingActivity(){
+    public void goToLandingActivity() {
         AndroidUtil.startNewActivity(this, LandingActivity.class);
     }
 
-    public void goToSetProfileInfoActivity(){
-        AndroidUtil.startNewActivity(this, SetProfileInfoActivity.class);
+    public void goToWelcomeActivity() {
+        AndroidUtil.startNewActivity(this, WelcomeActivity.class);
     }
 
-    public void goToVerifyEmailActivity(){
+    public void goToVerifyEmailActivity() {
         AndroidUtil.startNewActivity(this, VerifyEmailActivity.class);
     }
 }

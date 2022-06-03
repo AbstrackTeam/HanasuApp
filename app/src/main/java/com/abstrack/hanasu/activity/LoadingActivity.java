@@ -15,6 +15,7 @@ import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.auth.LoginActivity;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.activity.welcome.SetProfileInfoActivity;
+import com.abstrack.hanasu.activity.welcome.WelcomeActivity;
 import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,6 +29,8 @@ public class LoadingActivity extends BaseAppActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
+
+        Flame.getFireDatabase().setPersistenceEnabled(true);
 
         animateContent();
         manageActivity();
@@ -77,11 +80,11 @@ public class LoadingActivity extends BaseAppActivity {
 
     }
 
-    public void goToSetProfileInfoActivity() {
+    public void goToWelcomeActivity() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                AndroidUtil.startNewActivity(LoadingActivity.this, SetProfileInfoActivity.class);
+                AndroidUtil.startNewActivity(LoadingActivity.this, WelcomeActivity.class);
             }
         }, 3000);
 
@@ -100,14 +103,13 @@ public class LoadingActivity extends BaseAppActivity {
                     return;
                 }
 
-                String displayName = task.getResult().child("public").child("displayName").getValue().toString();
-
                 if (Flame.getFireAuth().getCurrentUser().isEmailVerified()) {
-                    if (!displayName.isEmpty()) {
+                    if (task.getResult().child("public").child("displayName").getValue() != null) {
                         goToLandingActivity();
                     }
 
-                    goToSetProfileInfoActivity();
+                    goToWelcomeActivity();
+                    return;
                 }
 
                 goToLoginActivity();
