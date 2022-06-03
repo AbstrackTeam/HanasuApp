@@ -23,7 +23,6 @@ import com.abstrack.hanasu.core.chatroom.message.data.MessageType;
 import com.abstrack.hanasu.core.chatroom.message.Message;
 import com.abstrack.hanasu.core.user.data.ConnectionStatus;
 import com.abstrack.hanasu.core.Flame;
-import com.abstrack.hanasu.notification.NotificationBuilder;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -116,7 +115,6 @@ public class ChatActivity extends BaseAppActivity {
                         Message message = new Message(content, time, sentBy, messageStatus, messageType);
                         adapter.addNewMessage(message);
 
-                        NotificationBuilder.notifyMessage(ChatActivity.this, sentBy, content, R.mipmap.ic_main_hanasu);
 
                         /** if (sentBy.equals(UserManager.getCurrentUser().getIdentifier())) {
                             recyclerViewMessage.smoothScrollToPosition(adapter.getItemCount());

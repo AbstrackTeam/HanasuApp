@@ -1,23 +1,24 @@
 package com.abstrack.hanasu.activity.landing;
 
-import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
+import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.core.chatroom.chat.Chat;
 import com.abstrack.hanasu.core.chatroom.chat.ChatsAdapter;
+import com.abstrack.hanasu.core.chatroom.message.data.MessageStatus;
 import com.abstrack.hanasu.core.story.StoriesAdapter;
 import com.abstrack.hanasu.core.story.Story;
 import com.abstrack.hanasu.core.user.UserManager;
-import com.abstrack.hanasu.notification.NotificationBuilder;
-import com.abstrack.hanasu.core.chatroom.message.data.MessageStatus;
-import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,6 +26,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +53,6 @@ public class LandingActivity extends BaseAppActivity {
     }
 
     private void init() {
-        NotificationBuilder.createNotificationChannel(this);
         //userService.start();
 
         storiesBar = findViewById(R.id.storiesBar);
@@ -113,7 +114,7 @@ public class LandingActivity extends BaseAppActivity {
         AndroidUtil.startNewActivity(LandingActivity.this, AddFriendActivity.class);
     }
 
-   public void load(){
+    public void load() {
         DatabaseReference currentUserRef = Flame.getDataBaseReferenceWithPath("users").child(Flame.getFireAuth().getUid()).child("contacts");
         currentUserRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -121,7 +122,7 @@ public class LandingActivity extends BaseAppActivity {
                 Log.w("hanasu-landing", "Loading landing contacts");
 
                 // Load chats by contacts
-               HashMap<String, String> contacts = UserManager.getCurrentPrivateUser().getContacts();
+                HashMap<String, String> contacts = UserManager.getCurrentPrivateUser().getContacts();
 
                 List<String> keys = new ArrayList<>(contacts.keySet());
 
@@ -130,7 +131,7 @@ public class LandingActivity extends BaseAppActivity {
                 chatsListView.removeAllViews();
 
                 // Get the chat room
-                for (String identifier : keys){
+                for (String identifier : keys) {
                     String chatRoom = contacts.get(identifier);
 
                     // it will try to get the information with firebase
@@ -163,7 +164,6 @@ public class LandingActivity extends BaseAppActivity {
                             int messageCount = 0;
 
 
-
                             String sentBy = messagesList.get(messagesList.size() - 1).get("sentBy");
 
                             /*
@@ -171,15 +171,15 @@ public class LandingActivity extends BaseAppActivity {
                                 and if you were the one who sended the message
                              */
 
-                            if(!sentBy.equals("")) {
+                            if (!sentBy.equals("")) {
                                 // If you didn't send the message.
                                 if (!sentBy.equals(Flame.getFireAuth().getCurrentUser().getUid())) {
-                                    for(int i = 1; i < messagesList.size(); i++){
+                                    for (int i = 1; i < messagesList.size(); i++) {
                                         // then we are going to count all the messages that don't have the tag "SEEN"
-                                        if(messagesList.get(i).get("sentBy").equals(Flame.getFireAuth().getCurrentUser().getUid())){
+                                        if (messagesList.get(i).get("sentBy").equals(Flame.getFireAuth().getCurrentUser().getUid())) {
                                             continue;
                                         }
-                                        if (MessageStatus.valueOf(messagesList.get(i).get("messageStatus")) != MessageStatus.SEEN)  {
+                                        if (MessageStatus.valueOf(messagesList.get(i).get("messageStatus")) != MessageStatus.SEEN) {
                                             messageCount += 1;
                                         }
                                     }
@@ -188,8 +188,8 @@ public class LandingActivity extends BaseAppActivity {
 
                             MessageStatus messageState = MessageStatus.valueOf(messagesList.get(messagesList.size() - 1).get("messageStatus"));
 
-                            String lastMessage = messagesList.get(messagesList.size() -1).get("content");
-                            String time = messagesList.get(messagesList.size() -1).get("time");
+                            String lastMessage = messagesList.get(messagesList.size() - 1).get("content");
+                            String time = messagesList.get(messagesList.size() - 1).get("time");
                             DatabaseReference userRef = Flame.getDataBaseReferenceWithPath("users").child(userIdentifier);
 
                             int finalMessageCount = messageCount;

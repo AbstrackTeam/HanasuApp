@@ -8,20 +8,22 @@ import java.util.HashMap;
 
 public class PublicUser {
 
-    private String identifier, displayName, about, imgKey;
+    private String identifier, displayName, fcmToken, about, imgKey;
     private ConnectionStatus connectionStatus;
 
     public PublicUser(String identifier) {
         this.identifier = identifier;
         displayName = "";
+        fcmToken = "";
         about = "Un problema en una rama deja de ser un problema después de ser cortada.";
         imgKey = "";
         connectionStatus = ConnectionStatus.OFFLINE;
     }
 
-    public PublicUser(String identifier, String displayName, String about, String imgKey, ConnectionStatus connectionStatus) {
+    public PublicUser(String identifier, String displayName, String fcmToken, String about, String imgKey, ConnectionStatus connectionStatus) {
         this.identifier = identifier;
         this.displayName = displayName;
+        this.fcmToken = fcmToken;
         this.about = about;
         this.imgKey = imgKey;
         this.connectionStatus = connectionStatus;
@@ -37,6 +39,14 @@ public class PublicUser {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
     }
 
     public void setDisplayName(String displayName) {
