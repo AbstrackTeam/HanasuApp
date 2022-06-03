@@ -36,7 +36,7 @@ public class ForgotPasswordActivity extends BaseAppActivity {
         });
 
         Button btnSend = findViewById(R.id.btnSend);
-        btnReturn.setOnClickListener(new View.OnClickListener() {
+        btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sendForgotPasswordEmail();
@@ -62,15 +62,12 @@ public class ForgotPasswordActivity extends BaseAppActivity {
     }
 
     public void goToVerifyForgottenPasswordActivity(){
-        Intent verifyEmailActivityIntent = new Intent(this, VerifyEmailActivity.class);
-        verifyEmailActivityIntent.putExtra("userCachedEmail", Flame.getFireAuth().getCurrentUser().getEmail());
-
-        Flame.getFireAuth().signOut();
-
+        Intent verifyEmailActivityIntent = new Intent(this, VerifyForgottenPasswordActivity.class);
+        verifyEmailActivityIntent.putExtra("userCachedEmail", emailTextInput.getEditText().getText().toString());
         startActivity(verifyEmailActivityIntent);
     }
 
     public void goToLoginActivity() {
-        AndroidUtil.startNewActivity(ForgotPasswordActivity.this, LoginActivity.class);
+        AndroidUtil.startNewActivity(this, LoginActivity.class);
     }
 }

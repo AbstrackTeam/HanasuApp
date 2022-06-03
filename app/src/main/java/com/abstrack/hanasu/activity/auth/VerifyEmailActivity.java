@@ -5,10 +5,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.util.AndroidUtil;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 public class VerifyEmailActivity extends BaseAppActivity {
 
@@ -18,11 +22,7 @@ public class VerifyEmailActivity extends BaseAppActivity {
         setContentView(R.layout.activity_verify_email);
 
         TextView txtViewEmail = findViewById(R.id.txtViewEmail);
-        Bundle extras = getIntent().getExtras();
-
-        if (extras != null) {
-            txtViewEmail.setText(extras.getString("userCachedEmail"));
-        }
+        txtViewEmail.setText(Flame.getFireAuth().getCurrentUser().getEmail());
 
         Button btnReturn = findViewById(R.id.btnReturn);
         btnReturn.setOnClickListener(new View.OnClickListener() {

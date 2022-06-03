@@ -1,6 +1,6 @@
 package com.abstrack.hanasu.core.user;
 
-import com.abstrack.hanasu.auth.AuthManager;
+import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.core.user.data.ConnectionStatus;
 
 import java.net.ConnectException;
@@ -18,7 +18,7 @@ public class User {
         imgKey = "";
         imgExtension = "";
         about = "";
-        uid = AuthManager.getFireAuth().getUid();
+        uid = Flame.getFireAuth().getUid();
         identifier = name + tag;
         displayName = "";
         contacts = new HashMap<String, String>();

@@ -1,5 +1,6 @@
 package com.abstrack.hanasu.activity.auth;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +12,7 @@ import androidx.annotation.Nullable;
 
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
+import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.abstrack.hanasu.util.TextUtil;
@@ -78,8 +80,7 @@ public class RegisterActivity extends BaseAppActivity {
     }
 
     public void goToVerifyEmailActivity(){
-        Flame.getFireAuth().signOut();
-        AndroidUtil.startNewActivity(RegisterActivity.this, VerifyEmailActivity.class);
+        AndroidUtil.startNewActivity(this, VerifyEmailActivity.class);
     }
 
     public void goToLoginActivity() {

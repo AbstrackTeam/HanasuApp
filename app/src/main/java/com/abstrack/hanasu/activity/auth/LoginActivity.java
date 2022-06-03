@@ -43,7 +43,7 @@ public class LoginActivity extends BaseAppActivity {
         });
 
         TextView txtViewForgotPassword = findViewById(R.id.txtViewForgotPassword);
-        btnSend.setOnClickListener(new View.OnClickListener() {
+        txtViewForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 goToForgotPasswordActivity();
@@ -51,7 +51,7 @@ public class LoginActivity extends BaseAppActivity {
         });
 
         TextView txtViewRegister = findViewById(R.id.txtViewRegister);
-        btnSend.setOnClickListener(new View.OnClickListener() {
+        txtViewRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 goToRegisterActivity();
@@ -65,10 +65,7 @@ public class LoginActivity extends BaseAppActivity {
 
     public void goToForgotPasswordActivity() {
         Intent forgotPasswordActivityIntent = new Intent(this, ForgotPasswordActivity.class);
-        forgotPasswordActivityIntent.putExtra("userCachedEmail", Flame.getFireAuth().getCurrentUser().getEmail());
-
-        Flame.getFireAuth().signOut();
-
+        forgotPasswordActivityIntent.putExtra("userCachedEmail", emailInputText.getEditText().getText().toString());
         startActivity(forgotPasswordActivityIntent);
     }
 
@@ -98,6 +95,10 @@ public class LoginActivity extends BaseAppActivity {
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
                     Log.e("Hanasu-Login", "Error getting data", task.getException());
+
+                    if(!Flame.getFireAuth().getCurrentUser().isEmailVerified()){
+                        goToVerifyEmailActivity();
+                    }
                     return;
                 }
 
@@ -117,19 +118,14 @@ public class LoginActivity extends BaseAppActivity {
     }
 
     public void goToLandingActivity(){
-        AndroidUtil.startNewActivity(LoginActivity.this, LandingActivity.class);
+        AndroidUtil.startNewActivity(this, LandingActivity.class);
     }
 
     public void goToSetProfileInfoActivity(){
-        AndroidUtil.startNewActivity(LoginActivity.this, SetProfileInfoActivity.class);
+        AndroidUtil.startNewActivity(this, SetProfileInfoActivity.class);
     }
 
     public void goToVerifyEmailActivity(){
-        Intent verifyEmailActivityIntent = new Intent(this, VerifyEmailActivity.class);
-        verifyEmailActivityIntent.putExtra("userCachedEmail", Flame.getFireAuth().getCurrentUser().getEmail());
-
-        Flame.getFireAuth().signOut();
-
-        startActivity(verifyEmailActivityIntent);
+        AndroidUtil.startNewActivity(this, VerifyEmailActivity.class);
     }
 }

@@ -3,7 +3,6 @@ package com.abstrack.hanasu.core.user;
 import android.util.Log;
 import androidx.annotation.NonNull;
 
-import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.core.chatroom.ChatRoom;
 import com.abstrack.hanasu.core.user.data.ConnectionStatus;
 import com.abstrack.hanasu.core.Flame;
@@ -37,7 +36,7 @@ public class UserManager{
                     return;
                 }
                 for(DataSnapshot user : task.getResult().getChildren()){
-                    if(!user.child("uid").getValue().equals(AuthManager.getFireAuth().getCurrentUser().getUid())){
+                    if(!user.child("uid").getValue().equals(Flame.getFireAuth().getCurrentUser().getUid())){
                         continue;
                     }
 
@@ -47,7 +46,7 @@ public class UserManager{
                     String imgExtension = (String) user.child("imgExtension").getValue();
                     String about = (String) user.child("about").getValue();
                     String identifier = name + tag;
-                    String uid = AuthManager.getFireAuth().getUid();
+                    String uid = Flame.getFireAuth().getUid();
                     String displayName = (String) user.child("displayName").getValue();
                     HashMap<String, String> contacts = (HashMap<String, String>) user.child("contacts").getValue();
                     ConnectionStatus connectionStatus = ConnectionStatus.valueOf(user.child("connectionStatus").getValue().toString());

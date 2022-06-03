@@ -1,11 +1,13 @@
 package com.abstrack.hanasu.activity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 
 import com.abstrack.hanasu.BaseAppActivity;
@@ -13,8 +15,8 @@ import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.auth.LoginActivity;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.activity.welcome.SetProfileInfoActivity;
-import com.abstrack.hanasu.util.AndroidUtil;
 import com.abstrack.hanasu.core.Flame;
+import com.abstrack.hanasu.util.AndroidUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -41,13 +43,13 @@ public class LoadingActivity extends BaseAppActivity {
         imgViewMainLogo.setAnimation(down_anim);
     }
 
-    public void manageActivity(){
-        if(!Flame.isFireUserLogged()) {
+    public void manageActivity() {
+        if (!Flame.isFireUserLogged()) {
             goToLoginActivity();
             return;
         }
 
-        if(!AndroidUtil.isNetworkConnected(this)){
+        if (!AndroidUtil.isNetworkConnected(this)) {
             goToLandingActivity();
             return;
         }
@@ -55,24 +57,41 @@ public class LoadingActivity extends BaseAppActivity {
         manageNextActivity();
     }
 
-    public void goToLoginActivity(){
-        Flame.getFireAuth().signOut();
-        AndroidUtil.startNewActivity(LoadingActivity.this, LoginActivity.class);
+    public void goToLoginActivity() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AndroidUtil.startNewActivity(LoadingActivity.this, LoginActivity.class);
+            }
+        }, 3000);
+
     }
 
     public void goToLandingActivity() {
-        AndroidUtil.startNewActivity(LoadingActivity.this, LandingActivity.class);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AndroidUtil.startNewActivity(LoadingActivity.this, LandingActivity.class);
+            }
+        }, 3000);
+
     }
 
-    public void goToSetProfileInfoActivity(){
-        AndroidUtil.startNewActivity(this, SetProfileInfoActivity.class);
+    public void goToSetProfileInfoActivity() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AndroidUtil.startNewActivity(LoadingActivity.this, SetProfileInfoActivity.class);
+            }
+        }, 3000);
+
     }
 
-    public void manageNextActivity(){
+    public void manageNextActivity() {
         changeActivityViaData();
     }
 
-    public void changeActivityViaData(){
+    public void changeActivityViaData() {
         Flame.getDataBaseReferenceWithPath("users").child(Flame.getFireAuth().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -83,8 +102,8 @@ public class LoadingActivity extends BaseAppActivity {
 
                 String displayName = task.getResult().child("public").child("displayName").getValue().toString();
 
-                if(Flame.getFireAuth().getCurrentUser().isEmailVerified()) {
-                    if(!displayName.isEmpty()) {
+                if (Flame.getFireAuth().getCurrentUser().isEmailVerified()) {
+                    if (!displayName.isEmpty()) {
                         goToLandingActivity();
                     }
 

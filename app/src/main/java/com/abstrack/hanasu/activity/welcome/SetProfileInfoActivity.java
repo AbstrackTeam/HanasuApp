@@ -17,11 +17,11 @@ import androidx.annotation.NonNull;
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
-import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.abstrack.hanasu.util.ImageUtil;
+import com.abstrack.hanasu.util.TextUtil;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -195,7 +195,7 @@ public class SetProfileInfoActivity extends BaseAppActivity {
             return;
         }
 
-        if (!AuthManager.validateTextField(edtTxtProfileName)) {
+        if (!TextUtil.validateTextField(edtTxtProfileName)) {
             return;
         }
 
@@ -228,7 +228,7 @@ public class SetProfileInfoActivity extends BaseAppActivity {
     }
 
     public void submit(View view) {
-        if (!AuthManager.validateTextField(edtTxtProfileName)) {
+        if (!TextUtil.validateTextField(edtTxtProfileName)) {
             return;
         }
 

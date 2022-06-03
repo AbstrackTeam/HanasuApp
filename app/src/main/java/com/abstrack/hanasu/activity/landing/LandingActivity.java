@@ -16,7 +16,6 @@ import com.abstrack.hanasu.core.story.StoriesAdapter;
 import com.abstrack.hanasu.core.story.Story;
 import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.notification.NotificationBuilder;
-import com.abstrack.hanasu.thread.UserServiceThread;
 import com.abstrack.hanasu.core.chatroom.message.data.MessageStatus;
 import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.util.AndroidUtil;
@@ -41,7 +40,7 @@ public class LandingActivity extends BaseAppActivity {
     private List<Story> stories = new ArrayList<>();
     private static List<Chat> chats = new ArrayList<Chat>();
 
-    UserServiceThread userService = new UserServiceThread();
+    //UserServiceThread userService = new UserServiceThread();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +52,7 @@ public class LandingActivity extends BaseAppActivity {
 
     private void init() {
         NotificationBuilder.createNotificationChannel(this);
-        userService.start();
+        //userService.start();
 
         storiesBar = findViewById(R.id.storiesBar);
         chatsListView = findViewById(R.id.chatsListView);
