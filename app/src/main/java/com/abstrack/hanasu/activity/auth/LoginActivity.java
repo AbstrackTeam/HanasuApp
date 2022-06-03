@@ -91,7 +91,7 @@ public class LoginActivity extends BaseAppActivity {
     }
 
     public void changeActivityViaData() {
-        Flame.getDataBaseReferenceWithPath("users").child(Flame.getFireAuth().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        Flame.getDataBaseReferenceWithPath("users").child(Flame.getFireAuth().getUid()).child("public").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
@@ -104,7 +104,7 @@ public class LoginActivity extends BaseAppActivity {
                 }
 
                 if (Flame.getFireAuth().getCurrentUser().isEmailVerified()) {
-                    if (task.getResult().child("public").child("displayName").getValue() != null) {
+                    if (task.getResult().child("displayName").getValue() != null) {
                         goToLandingActivity();
                     }
 
