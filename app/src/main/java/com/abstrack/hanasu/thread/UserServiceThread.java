@@ -6,7 +6,7 @@ import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.core.user.User;
 import com.abstrack.hanasu.core.user.data.ConnectionStatus;
-import com.abstrack.hanasu.db.FireDatabase;
+import com.abstrack.hanasu.core.Flame;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -78,7 +78,7 @@ public class UserServiceThread extends Thread{
         };
 
         String identifier = UserManager.getCurrentUser().getIdentifier();
-        FireDatabase.getDataBaseReferenceWithPath("users").child(identifier).addValueEventListener(postListener);
-        FireDatabase.getDataBaseReferenceWithPath("users").child(identifier).child("contacts").addValueEventListener(contactsListener);
+        Flame.getDataBaseReferenceWithPath("users").child(identifier).addValueEventListener(postListener);
+        Flame.getDataBaseReferenceWithPath("users").child(identifier).child("contacts").addValueEventListener(contactsListener);
     }
 }

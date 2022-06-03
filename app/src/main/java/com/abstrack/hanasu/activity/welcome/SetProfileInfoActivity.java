@@ -19,7 +19,7 @@ import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.core.user.UserManager;
-import com.abstrack.hanasu.db.FireDatabase;
+import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.abstrack.hanasu.util.ImageUtil;
 import com.bumptech.glide.Glide;
@@ -126,7 +126,7 @@ public class SetProfileInfoActivity extends BaseAppActivity {
     }
 
     public void uploadByBytes(byte[] bytes, Uri imgUri, String imgKey, String imgExtension){
-        StorageReference imageStorageReference = FireDatabase.getStorageReference().child("image").child(imgKey + imgExtension);
+        StorageReference imageStorageReference = Flame.getStorageReference().child("image").child(imgKey + imgExtension);
         imageStorageReference.putBytes(bytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -154,7 +154,7 @@ public class SetProfileInfoActivity extends BaseAppActivity {
     }
 
     public void  uploadByFile(Uri imgUri, String imgKey, String imgExtension) {
-        StorageReference imageStorageReference = FireDatabase.getStorageReference().child("image").child(imgKey + imgExtension);
+        StorageReference imageStorageReference = Flame.getStorageReference().child("image").child(imgKey + imgExtension);
         imageStorageReference.putFile(imgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

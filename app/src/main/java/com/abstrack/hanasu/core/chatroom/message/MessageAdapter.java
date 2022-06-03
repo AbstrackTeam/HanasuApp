@@ -15,14 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.core.chatroom.message.data.MessageType;
-import com.abstrack.hanasu.db.FireDatabase;
 import com.bumptech.glide.Glide;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {

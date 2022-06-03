@@ -1,20 +1,16 @@
-package com.abstrack.hanasu.auth;
+package com.abstrack.hanasu.util;
 
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.widget.EditText;
 
-import com.abstrack.hanasu.util.AndroidUtil;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AuthManager {
+public class TextUtil {
 
-    private static FirebaseAuth fireAuth = FirebaseAuth.getInstance();
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$");
 
     public static boolean validateRegisterForm(TextInputLayout emailTextInput, TextInputLayout passwordTextInput, TextInputLayout confirmPasswordTextInput) {
@@ -109,22 +105,5 @@ public class AuthManager {
 
         editText.setError(null);
         return true;
-    }
-
-    public static boolean isUserLogged() {
-        FirebaseUser currentUser = fireAuth.getCurrentUser();
-
-        if(currentUser == null)
-            return false;
-
-        return true;
-    }
-
-    public static FirebaseAuth getFireAuth() {
-        if(fireAuth != null) {
-            return fireAuth;
-        }
-
-        return null;
     }
 }

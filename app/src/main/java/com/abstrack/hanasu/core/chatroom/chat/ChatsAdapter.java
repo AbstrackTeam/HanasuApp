@@ -1,9 +1,7 @@
 package com.abstrack.hanasu.core.chatroom.chat;
 
-import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.chat.ChatActivity;
-import com.abstrack.hanasu.core.chatroom.message.Message;
 import com.abstrack.hanasu.core.chatroom.message.data.MessageStatus;
 import com.abstrack.hanasu.core.user.UserManager;
-import com.abstrack.hanasu.db.FireDatabase;
+import com.abstrack.hanasu.core.Flame;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -170,7 +167,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
 
         public void sync() {
             syncMessages();
-            DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
+            DatabaseReference chatRoomRef = Flame.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
             chatRoomRef.child("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -188,7 +185,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
 
         public void syncMessages() {
             // Reference
-            DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
+            DatabaseReference chatRoomRef = Flame.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
             // Creating the listener
             ValueEventListener syncMessages = new ValueEventListener() {
                 @Override
@@ -260,9 +257,9 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
 
         public void syncUserInfo(String identifier) {
             // References
-            DatabaseReference userImgKeyRef = FireDatabase.getDataBaseReferenceWithPath("users").child(identifier).child("imgKey");
-            DatabaseReference userImgExtensionRef = FireDatabase.getDataBaseReferenceWithPath("users").child(identifier).child("imgExtension");
-            DatabaseReference userDisplayNameRef = FireDatabase.getDataBaseReferenceWithPath("users").child(identifier).child("displayName");
+            DatabaseReference userImgKeyRef = Flame.getDataBaseReferenceWithPath("users").child(identifier).child("imgKey");
+            DatabaseReference userImgExtensionRef = Flame.getDataBaseReferenceWithPath("users").child(identifier).child("imgExtension");
+            DatabaseReference userDisplayNameRef = Flame.getDataBaseReferenceWithPath("users").child(identifier).child("displayName");
 
             // Create the valueEventListeners
             // Image listener

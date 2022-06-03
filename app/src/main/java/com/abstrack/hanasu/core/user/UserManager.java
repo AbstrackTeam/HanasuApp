@@ -2,16 +2,14 @@ package com.abstrack.hanasu.core.user;
 
 import android.util.Log;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.abstrack.hanasu.auth.AuthManager;
 import com.abstrack.hanasu.core.chatroom.ChatRoom;
 import com.abstrack.hanasu.core.user.data.ConnectionStatus;
-import com.abstrack.hanasu.db.FireDatabase;
+import com.abstrack.hanasu.core.Flame;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,13 +23,13 @@ public class UserManager{
 
     public static void addConnectionListener(){
         if(!connectionListenerAdded) {
-            FireDatabase.getDataBaseReferenceWithPath("users").child(UserManager.getCurrentUser().getIdentifier()).child("connectionStatus").onDisconnect().setValue(ConnectionStatus.OFFLINE);
+            Flame.getDataBaseReferenceWithPath("users").child(UserManager.getCurrentUser().getIdentifier()).child("connectionStatus").onDisconnect().setValue(ConnectionStatus.OFFLINE);
             connectionListenerAdded = true;
         }
     }
 
     public static void fetchInitialUserData() {
-        FireDatabase.getDataBaseReferenceWithPath("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        Flame.getDataBaseReferenceWithPath("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if(!task.isSuccessful()){
@@ -65,20 +63,20 @@ public class UserManager{
         User userModel = new User(name, tag);
         currentUser = new User(name, tag);
 
-        FireDatabase.getDataBaseReferenceWithPath("users").child(identifier).setValue(userModel);
+        Flame.getDataBaseReferenceWithPath("users").child(identifier).setValue(userModel);
     }
 
     public static void updateUserData(String path, Object value) {
         if(currentUser != null) {
-            FireDatabase.getDataBaseReferenceWithPath("users").child(currentUser.getIdentifier()).child(path).setValue(value);
+            Flame.getDataBaseReferenceWithPath("users").child(currentUser.getIdentifier()).child(path).setValue(value);
         }
     }
 
     public static void addToUserContacts(String contactIdentifier){
         if(currentUser != null) {
             HashMap<String, String> currentContacts = getCurrentUser().getContacts();
-            DatabaseReference userRef = FireDatabase.getDataBaseReferenceWithPath("users").child(currentUser.getIdentifier());
-            DatabaseReference chatRoomsRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms");
+            DatabaseReference userRef = Flame.getDataBaseReferenceWithPath("users").child(currentUser.getIdentifier());
+            DatabaseReference chatRoomsRef = Flame.getDataBaseReferenceWithPath("chat-rooms");
 
             // Check if you haven't been added by that person.
             chatRoomsRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {

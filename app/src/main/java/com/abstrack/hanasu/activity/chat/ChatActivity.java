@@ -1,6 +1,5 @@
 package com.abstrack.hanasu.activity.chat;
 
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +8,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,7 +22,7 @@ import com.abstrack.hanasu.core.chatroom.message.data.MessageStatus;
 import com.abstrack.hanasu.core.chatroom.message.data.MessageType;
 import com.abstrack.hanasu.core.chatroom.message.Message;
 import com.abstrack.hanasu.core.user.data.ConnectionStatus;
-import com.abstrack.hanasu.db.FireDatabase;
+import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.notification.NotificationBuilder;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.bumptech.glide.Glide;
@@ -36,8 +34,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,7 +79,7 @@ public class ChatActivity extends BaseAppActivity {
 
     public void sendMessage(View view) {
         if (!edtTxtMsg.getText().toString().isEmpty()) {
-            DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom+"/messagesList");
+            DatabaseReference chatRoomRef = Flame.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom+"/messagesList");
             chatRoomRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -100,7 +96,7 @@ public class ChatActivity extends BaseAppActivity {
     }
 
     public void syncMessages() {
-        DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
+        DatabaseReference chatRoomRef = Flame.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
         chatRoomRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot data) {
@@ -144,7 +140,7 @@ public class ChatActivity extends BaseAppActivity {
     }
 
     public void loadChatInformation() {
-        DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
+        DatabaseReference chatRoomRef = Flame.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
         chatRoomRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -179,7 +175,7 @@ public class ChatActivity extends BaseAppActivity {
     }
 
     public void loadFriendInformation() {
-        DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
+        DatabaseReference chatRoomRef = Flame.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
         chatRoomRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -200,7 +196,7 @@ public class ChatActivity extends BaseAppActivity {
     }
 
     public void syncFriendInformation(String friendIdentifier) {
-        FireDatabase.getDataBaseReferenceWithPath("users").child(friendIdentifier).addValueEventListener(new ValueEventListener() {
+        Flame.getDataBaseReferenceWithPath("users").child(friendIdentifier).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot user) {
                 String contactName = (String) user.child("displayName").getValue();
@@ -222,7 +218,7 @@ public class ChatActivity extends BaseAppActivity {
     }
 
     public void fetchFriendInformation(String friendIdentifier) {
-        FireDatabase.getDataBaseReferenceWithPath("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        Flame.getDataBaseReferenceWithPath("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {

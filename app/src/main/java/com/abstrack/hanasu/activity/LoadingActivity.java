@@ -13,11 +13,10 @@ import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.auth.LoginActivity;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.activity.welcome.SetProfileInfoActivity;
-import com.abstrack.hanasu.auth.AuthManager;
-import com.abstrack.hanasu.core.Preferences;
 import com.abstrack.hanasu.util.AndroidUtil;
-import com.abstrack.hanasu.db.FireDatabase;
+import com.abstrack.hanasu.core.Flame;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 
@@ -43,7 +42,7 @@ public class LoadingActivity extends BaseAppActivity {
     }
 
     public void manageActivity(){
-        if(!AuthManager.isUserLogged()){
+        if(!Flame.isFireUserLogged()) {
             goToLoginActivity();
             return;
         }
@@ -57,7 +56,7 @@ public class LoadingActivity extends BaseAppActivity {
     }
 
     public void goToLoginActivity(){
-        AuthManager.getFireAuth().signOut();
+        Flame.getFireAuth().signOut();
         AndroidUtil.startNewActivity(LoadingActivity.this, LoginActivity.class);
     }
 
@@ -65,22 +64,18 @@ public class LoadingActivity extends BaseAppActivity {
         AndroidUtil.startNewActivity(LoadingActivity.this, LandingActivity.class);
     }
 
-    public void manageNextActivity(){
-        String cachedUserIdentifier = Preferences.getValue("userCachedIdentifier", this);
-
-        if(!cachedUserIdentifier.isEmpty()){
-            fetchUserInformation(cachedUserIdentifier);
-        }
-
-        goToLoginActivity();
+    public void goToSetProfileInfoActivity(){
+        AndroidUtil.startNewActivity(this, SetProfileInfoActivity.class);
     }
 
-    public void fetchUserInformation(String cachedUserIdentifier){
-        FireDatabase.getDataBaseReferenceWithPath("users").child(cachedUserIdentifier).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+    public void manageNextActivity(){
+        changeActivityViaData();
+    }
+
+    public void changeActivityViaData(){
+        Flame.getDataBaseReferenceWithPath("users").child(Flame.getFireAuth().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                boolean hasDisplayName = false;
-
                 if (!task.isSuccessful()) {
                     Log.e("Hanasu-Loading", "Error getting data", task.getException());
                     return;
@@ -88,20 +83,21 @@ public class LoadingActivity extends BaseAppActivity {
 
                 String displayName = task.getResult().child("public").child("displayName").getValue().toString();
 
-                if(AuthManager.getFireAuth().getCurrentUser().isEmailVerified()) {
+                if(Flame.getFireAuth().getCurrentUser().isEmailVerified()) {
                     if(!displayName.isEmpty()) {
                         goToLandingActivity();
                     }
 
-                    goToSetInfoActivity();
+                    goToSetProfileInfoActivity();
                 }
 
                 goToLoginActivity();
             }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                goToLoginActivity();
+            }
         });
-    }
-
-    public void goToSetInfoActivity(){
-        AndroidUtil.startNewActivity(this, SetProfileInfoActivity.class);
     }
 }

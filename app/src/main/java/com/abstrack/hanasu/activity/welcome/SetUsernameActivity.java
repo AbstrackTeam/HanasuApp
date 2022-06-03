@@ -13,11 +13,10 @@ import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.util.AndroidUtil;
-import com.abstrack.hanasu.db.FireDatabase;
+import com.abstrack.hanasu.core.Flame;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
 
 public class SetUsernameActivity extends BaseAppActivity {
 
@@ -71,7 +70,7 @@ public class SetUsernameActivity extends BaseAppActivity {
             return;
         }
 
-        FireDatabase.getDataBaseReferenceWithPath("users").child(identifier).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        Flame.getDataBaseReferenceWithPath("users").child(identifier).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
 

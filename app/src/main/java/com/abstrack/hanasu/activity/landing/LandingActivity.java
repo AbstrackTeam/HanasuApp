@@ -18,7 +18,7 @@ import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.notification.NotificationBuilder;
 import com.abstrack.hanasu.thread.UserServiceThread;
 import com.abstrack.hanasu.core.chatroom.message.data.MessageStatus;
-import com.abstrack.hanasu.db.FireDatabase;
+import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -115,7 +115,7 @@ public class LandingActivity extends BaseAppActivity {
     }
 
     public void load(){
-        DatabaseReference currentUserRef = FireDatabase.getDataBaseReferenceWithPath("users").child(UserManager.getCurrentUser().getIdentifier()).child("contacts");
+        DatabaseReference currentUserRef = Flame.getDataBaseReferenceWithPath("users").child(UserManager.getCurrentUser().getIdentifier()).child("contacts");
         currentUserRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -135,7 +135,7 @@ public class LandingActivity extends BaseAppActivity {
                     String chatRoom = contacts.get(identifier);
 
                     // it will try to get the information with firebase
-                    DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
+                    DatabaseReference chatRoomRef = Flame.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
 
                     chatRoomRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                         @Override
@@ -191,7 +191,7 @@ public class LandingActivity extends BaseAppActivity {
 
                             String lastMessage = messagesList.get(messagesList.size() -1).get("content");
                             String time = messagesList.get(messagesList.size() -1).get("time");
-                            DatabaseReference userRef = FireDatabase.getDataBaseReferenceWithPath("users").child(userIdentifier);
+                            DatabaseReference userRef = Flame.getDataBaseReferenceWithPath("users").child(userIdentifier);
 
                             int finalMessageCount = messageCount;
 
