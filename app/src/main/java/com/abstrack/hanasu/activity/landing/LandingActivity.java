@@ -19,6 +19,7 @@ import com.abstrack.hanasu.core.chatroom.message.data.MessageStatus;
 import com.abstrack.hanasu.core.story.StoriesAdapter;
 import com.abstrack.hanasu.core.story.Story;
 import com.abstrack.hanasu.core.user.UserManager;
+import com.abstrack.hanasu.thread.UserThread;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -42,18 +43,20 @@ public class LandingActivity extends BaseAppActivity {
     private List<Story> stories = new ArrayList<>();
     private static List<Chat> chats = new ArrayList<Chat>();
 
-    //UserServiceThread userService = new UserServiceThread();
+    private UserThread userThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
         init();
-        load();
+        //LOAD
+        buildOptionsListeners();
     }
 
     private void init() {
-        //userService.start();
+        userThread = new UserThread(this);
+        userThread.start();
 
         storiesBar = findViewById(R.id.storiesBar);
         chatsListView = findViewById(R.id.chatsListView);
@@ -90,8 +93,6 @@ public class LandingActivity extends BaseAppActivity {
         storiesBar.setItemAnimator(null);
 
         addChatButton = findViewById(R.id.addFriend);
-
-        buildOptionsListeners();
     }
 
     public void buildOptionsListeners() {
@@ -105,12 +106,12 @@ public class LandingActivity extends BaseAppActivity {
         addChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startAddFriendActivity();
+                goToAddFriendActivity();
             }
         });
     }
 
-    public void startAddFriendActivity() {
+    public void goToAddFriendActivity() {
         AndroidUtil.startNewActivity(LandingActivity.this, AddFriendActivity.class);
     }
 

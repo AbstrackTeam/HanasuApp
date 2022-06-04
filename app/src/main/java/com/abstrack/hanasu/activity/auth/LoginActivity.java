@@ -95,7 +95,7 @@ public class LoginActivity extends BaseAppActivity {
     }
 
     public void changeActivityViaData() {
-        Flame.getDataBaseReferenceWithPath("public").child(Flame.getFireAuth().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        Flame.getDataBaseReferenceWithPath("public").child("users").child(Flame.getFireAuth().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {

@@ -16,6 +16,10 @@ import com.google.firebase.storage.StorageReference;
 
 public class Flame {
 
+    public static String getFCMToken() {
+        return FirebaseMessaging.getInstance().getToken().getResult();
+    }
+
     public static FirebaseDatabase getFireDatabase(){
         return FirebaseDatabase.getInstance();
     }

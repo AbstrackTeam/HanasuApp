@@ -6,7 +6,7 @@ public class PrivateUser {
 
     private HashMap<String, String> contacts;
 
-    public PrivateUser(){
+    public PrivateUser() {
         contacts = new HashMap<String, String>();
         contacts.put("friendIdentifier", "chatRoomUid");
     }

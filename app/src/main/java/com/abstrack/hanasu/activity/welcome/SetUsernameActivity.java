@@ -57,7 +57,7 @@ public class SetUsernameActivity extends BaseAppActivity {
     }
 
     public void createNewUser(String newIdentifier){
-        Flame.getDataBaseReferenceWithPath("public").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        Flame.getDataBaseReferenceWithPath("public").child("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 boolean identifierExisted = false;

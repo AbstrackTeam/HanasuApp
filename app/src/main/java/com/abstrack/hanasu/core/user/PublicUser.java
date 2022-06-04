@@ -11,6 +11,8 @@ public class PublicUser {
     private String identifier, displayName, fcmToken, about, imgKey;
     private ConnectionStatus connectionStatus;
 
+    public PublicUser(){}
+
     public PublicUser(String identifier) {
         this.identifier = identifier;
         displayName = "";

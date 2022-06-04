@@ -10,9 +10,7 @@ public class ChatRoom {
     private List<Message> messagesList;
     private String lastMessageTime, chatRoomKey;
 
-    public ChatRoom() {
-
-    }
+    public ChatRoom() {}
 
     public ChatRoom(List<String> users, String chatRoomKey) {
         this.users = users;

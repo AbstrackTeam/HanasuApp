@@ -10,6 +10,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +22,24 @@ public class UserManager{
     private static PublicUser currentPublicUser;
     private static PrivateUser currentPrivateUser;
 
+    public static void setInitialValues(){
+        updateUserData("public", "connectionStatus", ConnectionStatus.ONLINE);
+        getFCMTokenAndUpdate();
+    }
+
+    public static void getFCMTokenAndUpdate(){
+            FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if(!task.isSuccessful()){
+                    Log.d("Hanasu-UserManager", "Error getting data", task.getException());
+                }
+
+                updateUserData("public", "fcmToken", task.getResult());
+            }
+        });
+    }
+
     public static void writeNewUser(String identifier) {
         PrivateUser newPrivateUser = new PrivateUser();
         PublicUser newPublicUser = new PublicUser(identifier);
@@ -27,12 +47,12 @@ public class UserManager{
         currentPrivateUser = newPrivateUser;
         currentPublicUser = newPublicUser;
 
-        Flame.getDataBaseReferenceWithPath("public").child(Flame.getFireAuth().getUid()).setValue(currentPublicUser);
-        Flame.getDataBaseReferenceWithPath("private").child(Flame.getFireAuth().getUid()).setValue(currentPrivateUser);
+        Flame.getDataBaseReferenceWithPath("public").child("users").child(Flame.getFireAuth().getUid()).setValue(currentPublicUser);
+        Flame.getDataBaseReferenceWithPath("private").child("users").child(Flame.getFireAuth().getUid()).setValue(currentPrivateUser);
     }
 
     public static void updateUserData(String side, String path, Object value) {
-        Flame.getDataBaseReferenceWithPath(side).child(Flame.getFireAuth().getUid()).child(path).setValue(value);
+        Flame.getDataBaseReferenceWithPath(side).child("users").child(Flame.getFireAuth().getUid()).child(path).setValue(value);
     }
 
     public static PublicUser getCurrentPublicUser(){
@@ -48,6 +68,6 @@ public class UserManager{
     }
 
     public static void setCurrentPrivateUser(PrivateUser privateUser){
-        privateUser = privateUser;
+        currentPrivateUser = privateUser;
     }
 }
