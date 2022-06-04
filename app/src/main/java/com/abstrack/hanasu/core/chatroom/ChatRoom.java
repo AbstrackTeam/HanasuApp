@@ -1,31 +1,44 @@
 package com.abstrack.hanasu.core.chatroom;
 
+import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.core.chatroom.message.Message;
+import com.abstrack.hanasu.core.user.UserManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ChatRoom {
-    private List<String> users;
+
+    private String chatRoomUUID;
     private List<Message> messagesList;
-    private String lastMessageTime, chatRoomKey;
+    private List<String> usersList;
 
-    public ChatRoom() {}
+    public ChatRoom() {
+    }
 
-    public ChatRoom(List<String> users, String chatRoomKey) {
-        this.users = users;
+    public ChatRoom(String chatRoomUUID, String contactIdentifier) {
+        this.chatRoomUUID = chatRoomUUID;
+
+        usersList = new ArrayList<String>();
+        usersList.add(contactIdentifier);
+        usersList.add(UserManager.getCurrentPublicUser().getIdentifier());
+
         messagesList = new ArrayList<>();
         messagesList.add(new Message());
-        lastMessageTime = "";
-        this.chatRoomKey = chatRoomKey;
     }
 
-    public List<String> getUsers() {
-        return users;
+    public ChatRoom(String chatRoomUUID, List<String> usersList, List<Message> messagesList) {
+        this.chatRoomUUID = chatRoomUUID;
+        this.usersList = usersList;
+        this.messagesList = messagesList;
     }
 
-    public void setUsers(List<String> users) {
-        this.users = users;
+    public String getChatRoomUUID() {
+        return chatRoomUUID;
+    }
+
+    public void setChatRoomUUID(String chatRoomUUID) {
+        this.chatRoomUUID = chatRoomUUID;
     }
 
     public List<Message> getMessagesList() {
@@ -36,19 +49,11 @@ public class ChatRoom {
         this.messagesList = messagesList;
     }
 
-    public String getLastMessageTime() {
-        return lastMessageTime;
+    public List<String> getUsersList() {
+        return usersList;
     }
 
-    public void setLastMessageTime(String lastMessageTime) {
-        this.lastMessageTime = lastMessageTime;
-    }
-
-    public String getChatRoomKey() {
-        return chatRoomKey;
-    }
-
-    public void setChatRoomKey(String chatRoomKey) {
-        this.chatRoomKey = chatRoomKey;
+    public void setUsersList(List<String> usersList) {
+        this.usersList = usersList;
     }
 }

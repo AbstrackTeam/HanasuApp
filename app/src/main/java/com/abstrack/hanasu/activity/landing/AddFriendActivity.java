@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
+import com.abstrack.hanasu.core.chatroom.ChatRoomManager;
 import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.core.Flame;;
 import com.abstrack.hanasu.util.TextUtil;
@@ -18,7 +19,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -101,7 +104,12 @@ public class AddFriendActivity extends BaseAppActivity {
                         continue;
                     }
 
-                    UserManager.updateUserData("private", "contacts", retrieveNewContactList(friendIdentifier));
+                    String chatRoomUUID = UUID.randomUUID().toString();
+
+                    UserManager.updateUserData("private", "contacts", retrieveNewContactList(friendIdentifier, chatRoomUUID));
+                    UserManager.updateUserData("private", "chatRoomList", retrieveNewChatRoomList(chatRoomUUID));
+                    ChatRoomManager.writeNewChatRoom(chatRoomUUID, friendIdentifier);
+
                     Toast.makeText(AddFriendActivity.this, "Has agregado a " + friendIdentifier + ".", Toast.LENGTH_SHORT).show();
                     goToLastActivity();
                     return;
@@ -112,10 +120,16 @@ public class AddFriendActivity extends BaseAppActivity {
         });
     }
 
-    public HashMap<String, String> retrieveNewContactList(String friendIdentifier){
+    public HashMap<String, String> retrieveNewContactList(String friendIdentifier, String chatRoomUUID){
         HashMap<String, String> newContactsList = UserManager.getCurrentPrivateUser().getContacts();
-        newContactsList.put(friendIdentifier, UUID.randomUUID().toString());
+        newContactsList.put(friendIdentifier, chatRoomUUID);
         return newContactsList;
+    }
+
+    public List<String> retrieveNewChatRoomList(String chatRoomUUID){
+        List<String> newChatRoomList = UserManager.getCurrentPrivateUser().getChatRoomList();
+        newChatRoomList.add(chatRoomUUID);
+        return newChatRoomList;
     }
 
     public void goToLastActivity(){
