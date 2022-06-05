@@ -46,6 +46,26 @@ public class ChatRoomManager {
             }
         }
     }
+    public static void syncPrivateDataByIdentifier(String chatRoomUUID, OnChatRoomDataReceiveCallback chatRoomDataReceiveCallback) {
+        Log.d("Hanasu-ChatRoomManager", "Specific ChatRoom sync started");
+
+        Flame.getDataBaseReferenceWithPath("private").child("chatRooms").child(chatRoomUUID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ChatRoom chatRoom = snapshot.getValue(ChatRoom.class);
+
+                if(chatRoom != null){
+                    chatRoomDataReceiveCallback.onDataReceiver(chatRoom);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("Hanasu-ChatRoomManager", "An error ocurred while retrieving ChatRoom information", error.toException());
+            }
+        });
+    }
+
 
     public static void writeNewIndividualChatRoom(String chatRoomUUID, ChatType chatType, String contactIdentifier){
         ChatRoom chatRoom = new ChatRoom(chatRoomUUID, chatType, contactIdentifier);

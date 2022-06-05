@@ -1,5 +1,8 @@
 package com.abstrack.hanasu.core.chatroom.chat;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.callback.OnContactDataReceiveCallback;
 import com.abstrack.hanasu.core.chatroom.ChatRoom;
@@ -9,7 +12,9 @@ import com.abstrack.hanasu.core.chatroom.data.ChatType;
 import com.abstrack.hanasu.core.user.PublicUser;
 import com.abstrack.hanasu.core.user.UserManager;
 
-public class Chat {
+import java.io.Serializable;
+
+public class Chat  {
 
     private String chatName, lastMessageContent, lastMessageTimeStamp, imgKey;
     private MessageStatus lastMessageStatus;

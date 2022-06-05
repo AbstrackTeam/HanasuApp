@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.chat.ChatActivity;
+import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.core.chatroom.data.ChatType;
 import com.abstrack.hanasu.util.AndroidUtil;
@@ -35,9 +36,9 @@ import java.util.List;
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
 
     private List<Chat> chatsList;
-    private BaseAppActivity activity;
+    private LandingActivity activity;
 
-    public ChatAdapter(List<Chat> chatsList, BaseAppActivity activity) {
+    public ChatAdapter(List<Chat> chatsList, LandingActivity activity) {
         this.chatsList = chatsList;
         this.activity = activity;
     }
@@ -67,9 +68,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         holder.chatCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AndroidUtil.startNewActivity(activity, ChatActivity.class);
+                goToChatActivity(holder);
             }
         });
+    }
+
+    public void goToChatActivity(ChatViewHolder holder){
+        Intent intent = new Intent(activity, ChatActivity.class);
+        intent.putExtra("cachedChatRoom", chatsList.get(holder.getAdapterPosition()).getChatRoom());
+        activity.startActivity(intent);
     }
 
     /** TODO: Waiting for file rules **/

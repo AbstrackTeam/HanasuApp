@@ -29,13 +29,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         this.context = context;
     }
 
-    public void addNewMessage(Message newMessage){
-        if(!messageList.contains(newMessage)) {
-            messageList.add(newMessage);
-            notifyItemInserted(messageList.size() - 1);
-        }
-    }
-
     @NonNull
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

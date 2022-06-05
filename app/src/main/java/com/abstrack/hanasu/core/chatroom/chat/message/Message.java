@@ -1,9 +1,16 @@
 package com.abstrack.hanasu.core.chatroom.chat.message;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.abstrack.hanasu.core.chatroom.ChatRoom;
 import com.abstrack.hanasu.core.chatroom.chat.message.data.MessageStatus;
 import com.abstrack.hanasu.core.chatroom.chat.message.data.MessageType;
+import com.abstrack.hanasu.core.chatroom.data.ChatType;
 
-public class Message {
+import java.util.List;
+
+public class Message implements Parcelable {
     
     public String content, timeStamp, sentBy;
     public MessageStatus messageStatus;
@@ -63,5 +70,37 @@ public class Message {
 
     public void setMessageStatus(MessageStatus messageStatus) {
         this.messageStatus = messageStatus;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeString(content);
+        parcel.writeString(timeStamp);
+        parcel.writeString(sentBy);
+        parcel.writeString(messageStatus.toString());
+        parcel.writeString(messageType.toString());
+    }
+
+    public static final Parcelable.Creator<Message> CREATOR = new Parcelable.Creator<Message>() {
+        public Message createFromParcel(Parcel in) {
+            return new Message(in);
+        }
+
+        public Message[] newArray(int size) {
+            return new Message[size];
+        }
+    };
+
+    private Message(Parcel in) {
+        content = in.readString();
+        timeStamp = in.readString();
+        sentBy = in.readString();
+        messageStatus = MessageStatus.valueOf(in.readString());
+        messageType = MessageType.valueOf(in.readString());
     }
 }
