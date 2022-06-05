@@ -70,10 +70,12 @@ public class SetUsernameActivity extends BaseAppActivity {
                 for(DataSnapshot data : task.getResult().getChildren()) {
                     String identifier = data.child("identifier").getValue(String.class);
 
-                    if(identifier.equals(newIdentifier)){
-                        identifierExisted = true;
-                        Toast.makeText(SetUsernameActivity.this, "Este nombre de usuario ya existe, puedes cambiar el nombre o id", Toast.LENGTH_SHORT).show();
-                        break;
+                    if(identifier != null){
+                        if(identifier.equals(newIdentifier)){
+                            identifierExisted = true;
+                            Toast.makeText(SetUsernameActivity.this, "Este nombre de usuario ya existe, puedes cambiar el nombre o id", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
                     }
                 }
 

@@ -26,13 +26,16 @@ public class ChatRoomManager {
     public static void syncPrivateData(OnChatRoomDataReceiveCallback chatRoomDataReceiveCallback) {
         Log.d("Hanasu-ChatRoomManager", "Sync started");
 
-        for(String chatRoomUUID : UserManager.currentPrivateUser.getChatRoomList()){
+        for(String chatRoomUUID : UserManager.currentPrivateUser.getChatRoomList().keySet()){
             if(!chatRoomUUID.equals("chatRoomUUID")){
                 Flame.getDataBaseReferenceWithPath("private").child("chatRooms").child(chatRoomUUID).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         ChatRoom chatRoom = snapshot.getValue(ChatRoom.class);
-                        chatRoomDataReceiveCallback.onDataReceiver(chatRoom);
+
+                        if(chatRoom != null){
+                            chatRoomDataReceiveCallback.onDataReceiver(chatRoom);
+                        }
                     }
 
                     @Override

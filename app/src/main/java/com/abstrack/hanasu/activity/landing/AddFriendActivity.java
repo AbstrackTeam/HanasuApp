@@ -127,9 +127,9 @@ public class AddFriendActivity extends BaseAppActivity {
         return newContactsList;
     }
 
-    public List<String> retrieveNewChatRoomList(String chatRoomUUID){
-        List<String> newChatRoomList = UserManager.currentPrivateUser.getChatRoomList();
-        newChatRoomList.add(chatRoomUUID);
+    public HashMap<String, Integer> retrieveNewChatRoomList(String chatRoomUUID){
+        HashMap<String, Integer>  newChatRoomList = UserManager.currentPrivateUser.getChatRoomList();
+        newChatRoomList.put(chatRoomUUID, newChatRoomList.size());
         return newChatRoomList;
     }
 

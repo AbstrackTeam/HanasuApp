@@ -9,17 +9,17 @@ import java.util.List;
 public class PrivateUser {
 
     private HashMap<String, String> contacts;
-    private List<String> chatRoomList;
+    private HashMap<String, Integer> chatRoomList;
 
     public PrivateUser() {
         contacts = new HashMap<String, String>();
         contacts.put("friendIdentifier", "chatRoomUid");
 
-        chatRoomList = new ArrayList<String>();
-        chatRoomList.add("chatRoomUUID");
+        chatRoomList = new HashMap<String, Integer>();
+        chatRoomList.put("chatRoomUUID", chatRoomList.size());
     }
 
-    public PrivateUser(HashMap<String, String> contacts, List<String> chatRoomList){
+    public PrivateUser(HashMap<String, String> contacts, HashMap<String, Integer> chatRoomList){
         this.contacts = contacts;
         this.chatRoomList = chatRoomList;
     }
@@ -32,11 +32,11 @@ public class PrivateUser {
         this.contacts = contacts;
     }
 
-    public List<String> getChatRoomList() {
+    public HashMap<String, Integer> getChatRoomList() {
         return chatRoomList;
     }
 
-    public void setChatRoomList(List<String> chatRoomList) {
+    public void setChatRoomList(HashMap<String, Integer> chatRoomList) {
         this.chatRoomList = chatRoomList;
     }
 }
