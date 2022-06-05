@@ -1,4 +1,4 @@
-package com.abstrack.hanasu.core.chatroom.message;
+package com.abstrack.hanasu.core.chatroom.chat.message;
 
 import android.content.Context;
 import android.view.Gravity;
@@ -14,8 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.core.Flame;
-import com.abstrack.hanasu.core.user.UserManager;
-import com.abstrack.hanasu.core.chatroom.message.data.MessageType;
+import com.abstrack.hanasu.core.chatroom.chat.message.data.MessageType;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
@@ -57,7 +56,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         Message messageModel = messageList.get(position);
         boolean messageSendByOther = !messageModel.getSentBy().equals(Flame.getFireAuth().getCurrentUser().getUid());
 
-        holder.txtTime.setText(messageModel.getTime());
+        holder.txtTime.setText(messageModel.getTimeStamp());
 
         if (messageModel.getMessageType() == MessageType.IMAGE) {
             decorateMessageBox(holder.messageImgLinearLayout, holder.messageImgConstraintLayout, messageSendByOther);

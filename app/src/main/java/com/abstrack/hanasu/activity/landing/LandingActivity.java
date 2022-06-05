@@ -1,36 +1,30 @@
 package com.abstrack.hanasu.activity.landing;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
-import com.abstrack.hanasu.core.Flame;
+import com.abstrack.hanasu.callback.OnChatRoomDataReceiveCallback;
+import com.abstrack.hanasu.callback.OnUserDataReceiveCallback;
+import com.abstrack.hanasu.core.chatroom.ChatRoom;
+import com.abstrack.hanasu.core.chatroom.ChatRoomManager;
 import com.abstrack.hanasu.core.chatroom.chat.Chat;
-import com.abstrack.hanasu.core.chatroom.chat.ChatsAdapter;
-import com.abstrack.hanasu.core.chatroom.message.data.MessageStatus;
+import com.abstrack.hanasu.core.chatroom.chat.ChatAdapter;
+import com.abstrack.hanasu.core.chatroom.chat.ChatManager;
 import com.abstrack.hanasu.core.story.StoriesAdapter;
 import com.abstrack.hanasu.core.story.Story;
+import com.abstrack.hanasu.core.user.PrivateUser;
+import com.abstrack.hanasu.core.user.PublicUser;
 import com.abstrack.hanasu.core.user.UserManager;
-import com.abstrack.hanasu.thread.ChatThread;
-import com.abstrack.hanasu.thread.UserThread;
 import com.abstrack.hanasu.util.AndroidUtil;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class LandingActivity extends BaseAppActivity {
@@ -39,11 +33,7 @@ public class LandingActivity extends BaseAppActivity {
     private CardView showMoreButton, addChatButton, addGroupsButton, searchButton;
     private ImageView showMoreButtonIcon;
 
-    private UserThread userThread;
-    private ChatThread chatThread;
-
     private List<Story> storiesList = new ArrayList<Story>();
-    private List<Chat> chatsList = new ArrayList<Chat>();
 
     private boolean showingMoreOptions;
 
@@ -54,16 +44,10 @@ public class LandingActivity extends BaseAppActivity {
 
         init();
         buildOptionsListeners();
-        addStoriesToView();
+        syncLandingComponents();
     }
 
     public void init() {
-        userThread = new UserThread(this);
-        userThread.start();
-
-        chatThread = new ChatThread(this);
-        chatThread.start();
-
         storiesBar = findViewById(R.id.storiesBar);
         chatsListView = findViewById(R.id.chatsListView);
 
@@ -79,6 +63,29 @@ public class LandingActivity extends BaseAppActivity {
         searchButton.setVisibility(View.GONE);
 
         showingMoreOptions = false;
+    }
+
+    public void syncLandingComponents(){
+        UserManager.syncPublicAndPrivateData(new OnUserDataReceiveCallback() {
+            @Override
+            public void onDataReceiver(PublicUser publicUser) {
+            }
+
+            @Override
+            public void onDataReceiver(PrivateUser privateUser) {
+                syncChatRoomData();
+            }
+        });
+    }
+
+    private void syncChatRoomData(){
+        ChatRoomManager.syncPrivateData(new OnChatRoomDataReceiveCallback() {
+            @Override
+            public void onDataReceiver(ChatRoom chatRoom) {
+                ChatManager.getChatsList().clear();
+                new Chat().retrieveChatData(chatRoom, LandingActivity.this);
+            }
+        });
     }
 
     public void buildOptionsListeners() {
@@ -102,9 +109,9 @@ public class LandingActivity extends BaseAppActivity {
     }
 
 
-    public void addChatsToView(){
-        ChatsAdapter chatsAdapter = new ChatsAdapter(chatsList, LandingActivity.this);
-        chatsListView.setAdapter((chatsAdapter));
+    public void addChatsToView() {
+        ChatAdapter chatAdapter = new ChatAdapter(ChatManager.getChatsList(), this);
+        chatsListView.setAdapter((chatAdapter));
         chatsListView.setLayoutManager(new LinearLayoutManager(LandingActivity.this, RecyclerView.VERTICAL, false));
     }
 

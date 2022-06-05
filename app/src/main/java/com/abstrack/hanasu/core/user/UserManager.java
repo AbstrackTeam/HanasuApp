@@ -1,43 +1,83 @@
 package com.abstrack.hanasu.core.user;
 
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 
-import com.abstrack.hanasu.core.chatroom.ChatRoom;
-import com.abstrack.hanasu.core.user.data.ConnectionStatus;
+import com.abstrack.hanasu.callback.OnContactDataReceiveCallback;
+import com.abstrack.hanasu.callback.OnUserDataReceiveCallback;
 import com.abstrack.hanasu.core.Flame;
+import com.abstrack.hanasu.core.user.data.ConnectionStatus;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+public class UserManager {
 
-public class UserManager{
+    public static PublicUser currentPublicUser;
+    public static PrivateUser currentPrivateUser;
 
-    private static PublicUser currentPublicUser;
-    private static PrivateUser currentPrivateUser;
-
-    public static void setInitialValues(){
-        updateUserData("public", "connectionStatus", ConnectionStatus.ONLINE);
-        getFCMTokenAndUpdate();
+    private static void startUp() {
+        addConnectionListener();
+        fetchFCMTokenAndUpdate();
     }
 
-    public static void getFCMTokenAndUpdate(){
-            FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+    public static void syncPublicAndPrivateData(OnUserDataReceiveCallback userDataReceiveCallback) {
+        Log.d("Hanasu-UserManager", "Sync started");
+        startUp();
+
+        Flame.getDataBaseReferenceWithPath("public").child("users").child(Flame.getFireAuth().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                PublicUser publicUser = snapshot.getValue(PublicUser.class);
+                currentPublicUser = publicUser;
+
+                userDataReceiveCallback.onDataReceiver(currentPublicUser);
+                Log.d("Hanasu-UserManager", "(Public) synced");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("Hanasu-UserManager", "An error ocurred while retrieving Public User information", error.toException());
+            }
+        });
+
+        Flame.getDataBaseReferenceWithPath("private").child("users").child(Flame.getFireAuth().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                PrivateUser privateUser = snapshot.getValue(PrivateUser.class);
+                currentPrivateUser = privateUser;
+
+                userDataReceiveCallback.onDataReceiver(currentPrivateUser);
+                Log.d("Hanasu-UserManager", "(Private) synced");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("Hanasu-UserManager", "An error ocurred while retrieving Private User information", error.toException());
+            }
+        });
+    }
+
+    public static void fetchFCMTokenAndUpdate() {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
-                if(!task.isSuccessful()){
+                if (!task.isSuccessful()) {
                     Log.d("Hanasu-UserManager", "Error getting data", task.getException());
                 }
 
                 updateUserData("public", "fcmToken", task.getResult());
             }
         });
+    }
+
+    public static void addConnectionListener() {
+        updateUserData("public", "connectionStatus", ConnectionStatus.ONLINE);
+        Flame.getDataBaseReferenceWithPath("public").child("users").child(Flame.getFireAuth().getCurrentUser().getUid()).child("connectionStatus").onDisconnect().setValue(ConnectionStatus.OFFLINE);
     }
 
     public static void writeNewUser(String identifier) {
@@ -55,19 +95,22 @@ public class UserManager{
         Flame.getDataBaseReferenceWithPath(side).child("users").child(Flame.getFireAuth().getUid()).child(path).setValue(value);
     }
 
-    public static PublicUser getCurrentPublicUser(){
-        return currentPublicUser;
-    }
+    public static void fetchContactPublicInformation(String contactIdentifier, OnContactDataReceiveCallback contactDataReceiveCallback){
+        Log.d("Hanasu-UserManager", "Contact sync started");
 
-    public static PrivateUser getCurrentPrivateUser(){
-        return currentPrivateUser;
-    }
+        Flame.getDataBaseReferenceWithPath("public").child("users").orderByChild("identifier").equalTo(contactIdentifier).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot contactDataSnapshot : snapshot.getChildren()){
+                    PublicUser contactPublicUser = contactDataSnapshot.getValue(PublicUser.class);
+                    contactDataReceiveCallback.onDataReceive(contactPublicUser);
+                }
+            }
 
-    public static void setCurrentPublicUser(PublicUser publicUser) {
-        currentPublicUser = publicUser;
-    }
-
-    public static void setCurrentPrivateUser(PrivateUser privateUser){
-        currentPrivateUser = privateUser;
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("Hanasu-UserManager", "An error ocurred while retrieving Public Contact information", error.toException());
+            }
+        });
     }
 }

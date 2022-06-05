@@ -16,14 +16,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
-import com.abstrack.hanasu.core.chatroom.message.MessageAdapter;
-import com.abstrack.hanasu.core.user.UserManager;
-import com.abstrack.hanasu.core.chatroom.message.data.MessageStatus;
-import com.abstrack.hanasu.core.chatroom.message.data.MessageType;
-import com.abstrack.hanasu.core.chatroom.message.Message;
+import com.abstrack.hanasu.core.chatroom.chat.message.MessageAdapter;
+import com.abstrack.hanasu.core.chatroom.chat.message.data.MessageStatus;
+import com.abstrack.hanasu.core.chatroom.chat.message.data.MessageType;
+import com.abstrack.hanasu.core.chatroom.chat.message.Message;
 import com.abstrack.hanasu.core.user.data.ConnectionStatus;
 import com.abstrack.hanasu.core.Flame;
-import com.abstrack.hanasu.util.AndroidUtil;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

@@ -1,10 +1,6 @@
 package com.abstrack.hanasu.core.user;
 
-import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.core.user.data.ConnectionStatus;
-
-import java.net.ConnectException;
-import java.util.HashMap;
 
 public class PublicUser {
 

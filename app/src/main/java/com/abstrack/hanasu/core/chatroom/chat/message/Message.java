@@ -1,16 +1,17 @@
-package com.abstrack.hanasu.core.chatroom.message;
+package com.abstrack.hanasu.core.chatroom.chat.message;
 
-import com.abstrack.hanasu.core.chatroom.message.data.MessageStatus;
-import com.abstrack.hanasu.core.chatroom.message.data.MessageType;
+import com.abstrack.hanasu.core.chatroom.chat.message.data.MessageStatus;
+import com.abstrack.hanasu.core.chatroom.chat.message.data.MessageType;
 
 public class Message {
-    public String content, time, sentBy;
+    
+    public String content, timeStamp, sentBy;
     public MessageStatus messageStatus;
     public MessageType messageType;
 
     public Message(){
         this.content = "";
-        this.time = "";
+        this.timeStamp = "";
         this.sentBy = "";
         this.messageStatus = MessageStatus.ARRIVED_NOT_SEEN;
         this.messageType = MessageType.TEXT;
@@ -18,7 +19,7 @@ public class Message {
 
     public Message(String content, String time, String sentBy, MessageStatus messageStatus, MessageType messageType) {
         this.content = content;
-        this.time = time;
+        this.timeStamp = time;
         this.sentBy = sentBy;
         this.messageStatus = messageStatus;
         this.messageType = messageType;
@@ -40,12 +41,12 @@ public class Message {
         this.content = content;
     }
 
-    public String getTime() {
-        return time;
+    public String getTimeStamp() {
+        return timeStamp;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setTimeStamp(String time) {
+        this.timeStamp = time;
     }
 
     public String getSentBy() {
