@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.abstrack.hanasu.activity.landing.LandingActivity;
+import com.abstrack.hanasu.callback.OnChatDataReceiveCallback;
 import com.abstrack.hanasu.callback.OnContactDataReceiveCallback;
 import com.abstrack.hanasu.core.chatroom.ChatRoom;
 import com.abstrack.hanasu.core.chatroom.chat.message.Message;
@@ -20,7 +21,7 @@ public class Chat  {
     private MessageStatus lastMessageStatus;
     private ChatRoom chatRoom;
 
-    public void retrieveChatData(ChatRoom chatRoom, LandingActivity activity) {
+    public void retrieveChatData(ChatRoom chatRoom, LandingActivity activity, OnChatDataReceiveCallback chatDataReceiveCallback) {
         this.chatRoom = chatRoom;
 
         Message lastMessage = chatRoom.getMessagesList().get(chatRoom.getMessagesList().size() - 1);
@@ -45,11 +46,11 @@ public class Chat  {
                     chatName = contactPublicUser.getDisplayName();
                     imgKey = contactPublicUser.getImgKey();
 
-                    ChatManager.addChatToChatList(Chat.this);
-                    activity.addChatsToView();
+                    chatDataReceiveCallback.onDataReceive(Chat.this);
                 }
             });
         }
+
     }
 
     public String getChatName() {

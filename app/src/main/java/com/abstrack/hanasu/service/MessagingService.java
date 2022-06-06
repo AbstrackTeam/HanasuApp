@@ -1,7 +1,5 @@
 package com.abstrack.hanasu.service;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationManagerCompat;
 

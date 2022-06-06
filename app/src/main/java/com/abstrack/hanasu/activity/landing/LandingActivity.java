@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
+import com.abstrack.hanasu.callback.OnChatDataReceiveCallback;
 import com.abstrack.hanasu.callback.OnChatRoomDataReceiveCallback;
 import com.abstrack.hanasu.callback.OnUserDataReceiveCallback;
 import com.abstrack.hanasu.core.chatroom.ChatRoom;
@@ -84,8 +85,14 @@ public class LandingActivity extends BaseAppActivity {
         ChatRoomManager.syncPrivateData(new OnChatRoomDataReceiveCallback() {
             @Override
             public void onDataReceiver(ChatRoom chatRoom) {
-                ChatManager.getChatsList().clear();
-                new Chat().retrieveChatData(chatRoom, LandingActivity.this);
+                new Chat().retrieveChatData(chatRoom, LandingActivity.this, new OnChatDataReceiveCallback() {
+                    @Override
+                    public void onDataReceive(Chat chat) {
+                        ChatManager.getChatsList().clear();
+                        ChatManager.addChatToChatList(chat);
+                        addChatsToView();
+                    }
+                });
             }
         });
     }
