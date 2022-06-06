@@ -8,6 +8,8 @@ import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 
+import com.abstrack.hanasu.R;
+
 public class MessageNotifier {
 
     public static void createNotificationChannel(Context ctx) {
@@ -24,6 +26,7 @@ public class MessageNotifier {
 
     public static Notification builder(Context ctx, String messageTitle, String contentText){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, "Hanasu-Message-Channel")
+                .setSmallIcon(R.drawable.ic_add_chat)
                 .setContentTitle("My notification")
                 .setContentText("Much longer text that cannot fit one line...")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
