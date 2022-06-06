@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -46,6 +48,8 @@ public class SetProfileInfoActivity extends BaseAppActivity {
 
     private static final int IMAGE_CAPTURE_CODE = 1999, IMAGE_PICK_CODE = 2000;
 
+    Animation hideOptionsAnim, showOptionsAnim, fadeInAnim, fadeOutAnim;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,13 +67,17 @@ public class SetProfileInfoActivity extends BaseAppActivity {
 
         edtTxtProfileName = findViewById(R.id.edtTxtProfileName);
         btnContinue = findViewById(R.id.btnContinue);
+
+        hideOptionsAnim = AnimationUtils.loadAnimation(this, R.anim.hide_profile_pic_options);
+        showOptionsAnim = AnimationUtils.loadAnimation(this, R.anim.show_profile_picture_options);
+        fadeInAnim = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        fadeOutAnim = AnimationUtils.loadAnimation(this, R.anim.fade_out);
     }
 
     public void buildProfilePictureOptions(){
-        LinearLayout layoutPictureOptions = findViewById(R.id.layoutPictureOptions);
-        viewPictureOptions = LayoutInflater.from(this).inflate(R.layout.select_picture_option, null, false);
+        viewPictureOptions = LayoutInflater.from(this).inflate(R.layout.select_picture_option, clickableContainer, false);
         viewPictureOptions.setVisibility(View.INVISIBLE);
-        layoutPictureOptions.addView(viewPictureOptions);
+        clickableContainer.addView(viewPictureOptions);
     }
 
     public void setOnClickListeners(){
@@ -154,6 +162,7 @@ public class SetProfileInfoActivity extends BaseAppActivity {
     }
 
     private void showPictureOptions() {
+        startPictureOptionsShowAnimation();
         btnContinue.setClickable(false);
         clickableContainer.setClickable(true);
         clickableContainer.setVisibility(View.VISIBLE);
@@ -161,7 +170,17 @@ public class SetProfileInfoActivity extends BaseAppActivity {
         showPictureOptions = true;
     }
 
+    private void startPictureOptionsShowAnimation(){
+        viewPictureOptions.startAnimation(showOptionsAnim);
+        clickableContainer.startAnimation(fadeInAnim);
+    }
+    private void startPictureOptionsHideAnimation(){
+        viewPictureOptions.startAnimation(hideOptionsAnim);
+        clickableContainer.startAnimation(fadeOutAnim);
+    }
+
     private void hidePictureOptions() {
+        startPictureOptionsHideAnimation();
         btnContinue.setClickable(true);
         clickableContainer.setClickable(false);
         clickableContainer.setVisibility(View.INVISIBLE);

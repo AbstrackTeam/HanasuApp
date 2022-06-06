@@ -2,6 +2,8 @@ package com.abstrack.hanasu.activity.landing;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import androidx.cardview.widget.CardView;
@@ -33,6 +35,8 @@ public class LandingActivity extends BaseAppActivity {
     private static RecyclerView storiesBar, chatsListView;
     private CardView showMoreButton, addChatButton, addGroupsButton, searchButton;
     private ImageView showMoreButtonIcon;
+
+    Animation fromBottomAnim, toBottomAnim;
 
     private List<Story> storiesList = new ArrayList<Story>();
 
@@ -66,8 +70,11 @@ public class LandingActivity extends BaseAppActivity {
         searchButton.setVisibility(View.GONE);
 
         showingMoreOptions = false;
-    }
 
+        fromBottomAnim = AnimationUtils.loadAnimation(this, R.anim.options_up);
+        toBottomAnim = AnimationUtils.loadAnimation(this, R.anim.options_down);
+
+    }
     public void syncLandingComponents(){
         UserManager.syncPublicAndPrivateData(new OnUserDataReceiveCallback() {
             @Override
@@ -117,7 +124,6 @@ public class LandingActivity extends BaseAppActivity {
         AndroidUtil.startNewActivity(LandingActivity.this, AddFriendActivity.class);
     }
 
-
     public void addChatsToView() {
         ChatAdapter chatAdapter = new ChatAdapter(ChatManager.getChatsList(), this);
         chatsListView.setAdapter((chatAdapter));
@@ -133,86 +139,47 @@ public class LandingActivity extends BaseAppActivity {
         storiesBar.setItemAnimator(null);
     }
 
-    public void animateOptions() {
-        if (!showingMoreOptions) {
-            showMoreButtonIcon.setImageResource(R.drawable.ic_down_arrow);
-
-            showMoreButton.setClickable(false);
-            addChatButton.setClickable(false);
-            addGroupsButton.setClickable(false);
-            searchButton.setClickable(false);
-
-            showMoreButton.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    showMoreButton.setClickable(true);
-                    addChatButton.setClickable(true);
-                    addGroupsButton.setClickable(true);
-                    searchButton.setClickable(true);
-                    showingMoreOptions = true;
-                }
-            }, 450);
-
-            addChatButton.setVisibility(View.VISIBLE);
-            addGroupsButton.setVisibility(View.VISIBLE);
-            searchButton.setVisibility(View.VISIBLE);
-
-            addChatButton.setAlpha(0.5f);
-            addChatButton.setTranslationY(0);
-            addChatButton.setTranslationY(showMoreButton.getY() - addChatButton.getY());
-            addChatButton.animate()
-                    .alpha(1.0f).
-                    translationY(0)
-                    .setDuration(300);
-
-            addGroupsButton.setAlpha(0.5f);
-            addGroupsButton.setTranslationY(0);
-            addGroupsButton.setTranslationY(showMoreButton.getY() - addGroupsButton.getY());
-            addGroupsButton.animate()
-                    .alpha(1.0f)
-                    .translationY(0)
-                    .setDuration(300);
-
-            searchButton.setAlpha(0.5f);
-            searchButton.setTranslationY(0);
-            searchButton.setTranslationY(showMoreButton.getY() - searchButton.getY());
-            searchButton.animate()
-                    .alpha(1.0f)
-                    .translationY(0)
-                    .setDuration(300);
+    private void animateOptions() {
+        if(!showingMoreOptions){
+            startOptionsShowAnimation();
+            setOptionsClickable(true);
+            showingMoreOptions = true;
             return;
         }
-        showMoreButton.setClickable(false);
-        addChatButton.setClickable(false);
-        addGroupsButton.setClickable(false);
-        searchButton.setClickable(false);
-        showMoreButton.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                addChatButton.setVisibility(View.GONE);
-                addGroupsButton.setVisibility(View.GONE);
-                searchButton.setVisibility(View.GONE);
-                showMoreButton.setClickable(true);
-                addChatButton.setClickable(true);
-                addGroupsButton.setClickable(true);
-                searchButton.setClickable(true);
-                showingMoreOptions = false;
-            }
-        }, 450);
+        setOptionsClickable(false);
+        startOptionsCloseAnimation();
+        showingMoreOptions = false;
+    }
 
+    private void setOptionsClickable(boolean bool){
+        addChatButton.setClickable(bool);
+        addGroupsButton.setClickable(bool);
+        searchButton.setClickable(bool);
+    }
+
+    private void startOptionsShowAnimation() {
+        showMoreButtonIcon.setImageResource(R.drawable.ic_down_arrow);
+
+        setOptionsVisibility(View.VISIBLE);
+
+        addChatButton.startAnimation(fromBottomAnim);
+        addGroupsButton.startAnimation(fromBottomAnim);
+        searchButton.startAnimation(fromBottomAnim);
+    }
+
+    private void startOptionsCloseAnimation(){
         showMoreButtonIcon.setImageResource(R.drawable.ic_plus);
-        addChatButton.animate()
-                .translationY(showMoreButton.getY() - addChatButton.getY())
-                .setDuration(300);
-        addGroupsButton.animate().
-                translationY(showMoreButton.getY() - addGroupsButton.getY())
-                .setDuration(300);
-        searchButton.animate().
-                alpha(0.0f).
-                setDuration(0);
-        searchButton.animate()
-                .alpha(0.0f).
-                translationY(showMoreButton.getY() - searchButton.getY())
-                .setDuration(300);
+
+        addChatButton.startAnimation(toBottomAnim);
+        addGroupsButton.startAnimation(toBottomAnim);
+        searchButton.startAnimation(toBottomAnim);
+
+        setOptionsVisibility(View.GONE);
+    }
+
+    private void setOptionsVisibility(int visibility){
+        addChatButton.setVisibility(visibility);
+        addGroupsButton.setVisibility(visibility);
+        searchButton.setVisibility(visibility);
     }
 }
