@@ -1,7 +1,7 @@
 package com.abstrack.hanasu.activity.chat;
 
+import android.app.NotificationManager;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,31 +20,20 @@ import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.callback.OnChatRoomDataReceiveCallback;
 import com.abstrack.hanasu.callback.OnContactDataReceiveCallback;
-import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.core.chatroom.ChatRoom;
 import com.abstrack.hanasu.core.chatroom.ChatRoomManager;
-import com.abstrack.hanasu.core.chatroom.chat.ChatManager;
 import com.abstrack.hanasu.core.chatroom.chat.message.Message;
 import com.abstrack.hanasu.core.chatroom.chat.message.MessageAdapter;
 import com.abstrack.hanasu.core.chatroom.chat.message.MessageManager;
-import com.abstrack.hanasu.core.chatroom.chat.message.data.MessageStatus;
-import com.abstrack.hanasu.core.chatroom.chat.message.data.MessageType;
 import com.abstrack.hanasu.core.chatroom.data.ChatType;
 import com.abstrack.hanasu.core.user.PublicUser;
 import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.core.user.data.ConnectionStatus;
-import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.abstrack.hanasu.notification.MessageNotifier;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.Random;
 
 public class ChatActivity extends BaseAppActivity {
 
@@ -100,9 +89,7 @@ public class ChatActivity extends BaseAppActivity {
     }
 
     public void sendMessage() {
-        if (!edtTxtMsg.getText().toString().isEmpty()) {
-            //Send message via FCM
-        }
+        UserManager.sendMessage(cachedChatRoom, edtTxtMsg);
     }
 
     public void syncChatInformation() {
@@ -151,11 +138,15 @@ public class ChatActivity extends BaseAppActivity {
         checkMessageListState();
     }
 
-    public void checkMessageListState(){
+    public void checkMessageListState() {
         if(cachedChatRoom.getMessagesList().size() - 1 > MessageManager.getMessageList().size()) {
             for(Message message : cachedChatRoom.getMessagesList()) {
                 if(cachedChatRoom.getMessagesList().indexOf(message) != cachedChatRoom.getMessagesList().size() - 1){
                     continue;
+                }
+
+                if(!message.getSentBy().equals(UserManager.currentPublicUser.getIdentifier())){
+                    notifyNewMessage(message.getSentBy(), message.getContent(), cachedChatRoom.getMessagesList().indexOf(message));
                 }
 
                 MessageManager.addMessageToMessageList(message);
@@ -165,6 +156,11 @@ public class ChatActivity extends BaseAppActivity {
         }
 
         messageEdited();
+    }
+
+    public void notifyNewMessage(String messageTitle, String messageContent, int messageID){
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(messageID, MessageNotifier.builder(this, messageTitle, messageContent));
     }
 
     public void messageEdited(){

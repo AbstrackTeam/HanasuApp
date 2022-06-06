@@ -48,6 +48,8 @@ public class LandingActivity extends BaseAppActivity {
     }
 
     public void init() {
+        ChatManager.getChatsList().clear();
+
         storiesBar = findViewById(R.id.storiesBar);
         chatsListView = findViewById(R.id.chatsListView);
 

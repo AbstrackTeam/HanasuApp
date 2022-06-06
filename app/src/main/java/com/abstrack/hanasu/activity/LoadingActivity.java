@@ -17,6 +17,7 @@ import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.activity.welcome.SetProfileInfoActivity;
 import com.abstrack.hanasu.activity.welcome.WelcomeActivity;
 import com.abstrack.hanasu.core.Flame;
+import com.abstrack.hanasu.notification.MessageNotifier;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -31,6 +32,7 @@ public class LoadingActivity extends BaseAppActivity {
         setContentView(R.layout.activity_loading);
 
         Flame.getFireDatabase().setPersistenceEnabled(true);
+        MessageNotifier.createNotificationChannel(this);
 
         animateContent();
         manageActivity();

@@ -1,5 +1,7 @@
 package com.abstrack.hanasu.service;
 
+import android.util.Log;
+
 import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.core.user.UserManager;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -18,6 +20,7 @@ public class MessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        Log.d("Test", "watafak");
         super.onMessageReceived(remoteMessage);
     }
 }

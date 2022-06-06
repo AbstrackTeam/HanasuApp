@@ -1,19 +1,27 @@
 package com.abstrack.hanasu.core.user;
 
 import android.util.Log;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 
 import com.abstrack.hanasu.callback.OnContactDataReceiveCallback;
 import com.abstrack.hanasu.callback.OnUserDataReceiveCallback;
 import com.abstrack.hanasu.core.Flame;
+import com.abstrack.hanasu.core.chatroom.ChatRoom;
+import com.abstrack.hanasu.core.chatroom.chat.message.Message;
+import com.abstrack.hanasu.core.chatroom.chat.message.MessageManager;
+import com.abstrack.hanasu.core.chatroom.chat.message.data.MessageStatus;
+import com.abstrack.hanasu.core.chatroom.chat.message.data.MessageType;
 import com.abstrack.hanasu.core.user.data.ConnectionStatus;
+import com.abstrack.hanasu.util.AndroidUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 
 public class UserManager {
 
@@ -23,6 +31,14 @@ public class UserManager {
     private static void startUp() {
         addConnectionListener();
         fetchFCMTokenAndUpdate();
+    }
+
+    public static void sendMessage(ChatRoom chatRoom, EditText edtTxtMsg) {
+        if(!edtTxtMsg.getText().toString().isEmpty()) {
+            chatRoom.getMessagesList().add(new Message(edtTxtMsg.getText().toString(), AndroidUtil.getCurrentHour(), UserManager.currentPublicUser.getIdentifier(), MessageStatus.ARRIVED_NOT_SEEN, MessageType.TEXT));
+            edtTxtMsg.setText("");
+            Flame.getDataBaseReferenceWithPath("private").child("chatRooms").child(chatRoom.getChatRoomUUID()).child("messagesList").setValue(chatRoom.getMessagesList());
+        }
     }
 
     public static void syncPublicAndPrivateData(OnUserDataReceiveCallback userDataReceiveCallback) {
