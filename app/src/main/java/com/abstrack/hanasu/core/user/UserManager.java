@@ -33,11 +33,19 @@ public class UserManager {
         fetchFCMTokenAndUpdate();
     }
 
-    public static void sendMessage(ChatRoom chatRoom, EditText edtTxtMsg) {
+    public static void sendMessage(ChatRoom chatRoom, PublicUser publicContactUser, EditText edtTxtMsg) {
+        if(chatRoom == null || publicContactUser == null){
+            return;
+        }
+
         if(!edtTxtMsg.getText().toString().isEmpty()) {
-            chatRoom.getMessagesList().add(new Message(edtTxtMsg.getText().toString(), AndroidUtil.getCurrentHour(), UserManager.currentPublicUser.getIdentifier(), MessageStatus.ARRIVED_NOT_SEEN, MessageType.TEXT));
+            Message message = new Message(edtTxtMsg.getText().toString(), AndroidUtil.getCurrentHour(), UserManager.currentPublicUser.getIdentifier(), MessageStatus.ARRIVED_NOT_SEEN, MessageType.TEXT);
+
             edtTxtMsg.setText("");
+            chatRoom.getMessagesList().add(message);
+
             Flame.getDataBaseReferenceWithPath("private").child("chatRooms").child(chatRoom.getChatRoomUUID()).child("messagesList").setValue(chatRoom.getMessagesList());
+            Flame.sendNotification(message.getSentBy(), message.getContent(), publicContactUser.getFcmToken());
         }
     }
 

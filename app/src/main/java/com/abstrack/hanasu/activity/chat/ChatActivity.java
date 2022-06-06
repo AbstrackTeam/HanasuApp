@@ -26,6 +26,7 @@ import com.abstrack.hanasu.core.chatroom.chat.message.Message;
 import com.abstrack.hanasu.core.chatroom.chat.message.MessageAdapter;
 import com.abstrack.hanasu.core.chatroom.chat.message.MessageManager;
 import com.abstrack.hanasu.core.chatroom.data.ChatType;
+import com.abstrack.hanasu.core.user.PrivateUser;
 import com.abstrack.hanasu.core.user.PublicUser;
 import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.core.user.data.ConnectionStatus;
@@ -41,8 +42,10 @@ public class ChatActivity extends BaseAppActivity {
     private TextView txtContactName, txtContactStatus;
     private ImageView imgContactProfilePicture;
     private EditText edtTxtMsg;
-    private ChatRoom cachedChatRoom;
     private MessageAdapter messageAdapter;
+
+    private ChatRoom cachedChatRoom;
+    private PublicUser cachedPublicContactUser;
 
     private Animation down_anim, up_anim;
     private boolean firstAnimationRun = true;
@@ -89,7 +92,7 @@ public class ChatActivity extends BaseAppActivity {
     }
 
     public void sendMessage() {
-        UserManager.sendMessage(cachedChatRoom, edtTxtMsg);
+        UserManager.sendMessage(cachedChatRoom, cachedPublicContactUser, edtTxtMsg);
     }
 
     public void syncChatInformation() {
@@ -105,6 +108,8 @@ public class ChatActivity extends BaseAppActivity {
                             UserManager.fetchContactPublicInformation(contactIdentifier, new OnContactDataReceiveCallback() {
                                 @Override
                                 public void onDataReceive(PublicUser contactPublicUser) {
+                                    cachedPublicContactUser = contactPublicUser;
+
                                     txtContactName.setText(contactPublicUser.getDisplayName());
                                     decorateConnectionStatus(contactPublicUser.getConnectionStatus());
                                     // WAITING FOR IMG RULES
@@ -145,10 +150,6 @@ public class ChatActivity extends BaseAppActivity {
                     continue;
                 }
 
-                if(!message.getSentBy().equals(UserManager.currentPublicUser.getIdentifier())){
-                    notifyNewMessage(message.getSentBy(), message.getContent(), cachedChatRoom.getMessagesList().indexOf(message));
-                }
-
                 MessageManager.addMessageToMessageList(message);
                 messageAdapter.notifyItemInserted(MessageManager.getMessageList().size() - 1);
                 return;
@@ -158,10 +159,6 @@ public class ChatActivity extends BaseAppActivity {
         messageEdited();
     }
 
-    public void notifyNewMessage(String messageTitle, String messageContent, int messageID){
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(messageID, MessageNotifier.builder(this, messageTitle, messageContent));
-    }
 
     public void messageEdited(){
         if(cachedChatRoom.getMessagesList().size() - 1 == MessageManager.getMessageList().size()){

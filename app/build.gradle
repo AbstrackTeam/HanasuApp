@@ -29,6 +29,9 @@ android {
 }
 
 dependencies {
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.9.3"))
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
     implementation 'com.github.bumptech.glide:glide:4.13.0'
     implementation 'com.google.firebase:firebase-storage:20.0.1'
     implementation 'androidx.work:work-runtime:2.5.0'
