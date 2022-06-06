@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.core.chatroom.chat.message.data.MessageType;
+import com.abstrack.hanasu.core.user.UserManager;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
@@ -47,7 +48,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public void onBindViewHolder(@NonNull MessageAdapter.MessageViewHolder holder, int position) {
         Message messageModel = messageList.get(position);
-        boolean messageSendByOther = !messageModel.getSentBy().equals(Flame.getFireAuth().getCurrentUser().getUid());
+        boolean messageSendByOther = !messageModel.getSentBy().equals(UserManager.currentPublicUser.getIdentifier());
 
         holder.txtTime.setText(messageModel.getTimeStamp());
 
