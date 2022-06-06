@@ -3,6 +3,7 @@ package com.abstrack.hanasu.core.chatroom.chat;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,11 @@ import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.chat.ChatActivity;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
+import com.abstrack.hanasu.callback.OnContactDataReceiveCallback;
 import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.core.chatroom.data.ChatType;
+import com.abstrack.hanasu.core.user.PublicUser;
+import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -59,6 +63,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         holder.name.setText(chat.getChatName());
         holder.previewMessage.setText(chat.getLastMessageContent());
         holder.chatTime.setText(chat.getLastMessageTimeStamp());
+        //
+        holder.userIcon.setImageResource(R.drawable.ic_profile_pic);
 
         fetchChatPicture(holder);
         buildChatListeners(holder);
@@ -81,7 +87,56 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
     /** TODO: Waiting for file rules **/
     public void fetchChatPicture(ChatViewHolder holder){
-        holder.userIcon.setImageResource(R.drawable.ic_profile_pic);
+        // Get the user chatImgKey
+        String chatImgKey = chatsList.get(holder.getAdapterPosition()).getImgKey();
+        String imgExtension = chatImgKey.substring(chatImgKey.indexOf('.'));
+
+        // TODO: make contactIdentifier compatible with groups (chatType)
+
+        List<String> chatUsersList = chatsList.get(holder.getAdapterPosition()).getChatRoom().getUsersList();
+
+        String contactIdentifier = null;
+
+        for(String identifier : chatUsersList){
+            if(!identifier.equals(UserManager.currentPublicUser.getIdentifier())){
+                contactIdentifier = identifier;
+                break;
+            }
+        }
+
+        // Find the user uid with the identifier
+        DatabaseReference userRef = Flame.getDataBaseReferenceWithPath("public").child("users");
+
+        userRef.orderByChild("identifier").equalTo(contactIdentifier).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(!task.isSuccessful()){
+                    Log.e("Hanasu-ChatAdapter", "Error getting user");
+                }
+
+                String userUid = task.getResult().getKey();
+                locateAndSetChatPicture(holder, userUid, chatImgKey, imgExtension);
+            }
+        });
+    }
+
+    private void locateAndSetChatPicture(ChatViewHolder holder,String userUid, String chatImgKey, String imgExtension){
+        StorageReference imgRef = FirebaseStorage.getInstance().getReference();
+
+        imgRef.child("image").child("profilePic").child(userUid).child(chatImgKey).getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (!task.isSuccessful()) {
+                    return;
+                }
+
+                if (imgExtension.equals(".gif")) {
+                    Glide.with(holder.itemView).asGif().load(task.getResult()).into(holder.userIcon);
+                } else {
+                    Glide.with(holder.itemView).asBitmap().load(task.getResult()).into(holder.userIcon);
+                }
+            }
+        });
     }
 
     @Override

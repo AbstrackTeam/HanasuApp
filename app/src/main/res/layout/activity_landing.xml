@@ -7,6 +7,19 @@
     android:background="@color/background"
     tools:context=".activity.landing.LandingActivity">
 
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/noChatsTextView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:outlineProvider="none"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+        app:srcCompat="@drawable/nochats" />
+
     <TextView
         android:id="@+id/txtChats"
         android:layout_width="wrap_content"

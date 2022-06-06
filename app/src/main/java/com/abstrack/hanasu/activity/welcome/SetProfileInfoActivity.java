@@ -2,8 +2,6 @@ package com.abstrack.hanasu.activity.welcome;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -259,7 +257,7 @@ public class SetProfileInfoActivity extends BaseAppActivity {
     }
 
     public void  uploadByFile(Uri imgUri, String imgKey, String imgExtension) {
-        StorageReference imageStorageReference = Flame.getStorageReference().child("image").child(imgKey + imgExtension);
+        StorageReference imageStorageReference = Flame.getStorageReference().child("image").child("profilePic").child(Flame.getFireAuth().getUid()).child(imgKey + imgExtension);
         imageStorageReference.putFile(imgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -284,8 +282,8 @@ public class SetProfileInfoActivity extends BaseAppActivity {
         });
     }
 
-    public void uploadByBytes(byte[] bytes, Uri imgUri, String imgKey, String imgExtension){
-        StorageReference imageStorageReference = Flame.getStorageReference().child("image").child(imgKey + imgExtension);
+    public void uploadByBytes(byte[] bytes, Uri imgUri, String imgKey, String imgExtension) {
+        StorageReference imageStorageReference = Flame.getStorageReference().child("image").child("profilePic").child(Flame.getFireAuth().getUid()).child(imgKey + imgExtension);
         imageStorageReference.putBytes(bytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
