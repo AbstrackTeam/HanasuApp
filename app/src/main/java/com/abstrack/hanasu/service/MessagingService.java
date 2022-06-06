@@ -2,6 +2,7 @@ package com.abstrack.hanasu.service;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.abstrack.hanasu.core.Flame;
@@ -26,11 +27,13 @@ public class MessagingService extends FirebaseMessagingService {
     }
 
     @Override
-    public void onMessageReceived(RemoteMessage remoteMessage) {
+    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        MessageNotifier.createNotificationChannel(this);
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-        notificationManagerCompat.notify(random.nextInt(), MessageNotifier.builder(this, remoteMessage.getData().get("title"), remoteMessage.getData().get("body")));
+        if(remoteMessage.getNotification() != null){
+            MessageNotifier.createNotificationChannel(this);
+            NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+            notificationManagerCompat.notify(random.nextInt(), MessageNotifier.builder(this, remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody()));
+        }
     }
 }
