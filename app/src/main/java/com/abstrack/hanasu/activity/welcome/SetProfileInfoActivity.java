@@ -1,9 +1,13 @@
 package com.abstrack.hanasu.activity.welcome;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +21,8 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
@@ -33,6 +39,8 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class SetProfileInfoActivity extends BaseAppActivity {
@@ -46,7 +54,7 @@ public class SetProfileInfoActivity extends BaseAppActivity {
     private String tempCameraImagePath = "";
     private boolean showPictureOptions = false, progressFirstRun = false;
 
-    private static final int IMAGE_CAPTURE_CODE = 1999, IMAGE_PICK_CODE = 2000;
+    private static final int IMAGE_CAPTURE_CODE = 1999, IMAGE_PICK_CODE = 2000, REQUEST_CAMERA_PERMISSIONS = 100;
 
     Animation hideOptionsAnim, showOptionsAnim, fadeInAnim, fadeOutAnim;
 
@@ -142,7 +150,21 @@ public class SetProfileInfoActivity extends BaseAppActivity {
     }
 
     public void openCamera() {
-        tempCameraImagePath = AndroidUtil.openCameraAndTakePhoto(this, IMAGE_CAPTURE_CODE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSIONS);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CAMERA_PERMISSIONS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                tempCameraImagePath = AndroidUtil.openCameraAndTakePhoto(this, IMAGE_CAPTURE_CODE);
+            } else {
+                Toast.makeText(this, "Permiso denegado, no se podrá tomar foto", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -204,6 +226,8 @@ public class SetProfileInfoActivity extends BaseAppActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case IMAGE_CAPTURE_CODE:
@@ -214,7 +238,6 @@ public class SetProfileInfoActivity extends BaseAppActivity {
                     break;
             }
         }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void uploadPhoto(Uri imgUri, String imgExtension) {

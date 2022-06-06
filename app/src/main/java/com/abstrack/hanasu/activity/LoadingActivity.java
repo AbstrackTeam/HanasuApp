@@ -1,7 +1,10 @@
 package com.abstrack.hanasu.activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -9,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
@@ -19,10 +23,14 @@ import com.abstrack.hanasu.activity.welcome.WelcomeActivity;
 import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.notification.MessageNotifier;
 import com.abstrack.hanasu.util.AndroidUtil;
+import com.abstrack.hanasu.util.ImageUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
+
+import java.io.File;
+import java.io.IOException;
 
 public class LoadingActivity extends BaseAppActivity {
 
@@ -36,6 +44,7 @@ public class LoadingActivity extends BaseAppActivity {
 
         animateContent();
         manageActivity();
+
     }
 
     public void animateContent() {
