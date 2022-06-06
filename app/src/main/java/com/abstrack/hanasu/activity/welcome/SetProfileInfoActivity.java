@@ -151,7 +151,14 @@ public class SetProfileInfoActivity extends BaseAppActivity {
 
     public void openCamera() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSIONS);
+            ActivityCompat.requestPermissions(this, new String[]{
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+                            Manifest.permission.MANAGE_MEDIA,
+                            Manifest.permission.MANAGE_DOCUMENTS,
+                            Manifest.permission.READ_EXTERNAL_STORAGE},
+                    REQUEST_CAMERA_PERMISSIONS);
         }
     }
 
@@ -227,7 +234,6 @@ public class SetProfileInfoActivity extends BaseAppActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case IMAGE_CAPTURE_CODE:

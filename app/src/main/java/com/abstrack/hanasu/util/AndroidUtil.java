@@ -68,21 +68,21 @@ public class AndroidUtil {
 
     public static String openCameraAndTakePhoto(BaseAppActivity currentActivity, int captureCode) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        //if (takePictureIntent.resolveActivity(currentActivity.getPackageManager()) != null) {
-            File photoFile = null;
-            try {
-                photoFile = ImageUtil.createImageFile();
-            } catch (IOException ex) {
-                Log.d("Hanasu-AndroidUtil", "An error ocurred while creating the file", ex);
-            }
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(currentActivity, "com.abstrack.hanasu.android.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                currentActivity.startActivityForResult(takePictureIntent, captureCode);
-                return photoFile.getAbsolutePath();
-            }
-      //  }
+
+        File photoFile = null;
+        try {
+            photoFile = ImageUtil.createImageFile(currentActivity);
+        } catch (IOException ex) {
+            Log.d("Hanasu-AndroidUtil", "An error ocurred while creating the file", ex);
+        }
+        if (photoFile != null) {
+            Uri photoURI = FileProvider.getUriForFile(currentActivity, "com.abstrack.hanasu.android.fileprovider",
+                    photoFile);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+            currentActivity.startActivityForResult(takePictureIntent, captureCode);
+            return photoFile.getAbsolutePath();
+        }
+
         return null;
     }
 
