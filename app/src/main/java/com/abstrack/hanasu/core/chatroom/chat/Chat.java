@@ -40,7 +40,7 @@ public class Chat  {
                 continue;
             }
 
-            UserManager.fetchContactPublicInformation(userIdentifier, new OnContactDataReceiveCallback() {
+            UserManager.fetchAndListenContactPublicInformation(userIdentifier, new OnContactDataReceiveCallback() {
                 @Override
                 public void onDataReceive(PublicUser contactPublicUser) {
                     chatName = contactPublicUser.getDisplayName();

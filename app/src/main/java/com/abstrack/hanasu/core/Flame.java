@@ -3,6 +3,7 @@ package com.abstrack.hanasu.core;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.abstrack.hanasu.core.user.UserManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -25,19 +26,55 @@ public class Flame {
     public static final MediaType CONTENT_TYPE = MediaType.parse("application/json; charset=utf-8");
     private static boolean isPersistenceEnabled;
 
-    public static void sendNotification(String notificationTitle, String notificationMessage, String tokenToSend) {
+    public static void sendMessageNotification(String notificationTitle, String notificationMessage, String tokenToSend) {
         new AsyncTask<Void,Void,Void>(){
             @Override
             protected Void doInBackground(Void... params) {
                 try {
                     OkHttpClient client = new OkHttpClient();
                     JSONObject json=new JSONObject();
-                    JSONObject dataJson=new JSONObject();
+                    JSONObject notificationDataJson =new JSONObject();
 
-                    dataJson.put("title", notificationTitle);
-                    dataJson.put("body", notificationMessage);
+                    notificationDataJson.put("title", notificationTitle);
+                    notificationDataJson.put("body", notificationMessage);
 
-                    json.put("notification", dataJson);
+                    json.put("notification", notificationDataJson);
+                    json.put("to", tokenToSend);
+
+                    RequestBody body = RequestBody.create(CONTENT_TYPE, json.toString());
+                    Request request = new Request.Builder()
+                            .header("Authorization","key="+ SERVER_KEY)
+                            .url(FCM_API_URL)
+                            .post(body)
+                            .build();
+
+                    client.newCall(request).execute();
+                } catch (Exception e){
+                    Log.e("Flame", "An error ocurred sending notification ", e);
+                }
+                return null;
+            }
+        }.execute();
+    }
+
+    public static void sendFriendRequestNotification(String notificationTitle, String notificationMessage, String chatRoomUUID, String tokenToSend) {
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    OkHttpClient client = new OkHttpClient();
+                    JSONObject json=new JSONObject();
+                    JSONObject notificationDataJson =new JSONObject();
+                    JSONObject messageDataJson =new JSONObject();
+
+                    messageDataJson.put("chatRoomUUID", chatRoomUUID);
+                    messageDataJson.put("contactIdentifier", UserManager.currentPublicUser.getIdentifier());
+
+                    notificationDataJson.put("title", notificationTitle);
+                    notificationDataJson.put("body", notificationMessage);
+
+                    json.put("notification", notificationDataJson);
+                    json.put("data", messageDataJson);
                     json.put("to", tokenToSend);
 
                     RequestBody body = RequestBody.create(CONTENT_TYPE, json.toString());

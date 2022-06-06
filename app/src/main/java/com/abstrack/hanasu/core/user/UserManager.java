@@ -10,7 +10,6 @@ import com.abstrack.hanasu.callback.OnUserDataReceiveCallback;
 import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.core.chatroom.ChatRoom;
 import com.abstrack.hanasu.core.chatroom.chat.message.Message;
-import com.abstrack.hanasu.core.chatroom.chat.message.MessageManager;
 import com.abstrack.hanasu.core.chatroom.chat.message.data.MessageStatus;
 import com.abstrack.hanasu.core.chatroom.chat.message.data.MessageType;
 import com.abstrack.hanasu.core.user.data.ConnectionStatus;
@@ -21,7 +20,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.RemoteMessage;
+
+import java.util.HashMap;
 
 public class UserManager {
 
@@ -33,19 +33,33 @@ public class UserManager {
         fetchFCMTokenAndUpdate();
     }
 
+    public static void addNewContact(String chatRoomUUID, String contactIdentifier) {
+        updateUserData("private", "contacts", retrieveNewContactList(contactIdentifier, chatRoomUUID));
+        updateUserData("private", "chatRoomList", retrieveNewChatRoomList(chatRoomUUID));
+    }
+
+    public static void sendFriendRequest(String chatRoomUUID, String contactIdentifier){
+        fetchContactPublicInformation(contactIdentifier, new OnContactDataReceiveCallback() {
+            @Override
+            public void onDataReceive(PublicUser contactPublicUser) {
+                Flame.sendFriendRequestNotification(UserManager.currentPublicUser.getDisplayName(), "Te ha añadido como contacto", contactPublicUser.getFcmToken(), chatRoomUUID);
+            }
+        });
+    }
+
     public static void sendMessage(ChatRoom chatRoom, PublicUser publicContactUser, EditText edtTxtMsg) {
-        if(chatRoom == null || publicContactUser == null){
+        if (chatRoom == null || publicContactUser == null) {
             return;
         }
 
-        if(!edtTxtMsg.getText().toString().isEmpty()) {
+        if (!edtTxtMsg.getText().toString().isEmpty()) {
             Message message = new Message(edtTxtMsg.getText().toString(), AndroidUtil.getCurrentHour(), UserManager.currentPublicUser.getIdentifier(), MessageStatus.ARRIVED_NOT_SEEN, MessageType.TEXT);
 
             edtTxtMsg.setText("");
             chatRoom.getMessagesList().add(message);
 
             Flame.getDataBaseReferenceWithPath("private").child("chatRooms").child(chatRoom.getChatRoomUUID()).child("messagesList").setValue(chatRoom.getMessagesList());
-            Flame.sendNotification(message.getSentBy(), message.getContent(), publicContactUser.getFcmToken());
+            Flame.sendMessageNotification(message.getSentBy(), message.getContent(), publicContactUser.getFcmToken());
         }
     }
 
@@ -119,13 +133,13 @@ public class UserManager {
         Flame.getDataBaseReferenceWithPath(side).child("users").child(Flame.getFireAuth().getUid()).child(path).setValue(value);
     }
 
-    public static void fetchContactPublicInformation(String contactIdentifier, OnContactDataReceiveCallback contactDataReceiveCallback){
+    public static void fetchAndListenContactPublicInformation(String contactIdentifier, OnContactDataReceiveCallback contactDataReceiveCallback) {
         Log.d("Hanasu-UserManager", "Contact sync started");
 
         Flame.getDataBaseReferenceWithPath("public").child("users").orderByChild("identifier").equalTo(contactIdentifier).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot contactDataSnapshot : snapshot.getChildren()){
+                for (DataSnapshot contactDataSnapshot : snapshot.getChildren()) {
                     PublicUser contactPublicUser = contactDataSnapshot.getValue(PublicUser.class);
                     contactDataReceiveCallback.onDataReceive(contactPublicUser);
                 }
@@ -136,5 +150,48 @@ public class UserManager {
                 Log.d("Hanasu-UserManager", "An error ocurred while retrieving Public Contact information", error.toException());
             }
         });
+    }
+
+    public static void fetchContactPublicInformation(String contactIdentifier, OnContactDataReceiveCallback contactDataReceiveCallback) {
+        Log.d("Hanasu-UserManager", "Contact get data started");
+
+        Flame.getDataBaseReferenceWithPath("public").child("users").orderByChild("identifier").equalTo(contactIdentifier).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(!task.isSuccessful()){
+                    Log.d("Hanasu-UserManager", "Error getting data", task.getException());
+                }
+
+                PublicUser contactPublicUser = task.getResult().getValue(PublicUser.class);
+                contactDataReceiveCallback.onDataReceive(contactPublicUser);
+            }
+        });
+
+        Flame.getDataBaseReferenceWithPath("public").child("users").orderByChild("identifier").equalTo(contactIdentifier).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot contactDataSnapshot : snapshot.getChildren()) {
+                    PublicUser contactPublicUser = contactDataSnapshot.getValue(PublicUser.class);
+                    contactDataReceiveCallback.onDataReceive(contactPublicUser);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("Hanasu-UserManager", "An error ocurred while retrieving Public Contact information", error.toException());
+            }
+        });
+    }
+
+    public static HashMap<String, String> retrieveNewContactList(String friendIdentifier, String chatRoomUUID) {
+        HashMap<String, String> newContactsList = UserManager.currentPrivateUser.getContacts();
+        newContactsList.put(friendIdentifier, chatRoomUUID);
+        return newContactsList;
+    }
+
+    public static HashMap<String, Integer> retrieveNewChatRoomList(String chatRoomUUID) {
+        HashMap<String, Integer> newChatRoomList = UserManager.currentPrivateUser.getChatRoomList();
+        newChatRoomList.put(chatRoomUUID, newChatRoomList.size());
+        return newChatRoomList;
     }
 }

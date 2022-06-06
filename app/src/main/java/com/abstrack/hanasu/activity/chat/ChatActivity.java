@@ -105,7 +105,7 @@ public class ChatActivity extends BaseAppActivity {
                 if(cachedChatRoom.getChatType() == ChatType.INDIVIDUAL){
                     for (String contactIdentifier : cachedChatRoom.getUsersList()) {
                         if (!contactIdentifier.equals(UserManager.currentPublicUser.getIdentifier())) {
-                            UserManager.fetchContactPublicInformation(contactIdentifier, new OnContactDataReceiveCallback() {
+                            UserManager.fetchAndListenContactPublicInformation(contactIdentifier, new OnContactDataReceiveCallback() {
                                 @Override
                                 public void onDataReceive(PublicUser contactPublicUser) {
                                     cachedPublicContactUser = contactPublicUser;

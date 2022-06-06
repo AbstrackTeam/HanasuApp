@@ -9,6 +9,7 @@ import com.abstrack.hanasu.notification.MessageNotifier;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 public class MessagingService extends FirebaseMessagingService {
@@ -29,6 +30,10 @@ public class MessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
 
         if(remoteMessage.getNotification() != null){
+            if(remoteMessage.getData().get("chatRoomUUID") != null){
+                UserManager.addNewContact(remoteMessage.getData().get("chatRoomUUID"), remoteMessage.getData().get("contactIdentifier"));
+            }
+
             MessageNotifier.createNotificationChannel(this);
             NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
             notificationManagerCompat.notify(random.nextInt(), MessageNotifier.builder(this, remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody()));
