@@ -1,254 +1,198 @@
 package com.abstrack.hanasu.activity.chat;
 
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
+import android.app.NotificationManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
-import com.abstrack.hanasu.core.chatroom.message.MessageAdapter;
+import com.abstrack.hanasu.callback.OnChatRoomDataReceiveCallback;
+import com.abstrack.hanasu.callback.OnContactDataReceiveCallback;
+import com.abstrack.hanasu.core.chatroom.ChatRoom;
+import com.abstrack.hanasu.core.chatroom.ChatRoomManager;
+import com.abstrack.hanasu.core.chatroom.chat.message.Message;
+import com.abstrack.hanasu.core.chatroom.chat.message.MessageAdapter;
+import com.abstrack.hanasu.core.chatroom.chat.message.MessageManager;
+import com.abstrack.hanasu.core.chatroom.data.ChatType;
+import com.abstrack.hanasu.core.user.PrivateUser;
+import com.abstrack.hanasu.core.user.PublicUser;
 import com.abstrack.hanasu.core.user.UserManager;
-import com.abstrack.hanasu.core.chatroom.message.data.MessageStatus;
-import com.abstrack.hanasu.core.chatroom.message.data.MessageType;
-import com.abstrack.hanasu.core.chatroom.message.Message;
 import com.abstrack.hanasu.core.user.data.ConnectionStatus;
-import com.abstrack.hanasu.db.FireDatabase;
-import com.abstrack.hanasu.notification.NotificationBuilder;
-import com.abstrack.hanasu.util.AndroidUtil;
-import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.abstrack.hanasu.notification.MessageNotifier;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Random;
 
 public class ChatActivity extends BaseAppActivity {
 
-    private String chatRoom;
     private RecyclerView recyclerViewMessage;
-
     private TextView txtContactName, txtContactStatus;
     private ImageView imgContactProfilePicture;
     private EditText edtTxtMsg;
+    private MessageAdapter messageAdapter;
+
+    private ChatRoom cachedChatRoom;
+    private PublicUser cachedPublicContactUser;
 
     private Animation down_anim, up_anim;
     private boolean firstAnimationRun = true;
 
-    private List<Message> messageList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        Bundle extras = getIntent().getExtras();
+        init();
+        buildButtonsActions();
+        loadChatMessages(false);
+        syncChatInformation();
+    }
 
-        if (extras != null) {
-            chatRoom = extras.getString("chatRoom");
-        }
+    public void init() {
+        Intent intent = getIntent();
+        cachedChatRoom = intent.getParcelableExtra("cachedChatRoom");
 
         recyclerViewMessage = findViewById(R.id.recyclerViewMessage);
         txtContactName = findViewById(R.id.txtContactName);
         txtContactStatus = findViewById(R.id.txtContactStatus);
         imgContactProfilePicture = findViewById(R.id.imgContactProfilePicture);
         edtTxtMsg = findViewById(R.id.edtTxtMsg);
-
-        messageList = new ArrayList<Message>();
-
-        loadChatInformation();
-        loadFriendInformation();
-        syncMessages();
     }
 
-    public void sendMessage(View view) {
-        if (!edtTxtMsg.getText().toString().isEmpty()) {
-            DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom+"/messagesList");
-            chatRoomRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    if (!task.isSuccessful()) {
-                        Log.e("HanasuChat", "Error getting values");
-                    }
-
-                    List<HashMap<String, String>> messagesList = (List<HashMap<String, String>>) task.getResult().getValue();
-                    chatRoomRef.child(String.valueOf(messagesList.size())).setValue(new Message(edtTxtMsg.getText().toString(), AndroidUtil.getCurrentHour(), UserManager.getCurrentUser().getIdentifier(), MessageStatus.SENDING, MessageType.TEXT));
-                    edtTxtMsg.setText("");
-                }
-            });
-        }
-    }
-
-    public void syncMessages() {
-        DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
-        chatRoomRef.addValueEventListener(new ValueEventListener() {
+    public void buildButtonsActions() {
+        Button btnSend = findViewById(R.id.btnSend);
+        btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot data) {
+            public void onClick(View view) {
+                sendMessage();
+            }
+        });
 
-                List<HashMap<String, String>> messagesList = (List<HashMap<String, String>>) data.child("messagesList").getValue();
-                if ((messagesList.size() - 1) != messageList.size()) {
-                    HashMap<String, String> lastMessage = messagesList.get(messagesList.size() - 1);
+        Button btnReturn = findViewById(R.id.btnReturn);
+        btnReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                returnToLastActivity();
+            }
+        });
+    }
 
-                    MessageAdapter adapter = (MessageAdapter) recyclerViewMessage.getAdapter();
-                    if (adapter != null) {
-                        MessageType messageType = MessageType.valueOf(lastMessage.get("messageType"));
-                        MessageStatus messageStatus = MessageStatus.valueOf(lastMessage.get("messageStatus"));
-                        String content = lastMessage.get("content");
-                        String sentBy = lastMessage.get("sentBy");
-                        String time = lastMessage.get("time");
+    public void sendMessage() {
+        UserManager.sendMessage(cachedChatRoom, cachedPublicContactUser, edtTxtMsg);
+    }
 
-                        Message message = new Message(content, time, sentBy, messageStatus, messageType);
-                        adapter.addNewMessage(message);
+    public void syncChatInformation() {
+        ChatRoomManager.syncPrivateDataByIdentifier(cachedChatRoom.getChatRoomUUID(), new OnChatRoomDataReceiveCallback() {
+            @Override
+            public void onDataReceiver(ChatRoom chatRoom) {
+                cachedChatRoom = chatRoom;
+                loadChatMessages(true);
 
-                        NotificationBuilder.notifyMessage(ChatActivity.this, sentBy, content, R.mipmap.ic_main_hanasu);
+                if(cachedChatRoom.getChatType() == ChatType.INDIVIDUAL){
+                    for (String contactIdentifier : cachedChatRoom.getUsersList()) {
+                        if (!contactIdentifier.equals(UserManager.currentPublicUser.getIdentifier())) {
+                            UserManager.fetchContactPublicInformation(contactIdentifier, new OnContactDataReceiveCallback() {
+                                @Override
+                                public void onDataReceive(PublicUser contactPublicUser) {
+                                    cachedPublicContactUser = contactPublicUser;
 
-                        if (sentBy.equals(UserManager.getCurrentUser().getIdentifier())) {
-                            recyclerViewMessage.smoothScrollToPosition(adapter.getItemCount());
-                        } else {
-                            if(recyclerViewMessage.getScrollState() == RecyclerView.SCROLL_STATE_IDLE) {
-                                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerViewMessage.getLayoutManager();
-                                if((messagesList.size() - 1) == (linearLayoutManager.findLastCompletelyVisibleItemPosition() + 2)) {
-                                    recyclerViewMessage.smoothScrollToPosition(adapter.getItemCount());
+                                    txtContactName.setText(contactPublicUser.getDisplayName());
+                                    decorateConnectionStatus(contactPublicUser.getConnectionStatus());
+                                    // WAITING FOR IMG RULES
                                 }
-                            }
+                            });
                         }
                     }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    public void loadChatInformation() {
-        DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
-        chatRoomRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("HanasuChat", "Error getting values");
-                }
-
-                List<HashMap<String, String>> messagesList = (List<HashMap<String, String>>) task.getResult().child("messagesList").getValue();
-
-                for (int i = 1; i < messagesList.size(); i++) {
-
-                    MessageType messageType = MessageType.valueOf(messagesList.get(i).get("messageType"));
-                    MessageStatus messageStatus = MessageStatus.valueOf(messagesList.get(i).get("messageStatus"));
-                    String content = messagesList.get(i).get("content");
-                    String sentBy = messagesList.get(i).get("sentBy");
-                    String time = messagesList.get(i).get("time");
-
-                    Message message = new Message(content, time, sentBy, messageStatus, messageType);
-                    messageList.add(message);
-                }
-
-                buildMessageRecyclerView(messageList);
-            }
-        });
-    }
-
-    public void buildMessageRecyclerView(List<Message> messageList) {
-        MessageAdapter messageAdapter = new MessageAdapter(messageList, ChatActivity.this);
-        recyclerViewMessage.setAdapter((messageAdapter));
-        recyclerViewMessage.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        recyclerViewMessage.scrollToPosition(messageAdapter.getItemCount() - 1);
-    }
-
-    public void loadFriendInformation() {
-        DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom);
-        chatRoomRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("HanasuChat", "Error getting values");
-                }
-
-                List<String> userList = (List<String>) task.getResult().child("users").getValue();
-
-                for(String identifier : userList){
-                    if(!identifier.equals(UserManager.getCurrentUser().getIdentifier())){
-                        syncFriendInformation(identifier);
-                        break;
-                    }
-                }
-            }
-        });
-    }
-
-    public void syncFriendInformation(String friendIdentifier) {
-        FireDatabase.getDataBaseReferenceWithPath("users").child(friendIdentifier).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot user) {
-                String contactName = (String) user.child("displayName").getValue();
-                String imgExtension = (String) user.child("imgExtension").getValue();
-                String imgKey = (String) user.child("imgKey").getValue();
-                ConnectionStatus connectionStatus = ConnectionStatus.valueOf(user.child("connectionStatus").getValue().toString());
-
-                txtContactName.setText(contactName);
-
-                decorateConnectionStatus(connectionStatus);
-                fetchFriendProfilePicture(imgExtension, imgKey);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    public void fetchFriendInformation(String friendIdentifier) {
-        FireDatabase.getDataBaseReferenceWithPath("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
                     return;
                 }
 
-                for (DataSnapshot user : task.getResult().getChildren()) {
-                    if (!user.child("identifier").getValue().equals(friendIdentifier)) {
-                        continue;
-                    }
-
-                    String contactName = (String) user.child("displayName").getValue();
-                    String imgExtension = (String) user.child("imgExtension").getValue();
-                    String imgKey = (String) user.child("imgKey").getValue();
-                    ConnectionStatus connectionStatus = ConnectionStatus.valueOf(user.child("connectionStatus").getValue().toString());
-
-                    txtContactName.setText(contactName);
-
-                    decorateConnectionStatus(connectionStatus);
-                    fetchFriendProfilePicture(imgExtension, imgKey);
-                }
+                txtContactName.setText("Groupal chat");
+                // Change status to Members List
             }
         });
     }
 
-    public void decorateConnectionStatus(ConnectionStatus connectionStatus){
+    public void loadChatMessages(boolean async) {
+        if(!async) {
+            MessageManager.getMessageList().clear();
+
+            for (Message message : cachedChatRoom.getMessagesList()) {
+                if(cachedChatRoom.getMessagesList().indexOf(message) > 0) {
+                    MessageManager.addMessageToMessageList(message);
+                }
+            }
+
+            buildMessageRecyclerView();
+            return;
+        }
+
+        checkMessageListState();
+    }
+
+    public void checkMessageListState() {
+        if(cachedChatRoom.getMessagesList().size() - 1 > MessageManager.getMessageList().size()) {
+            for(Message message : cachedChatRoom.getMessagesList()) {
+                if(cachedChatRoom.getMessagesList().indexOf(message) != cachedChatRoom.getMessagesList().size() - 1){
+                    continue;
+                }
+
+                MessageManager.addMessageToMessageList(message);
+                messageAdapter.notifyItemInserted(MessageManager.getMessageList().size() - 1);
+                return;
+            }
+        }
+
+        messageEdited();
+    }
+
+
+    public void messageEdited(){
+        if(cachedChatRoom.getMessagesList().size() - 1 == MessageManager.getMessageList().size()){
+            MessageManager.getMessageList().clear();
+
+            for(Message message : cachedChatRoom.getMessagesList()) {
+                if(cachedChatRoom.getMessagesList().indexOf(message) > 0) {
+                    MessageManager.addMessageToMessageList(message);
+                }
+            }
+
+            buildMessageRecyclerView();
+            return;
+        }
+
+        messageDeleted();
+    }
+
+    public void messageDeleted() {
+        if(cachedChatRoom.getMessagesList().size() - 1 < MessageManager.getMessageList().size()){
+            for(Message message : MessageManager.getMessageList()){
+                if(MessageManager.getMessageList().indexOf(message) != MessageManager.getMessageList().size() - 1){
+                    continue;
+                }
+
+                MessageManager.removeMessageFromlist(message);
+                messageAdapter.notifyItemRemoved(MessageManager.getMessageList().size());
+                return;
+            }
+        }
+    }
+
+
+    public void decorateConnectionStatus(ConnectionStatus connectionStatus) {
         if(connectionStatus == ConnectionStatus.ONLINE){
             down_anim = AnimationUtils.loadAnimation(ChatActivity.this, R.anim.down_movement);
             txtContactStatus.setVisibility(View.VISIBLE);
@@ -265,27 +209,14 @@ public class ChatActivity extends BaseAppActivity {
         }
     }
 
-    public void fetchFriendProfilePicture(String imgExtension, String imgKey) {
-        String imagePath = "image/" + imgKey + imgExtension;
-
-        StorageReference imgRef = FirebaseStorage.getInstance().getReference();
-        imgRef.child(imagePath).getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (!task.isSuccessful()) {
-                    return;
-                }
-
-                if (imgExtension.equals(".gif")) {
-                    Glide.with(ChatActivity.this).asGif().load(task.getResult()).into(imgContactProfilePicture);
-                } else {
-                    Glide.with(ChatActivity.this).asBitmap().load(task.getResult()).into(imgContactProfilePicture);
-                }
-            }
-        });
+    public void buildMessageRecyclerView() {
+        messageAdapter = new MessageAdapter(MessageManager.getMessageList(), ChatActivity.this);
+        recyclerViewMessage.setAdapter((messageAdapter));
+        recyclerViewMessage.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        recyclerViewMessage.scrollToPosition(messageAdapter.getItemCount() - 1);
     }
 
-    public void returnToLastActivity(View view) {
+    public void returnToLastActivity() {
         finish();
     }
 }

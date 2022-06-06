@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    android:onClick="changeToLoginActivity"
     tools:context=".activity.auth.VerifyEmailActivity">
 
     <Button
@@ -15,7 +14,6 @@
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/background"
         android:contentDescription="@string/register_btn"
-        android:onClick="changeToLoginActivity"
         app:icon="@mipmap/ic_return_foreground"
         app:iconSize="30dp"
         app:iconTint="@color/accent_color"
@@ -24,7 +22,7 @@
         tools:ignore="DuplicateSpeakableTextCheck" />
 
     <ImageView
-        android:id="@+id/imgLogo"
+        android:id="@+id/imgViewMainLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -48,7 +46,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgLogo" />
+        app:layout_constraintTop_toBottomOf="@+id/imgViewMainLogo" />
 
     <TextView
         android:id="@+id/txtVerify"
@@ -99,10 +97,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.142"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/txtViewEmail" />
 
     <TextView
-        android:id="@+id/txtEmail"
+        android:id="@+id/txtViewEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -148,7 +146,6 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="15dp"
         android:fontFamily="@font/asap"
-        android:onClick="sendVerificationEmail"
         android:text="@string/verify_resend"
         android:textColor="@color/resend_color"
         android:textSize="16sp"

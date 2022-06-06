@@ -1,25 +1,27 @@
 package com.abstrack.hanasu.activity.auth;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.abstrack.hanasu.BaseAppActivity;
+import com.abstrack.hanasu.R;
+import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.activity.welcome.SetProfileInfoActivity;
 import com.abstrack.hanasu.activity.welcome.WelcomeActivity;
-import com.abstrack.hanasu.auth.AuthManager;
-import com.abstrack.hanasu.BaseAppActivity;
-import com.abstrack.hanasu.activity.landing.LandingActivity;
-import com.abstrack.hanasu.R;
+import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.util.AndroidUtil;
-import com.abstrack.hanasu.db.FireDatabase;
+import com.abstrack.hanasu.util.TextUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends BaseAppActivity {
 
@@ -32,77 +34,110 @@ public class LoginActivity extends BaseAppActivity {
 
         emailInputText = findViewById(R.id.textInputLayoutEmail);
         passwordInputText = findViewById(R.id.textInputLayoutPswd);
+
+        Button btnSend = findViewById(R.id.btnSend);
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginAccount();
+            }
+        });
+
+        TextView txtViewForgotPassword = findViewById(R.id.txtViewForgotPassword);
+        txtViewForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToForgotPasswordActivity();
+            }
+        });
+
+        TextView txtViewRegister = findViewById(R.id.txtViewRegister);
+        txtViewRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToRegisterActivity();
+            }
+        });
     }
 
-    public void loginAccount(View view){
-        if(!AuthManager.validateLoginForm(emailInputText, passwordInputText))
+    public void goToRegisterActivity() {
+        AndroidUtil.startNewActivity(this, RegisterActivity.class);
+    }
+
+    public void goToSetProfileInfoActivity() {
+        AndroidUtil.startNewActivity(LoginActivity.this, SetProfileInfoActivity.class);
+    }
+
+    public void goToForgotPasswordActivity() {
+        Intent forgotPasswordActivityIntent = new Intent(this, ForgotPasswordActivity.class);
+        forgotPasswordActivityIntent.putExtra("userCachedEmail", emailInputText.getEditText().getText().toString());
+        startActivity(forgotPasswordActivityIntent);
+    }
+
+    public void loginAccount() {
+        if (!TextUtil.validateLoginForm(emailInputText, passwordInputText))
             return;
 
         String emailText = emailInputText.getEditText().getText().toString();
         String passwordText = passwordInputText.getEditText().getText().toString();
 
-        AuthManager.getFireAuth().signInWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        Flame.getFireAuth().signInWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(!task.isSuccessful()){
-                    Log.e("HanasuFirebase", "Error Login In", task.getException());
+                if (!task.isSuccessful()) {
+                    Log.e("Hanasu-Login", "Error Login In", task.getException());
                     return;
                 }
 
-                if(!AuthManager.getFireAuth().getCurrentUser().isEmailVerified()){
-                    AuthManager.getFireAuth().signOut();
-                    AndroidUtil.startNewActivity(LoginActivity.this, VerifyEmailActivity.class);
-                    return;
-                }
-
-
-                FireDatabase.getDataBaseReferenceWithPath("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        boolean hasIdentifier = false, hasDisplayName = false;
-
-                        if (!task.isSuccessful()) {
-                            Log.e("HanasuFirebase", "Error getting data", task.getException());
-                            return;
-                        }
-
-                        for(DataSnapshot user : task.getResult().getChildren()){
-                            if(!user.child("uid").getValue().equals(AuthManager.getFireAuth().getCurrentUser().getUid())){
-                                continue;
-                            }
-
-                            if(user.child("identifier").getValue() != null){
-                                if(user.child("displayName").getValue() != null){
-                                    if(!user.child("displayName").getValue().equals("")){
-                                        hasDisplayName = true;
-                                    }
-                                }
-
-                                hasIdentifier = true;
-                                break;
-                            }
-                        }
-
-                        if(hasIdentifier) {
-                            if(hasDisplayName){
-                                AndroidUtil.startNewActivity(LoginActivity.this, LandingActivity.class);
-                                return;
-                            }
-                            AndroidUtil.startNewActivity(LoginActivity.this, SetProfileInfoActivity.class);
-                            return;
-                        }
-
-                        AndroidUtil.startNewActivity(LoginActivity.this, WelcomeActivity.class);
-                    }
-                });
+                changeActivityViaData();
             }
         });
     }
 
-    public void changeToRegisterActivity(View view) {
-        AndroidUtil.startNewActivity(this, RegisterActivity.class);
+    public void changeActivityViaData() {
+        Flame.getDataBaseReferenceWithPath("public").child("users").child(Flame.getFireAuth().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("Hanasu-Login", "Error getting data", task.getException());
+
+                    if (!Flame.getFireAuth().getCurrentUser().isEmailVerified()) {
+                        goToVerifyEmailActivity();
+                    }
+                    return;
+                }
+
+                if (!Flame.getFireAuth().getCurrentUser().isEmailVerified()) {
+                    goToVerifyEmailActivity();
+                    return;
+                }
+
+                if (task.getResult().child("identifier").getValue() == null) {
+                    goToWelcomeActivity();
+                    return;
+                }
+
+                String displayName = task.getResult().child("displayName").getValue(String.class);
+
+                if (!displayName.isEmpty()) {
+                    goToLandingActivity();
+                    return;
+                }
+
+                goToSetProfileInfoActivity();
+            }
+        });
     }
-    public void changeToForgotPasswordActivity(View view){
-        AndroidUtil.startNewActivity(this, ForgotPasswordActivity.class);
+
+    public void goToLandingActivity() {
+        AndroidUtil.startNewActivity(this, LandingActivity.class);
+    }
+
+    public void goToWelcomeActivity() {
+        AndroidUtil.startNewActivity(this, WelcomeActivity.class);
+    }
+
+    public void goToVerifyEmailActivity() {
+        AndroidUtil.startNewActivity(this, VerifyEmailActivity.class);
     }
 }

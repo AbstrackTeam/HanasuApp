@@ -1,14 +1,17 @@
 package com.abstrack.hanasu.activity.auth;
 
-import androidx.annotation.NonNull;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
-import com.abstrack.hanasu.auth.AuthManager;
+import androidx.annotation.NonNull;
+
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
+import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.util.AndroidUtil;
+import com.abstrack.hanasu.util.TextUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -23,27 +26,48 @@ public class ForgotPasswordActivity extends BaseAppActivity {
         setContentView(R.layout.activity_forgot_password);
 
         emailTextInput = findViewById(R.id.textInputLayoutEmail);
+
+        Button btnReturn = findViewById(R.id.btnReturn);
+        btnReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToLoginActivity();
+            }
+        });
+
+        Button btnSend = findViewById(R.id.btnSend);
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendForgotPasswordEmail();
+            }
+        });
     }
 
-    public void sendForgotPasswordEmail(View view){
-        if(!AuthManager.validateEmailText(emailTextInput))
+    public void sendForgotPasswordEmail() {
+        if (!TextUtil.validateEmailText(emailTextInput))
             return;
 
         String emailText = emailTextInput.getEditText().getText().toString();
 
-        AuthManager.getFireAuth().sendPasswordResetEmail(emailText)
+        Flame.getFireAuth().sendPasswordResetEmail(emailText)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-                            VerifyForgottenPasswordActivity.textEmail = emailText;
-                            AndroidUtil.startNewActivity(ForgotPasswordActivity.this, VerifyForgottenPasswordActivity.class);
+                        if (task.isSuccessful()) {
+                            goToVerifyForgottenPasswordActivity();
                         }
                     }
                 });
     }
 
-    public void changeToLoginActivity(View view) {
-        AndroidUtil.startNewActivity(ForgotPasswordActivity.this, LoginActivity.class);
+    public void goToVerifyForgottenPasswordActivity(){
+        Intent verifyEmailActivityIntent = new Intent(this, VerifyForgottenPasswordActivity.class);
+        verifyEmailActivityIntent.putExtra("userCachedEmail", emailTextInput.getEditText().getText().toString());
+        startActivity(verifyEmailActivityIntent);
+    }
+
+    public void goToLoginActivity() {
+        AndroidUtil.startNewActivity(this, LoginActivity.class);
     }
 }

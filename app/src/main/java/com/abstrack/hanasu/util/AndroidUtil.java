@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -25,6 +26,11 @@ import java.util.regex.Pattern;
 
 public class AndroidUtil {
 
+    public static boolean isNetworkConnected(Context ctx) {
+        ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
+    }
+
     public static void chooseGalleryPhoto(BaseAppActivity currentActivity, int pickCode){
         Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
         getIntent.setType("image/*");
@@ -38,6 +44,16 @@ public class AndroidUtil {
         currentActivity.startActivityForResult(chooserIntent, pickCode);
     }
 
+    public static Uri getPhotoUriViaFile(Context ctx, String photoPath){
+        File f = new File(photoPath);
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        Uri imageUri = Uri.fromFile(f);
+        mediaScanIntent.setData(imageUri);
+        ctx.sendBroadcast(mediaScanIntent);
+
+        return imageUri;
+    }
+
     public static String getCurrentHour(){
         Calendar rightNow = Calendar.getInstance();
         String messageAmPm = "PM";
@@ -49,29 +65,28 @@ public class AndroidUtil {
         return rightNow.get(Calendar.HOUR) + ":" + rightNow.get(Calendar.MINUTE) + " " + messageAmPm;
     }
 
-    public static String takeCameraPhoto(BaseAppActivity currentActivity, int captureCode) {
-        if(ContextCompat.checkSelfPermission(currentActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(currentActivity, new String[] {Manifest.permission.CAMERA}, captureCode);
-        } else {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(currentActivity.getPackageManager()) != null) {
-                File photoFile = null;
-                try {
-                    photoFile = ImageUtil.createImageFile();
-                } catch (IOException ex) {
-                    Log.d("HanasuFile", "An error ocurred while creating a file", ex);
-                }
+    public static String openCameraAndTakePhoto(BaseAppActivity currentActivity, int captureCode){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-                if (photoFile != null) {
-                    Uri photoURI = FileProvider.getUriForFile(currentActivity,
-                            "com.abstrack.hanasu.android.fileprovider",
-                            photoFile);
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                    currentActivity.startActivityForResult(takePictureIntent, captureCode);
-                    return photoFile.getAbsolutePath();
-                }
+        if (takePictureIntent.resolveActivity(currentActivity.getPackageManager()) != null) {
+
+            File photoFile = null;
+            try {
+                photoFile = ImageUtil.createImageFile();
+            } catch (IOException ex) {
+                Log.d("Hanasu-AndroidUtil", "An error ocurred while creating the file", ex);
+            }
+
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(currentActivity,
+                        "com.abstrack.hanasu.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                currentActivity.startActivityForResult(takePictureIntent, captureCode);
+                return photoFile.getAbsolutePath();
             }
         }
+
         return null;
     }
 

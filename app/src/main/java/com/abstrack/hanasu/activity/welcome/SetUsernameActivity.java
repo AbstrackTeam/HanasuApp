@@ -13,79 +13,82 @@ import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.util.AndroidUtil;
-import com.abstrack.hanasu.db.FireDatabase;
+import com.abstrack.hanasu.core.Flame;
+import com.abstrack.hanasu.util.TextUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
 
 public class SetUsernameActivity extends BaseAppActivity {
 
-    public EditText nameField, tagField;
-    public Button submitButton;
-    public String tag, identifier, name;
-
+    private EditText nameField, tagField;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_username);
 
-        name = "";
-        identifier = "";
-
         nameField = findViewById(R.id.editTextUsername); // editTextUsername
         tagField = findViewById(R.id.editTextTag); // editTextTag
-        submitButton = findViewById(R.id.btnSubmit); // btnSubmit
 
+        Button submitButton = findViewById(R.id.btnSubmit); // btnSubmit
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                submit();
+                submitUserIdentifier();
             }
         });
 
     }
 
-    @Override
-    public void onBackPressed() {
-        AndroidUtil.startNewActivity(SetUsernameActivity.this, LandingActivity.class);
-    }
-
-    public void submit() {
-        name = nameField.getText().toString();
-        tag = tagField.getText().toString();
-        identifier = name + tag;
+    public void submitUserIdentifier() {
+        String newIdentifier = nameField.getText().toString() + tagField.getText().toString();
 
         //Pending refactor
-        if(name.equals("")){
-            Toast.makeText(this, "Ingresa el nombre de usuario", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if(name.length() > 20){
-            Toast.makeText(this, "Solo nombres menores a 20 letras", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if(tag.length() != 4 ){
-            Toast.makeText(this, "Las tags solo pueden ser de 4 digitos", Toast.LENGTH_SHORT).show();
+        if(!TextUtil.validateTextField(nameField, 20)){
             return;
         }
 
-        FireDatabase.getDataBaseReferenceWithPath("users").child(identifier).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        if(!TextUtil.validateTextField(tagField, 4)){
+            return;
+        }
+
+        createNewUser(newIdentifier);
+    }
+
+    public void createNewUser(String newIdentifier){
+        Flame.getDataBaseReferenceWithPath("public").child("users").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
+                boolean identifierExisted = false;
 
                 if(!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
+                    Log.e("Hanasu-SetUsername", "Error getting data", task.getException());
                     return;
                 }
-                if(task.getResult().getValue() != null){
-                    Toast.makeText(SetUsernameActivity.this, "Este nombre de usuario ya existe, puedes cambiar el nombre o id", Toast.LENGTH_SHORT).show();
-                } else{
-                    UserManager.writeNewUser(name, tag);
+
+                for(DataSnapshot data : task.getResult().getChildren()) {
+                    String identifier = data.child("identifier").getValue(String.class);
+
+                    if(identifier != null){
+                        if(identifier.equals(newIdentifier)){
+                            identifierExisted = true;
+                            Toast.makeText(SetUsernameActivity.this, "Este nombre de usuario ya existe, puedes cambiar el nombre o id", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                    }
+                }
+
+                if(!identifierExisted){
+                    UserManager.writeNewUser(newIdentifier);
                     AndroidUtil.startNewActivity(SetUsernameActivity.this, SetProfileInfoActivity.class);
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        AndroidUtil.startNewActivity(SetUsernameActivity.this, WelcomeActivity.class);
     }
 }

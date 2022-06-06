@@ -9,16 +9,6 @@
     android:outlineProvider="paddedBounds"
     tools:context=".activity.welcome.SetProfileInfoActivity">
 
-    <LinearLayout
-        android:id="@+id/layoutPictureOptions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="5dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"></LinearLayout>
-
     <EditText
         android:id="@+id/edtTxtProfileName"
         android:layout_width="0dp"
@@ -96,7 +86,6 @@
         android:layout_marginTop="160dp"
         android:foreground="@drawable/ic_camera"
         android:foregroundGravity="center"
-        android:onClick="updatePictureOptions"
         android:outlineProvider="none"
         app:cardBackgroundColor="@color/detail_color_primary"
         app:cardCornerRadius="100dp"
@@ -120,7 +109,6 @@
         android:background="@drawable/round_button"
         android:backgroundTint="@color/purple_500"
         android:fontFamily="@font/quicksand_bold"
-        android:onClick="submit"
         android:text="@string/profile_info_btn"
         android:textAllCaps="false"
         android:textSize="20sp"
@@ -134,17 +122,14 @@
     <LinearLayout
         android:id="@+id/clickableContainer"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:background="#3E000000"
         android:clickable="false"
         android:elevation="10dp"
-        android:onClick="updatePictureOptions"
+        android:gravity="bottom"
         android:orientation="horizontal"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/layoutPictureOptions"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent"></LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
