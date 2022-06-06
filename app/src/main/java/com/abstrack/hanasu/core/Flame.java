@@ -21,7 +21,7 @@ public class Flame {
 
     // :(
     public static final String FCM_API_URL = "https://fcm.googleapis.com/fcm/send";
-    public static final String SERVER_KEY = "key=AAAARBH4WWo:APA91bHV6Jrz-T8MFSksTTO4x-i7ziEmlMczmCenjm93R9B4x2_8z64VrrsqosVGc_Fs5IFQaLTlGsV8M9vrpJUsrB6X5LYW3gnwaUjdSm7zIPGYGBA-sfrc53xftmbkHplHlR0RJWHV";
+    public static final String SERVER_KEY = "AAAARBH4WWo:APA91bHV6Jrz-T8MFSksTTO4x-i7ziEmlMczmCenjm93R9B4x2_8z64VrrsqosVGc_Fs5IFQaLTlGsV8M9vrpJUsrB6X5LYW3gnwaUjdSm7zIPGYGBA-sfrc53xftmbkHplHlR0RJWHV";
     public static final MediaType CONTENT_TYPE = MediaType.parse("application/json; charset=utf-8");
 
     public static void sendNotification(String notificationTitle, String notificationMessage, String tokenToSend) {
