@@ -27,8 +27,8 @@ public class MessageNotifier {
     public static Notification builder(Context ctx, String messageTitle, String contentText){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, "Hanasu-Message-Channel")
                 .setSmallIcon(R.drawable.ic_add_chat)
-                .setContentTitle("My notification")
-                .setContentText("Much longer text that cannot fit one line...")
+                .setContentTitle(messageTitle)
+                .setContentText(contentText)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         return builder.build();
     }
