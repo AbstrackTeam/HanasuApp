@@ -42,7 +42,7 @@ public class UserManager {
         fetchContactPublicInformation(contactIdentifier, new OnContactDataReceiveCallback() {
             @Override
             public void onDataReceive(PublicUser contactPublicUser) {
-                Flame.sendFriendRequestNotification(UserManager.currentPublicUser.getDisplayName(), "Te ha añadido como contacto", contactPublicUser.getFcmToken(), chatRoomUUID);
+                Flame.sendFriendRequestNotification(UserManager.currentPublicUser.getDisplayName(), "Te ha añadido como contacto", chatRoomUUID, contactPublicUser.getFcmToken());
             }
         });
     }

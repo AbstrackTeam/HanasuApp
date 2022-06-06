@@ -63,19 +63,20 @@ public class Flame {
             protected Void doInBackground(Void... params) {
                 try {
                     OkHttpClient client = new OkHttpClient();
-                    JSONObject json=new JSONObject();
+                    JSONObject json =new JSONObject();
+
                     JSONObject notificationDataJson =new JSONObject();
                     JSONObject messageDataJson =new JSONObject();
-
-                    messageDataJson.put("chatRoomUUID", chatRoomUUID);
-                    messageDataJson.put("contactIdentifier", UserManager.currentPublicUser.getIdentifier());
 
                     notificationDataJson.put("title", notificationTitle);
                     notificationDataJson.put("body", notificationMessage);
 
+                    messageDataJson.put("chatRoomUUID", chatRoomUUID);
+                    messageDataJson.put("contactIdentifier", UserManager.currentPublicUser.getIdentifier());
+
+                    json.put("to", tokenToSend);
                     json.put("notification", notificationDataJson);
                     json.put("data", messageDataJson);
-                    json.put("to", tokenToSend);
 
                     RequestBody body = RequestBody.create(CONTENT_TYPE, json.toString());
                     Request request = new Request.Builder()
