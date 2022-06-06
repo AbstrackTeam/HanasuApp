@@ -23,6 +23,7 @@ public class Flame {
     public static final String FCM_API_URL = "https://fcm.googleapis.com/fcm/send";
     public static final String SERVER_KEY = "AAAARBH4WWo:APA91bHV6Jrz-T8MFSksTTO4x-i7ziEmlMczmCenjm93R9B4x2_8z64VrrsqosVGc_Fs5IFQaLTlGsV8M9vrpJUsrB6X5LYW3gnwaUjdSm7zIPGYGBA-sfrc53xftmbkHplHlR0RJWHV";
     public static final MediaType CONTENT_TYPE = MediaType.parse("application/json; charset=utf-8");
+    private static boolean isPersistenceEnabled;
 
     public static void sendNotification(String notificationTitle, String notificationMessage, String tokenToSend) {
         new AsyncTask<Void,Void,Void>(){
@@ -53,6 +54,13 @@ public class Flame {
                 return null;
             }
         }.execute();
+    }
+
+    public static void setDataPersistence(){
+        if(!isPersistenceEnabled){
+            getFireDatabase().setPersistenceEnabled(true);
+            isPersistenceEnabled = true;
+        }
     }
 
     public static FirebaseDatabase getFireDatabase() {

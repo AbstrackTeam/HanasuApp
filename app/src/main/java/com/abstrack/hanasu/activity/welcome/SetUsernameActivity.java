@@ -86,4 +86,9 @@ public class SetUsernameActivity extends BaseAppActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        AndroidUtil.startNewActivity(SetUsernameActivity.this, WelcomeActivity.class);
+    }
 }

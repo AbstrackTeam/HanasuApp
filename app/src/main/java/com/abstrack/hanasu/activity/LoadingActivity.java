@@ -31,7 +31,7 @@ public class LoadingActivity extends BaseAppActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
 
-        Flame.getFireDatabase().setPersistenceEnabled(true);
+        Flame.setDataPersistence();
         MessageNotifier.createNotificationChannel(this);
 
         animateContent();
@@ -125,7 +125,7 @@ public class LoadingActivity extends BaseAppActivity {
 
                 String displayName = task.getResult().child("displayName").getValue(String.class);
 
-                if (!displayName.isEmpty()) {
+                if (displayName != null && !displayName.isEmpty()) {
                     goToLandingActivity();
                     return;
                 }
