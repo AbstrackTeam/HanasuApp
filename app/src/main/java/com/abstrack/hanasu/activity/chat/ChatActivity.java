@@ -2,6 +2,7 @@ package com.abstrack.hanasu.activity.chat;
 
 import android.app.NotificationManager;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +22,7 @@ import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.callback.OnChatRoomDataReceiveCallback;
 import com.abstrack.hanasu.callback.OnContactDataReceiveCallback;
+import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.core.chatroom.ChatRoom;
 import com.abstrack.hanasu.core.chatroom.ChatRoomManager;
 import com.abstrack.hanasu.core.chatroom.chat.message.Message;
@@ -31,8 +34,17 @@ import com.abstrack.hanasu.core.user.PublicUser;
 import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.core.user.data.ConnectionStatus;
 import com.abstrack.hanasu.notification.MessageNotifier;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.Random;
 
@@ -49,7 +61,7 @@ public class ChatActivity extends BaseAppActivity {
 
     private Animation down_anim, up_anim;
     private boolean firstAnimationRun = true;
-
+    private boolean isSyncingImage = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +114,7 @@ public class ChatActivity extends BaseAppActivity {
                 cachedChatRoom = chatRoom;
                 loadChatMessages(true);
 
-                if(cachedChatRoom.getChatType() == ChatType.INDIVIDUAL){
+                if (cachedChatRoom.getChatType() == ChatType.INDIVIDUAL) {
                     for (String contactIdentifier : cachedChatRoom.getUsersList()) {
                         if (!contactIdentifier.equals(UserManager.currentPublicUser.getIdentifier())) {
                             UserManager.fetchAndListenContactPublicInformation(contactIdentifier, new OnContactDataReceiveCallback() {
@@ -112,7 +124,7 @@ public class ChatActivity extends BaseAppActivity {
 
                                     txtContactName.setText(contactPublicUser.getDisplayName());
                                     decorateConnectionStatus(contactPublicUser.getConnectionStatus());
-                                    // WAITING FOR IMG RULES
+                                    syncChatImage(contactPublicUser.getIdentifier());
                                 }
                             });
                         }
@@ -126,12 +138,69 @@ public class ChatActivity extends BaseAppActivity {
         });
     }
 
+    public void syncChatImage(String chatIdentifier) {
+        if(isSyncingImage){
+            return;
+        }
+        // Find the user uid with the identifier
+
+        DatabaseReference userRef = Flame.getDataBaseReferenceWithPath("public").child("users");
+
+        UserManager.fetchAndListenContactPublicInformation(chatIdentifier, new OnContactDataReceiveCallback() {
+            @Override
+            public void onDataReceive(PublicUser contactPublicUser) {
+                userRef.orderByChild("identifier").equalTo(chatIdentifier).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if(!task.isSuccessful()){
+                            Log.e("Hanasu-ChatActivity", "Error getting chat image");
+                        }
+                        String chatUid = null;
+
+                        for (DataSnapshot dt : task.getResult().getChildren()) {
+                            chatUid = dt.getKey();
+                        }
+
+                        fetchChatImage(chatUid);
+                    }
+                });
+            }
+        });
+
+        isSyncingImage = true;
+    }
+
+    private void fetchChatImage(String uid) {
+        if(cachedPublicContactUser.getImgKey() == null || cachedPublicContactUser.getImgKey().length() == 0 || cachedPublicContactUser.getImgKey().contains(".") == false){
+            return;
+        }
+
+        String imgExtension = cachedPublicContactUser.getImgKey().substring(cachedPublicContactUser.getImgKey().indexOf('.'));
+
+        StorageReference imgRef = FirebaseStorage.getInstance().getReference();
+        imgRef.child("image").child("profilePic").child(uid).child(cachedPublicContactUser.getImgKey()).getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("Hanasu-ChatActivity", "Error getting chat image");
+                    return;
+                }
+
+                if (imgExtension.equals(".gif")) {
+                    Glide.with(ChatActivity.this).asGif().load(task.getResult()).into(imgContactProfilePicture);
+                } else {
+                    Glide.with(ChatActivity.this).asBitmap().load(task.getResult()).into(imgContactProfilePicture);
+                }
+            }
+        });
+    }
+
     public void loadChatMessages(boolean async) {
-        if(!async) {
+        if (!async) {
             MessageManager.getMessageList().clear();
 
             for (Message message : cachedChatRoom.getMessagesList()) {
-                if(cachedChatRoom.getMessagesList().indexOf(message) > 0) {
+                if (cachedChatRoom.getMessagesList().indexOf(message) > 0) {
                     MessageManager.addMessageToMessageList(message);
                 }
             }
@@ -144,9 +213,9 @@ public class ChatActivity extends BaseAppActivity {
     }
 
     public void checkMessageListState() {
-        if(cachedChatRoom.getMessagesList().size() - 1 > MessageManager.getMessageList().size()) {
-            for(Message message : cachedChatRoom.getMessagesList()) {
-                if(cachedChatRoom.getMessagesList().indexOf(message) != cachedChatRoom.getMessagesList().size() - 1){
+        if (cachedChatRoom.getMessagesList().size() - 1 > MessageManager.getMessageList().size()) {
+            for (Message message : cachedChatRoom.getMessagesList()) {
+                if (cachedChatRoom.getMessagesList().indexOf(message) != cachedChatRoom.getMessagesList().size() - 1) {
                     continue;
                 }
 
@@ -160,12 +229,12 @@ public class ChatActivity extends BaseAppActivity {
     }
 
 
-    public void messageEdited(){
-        if(cachedChatRoom.getMessagesList().size() - 1 == MessageManager.getMessageList().size()){
+    public void messageEdited() {
+        if (cachedChatRoom.getMessagesList().size() - 1 == MessageManager.getMessageList().size()) {
             MessageManager.getMessageList().clear();
 
-            for(Message message : cachedChatRoom.getMessagesList()) {
-                if(cachedChatRoom.getMessagesList().indexOf(message) > 0) {
+            for (Message message : cachedChatRoom.getMessagesList()) {
+                if (cachedChatRoom.getMessagesList().indexOf(message) > 0) {
                     MessageManager.addMessageToMessageList(message);
                 }
             }
@@ -178,9 +247,9 @@ public class ChatActivity extends BaseAppActivity {
     }
 
     public void messageDeleted() {
-        if(cachedChatRoom.getMessagesList().size() - 1 < MessageManager.getMessageList().size()){
-            for(Message message : MessageManager.getMessageList()){
-                if(MessageManager.getMessageList().indexOf(message) != MessageManager.getMessageList().size() - 1){
+        if (cachedChatRoom.getMessagesList().size() - 1 < MessageManager.getMessageList().size()) {
+            for (Message message : MessageManager.getMessageList()) {
+                if (MessageManager.getMessageList().indexOf(message) != MessageManager.getMessageList().size() - 1) {
                     continue;
                 }
 
@@ -193,13 +262,13 @@ public class ChatActivity extends BaseAppActivity {
 
 
     public void decorateConnectionStatus(ConnectionStatus connectionStatus) {
-        if(connectionStatus == ConnectionStatus.ONLINE){
+        if (connectionStatus == ConnectionStatus.ONLINE) {
             down_anim = AnimationUtils.loadAnimation(ChatActivity.this, R.anim.down_movement);
             txtContactStatus.setVisibility(View.VISIBLE);
             txtContactStatus.setAnimation(down_anim);
             firstAnimationRun = false;
         } else {
-            if(!firstAnimationRun) {
+            if (!firstAnimationRun) {
                 up_anim = AnimationUtils.loadAnimation(ChatActivity.this, R.anim.slide_to_right_movement);
                 txtContactStatus.setVisibility(View.INVISIBLE);
                 txtContactStatus.setAnimation(up_anim);

@@ -3,6 +3,7 @@ package com.abstrack.hanasu.core.chatroom.chat;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,10 +86,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         activity.startActivity(intent);
     }
 
-    /** TODO: Waiting for file rules **/
     public void fetchChatPicture(ChatViewHolder holder){
         // Get the user chatImgKey
         String chatImgKey = chatsList.get(holder.getAdapterPosition()).getImgKey();
+        if(chatImgKey == null || chatImgKey.length() == 0){
+            return;
+        }
+
         String imgExtension = chatImgKey.substring(chatImgKey.indexOf('.'));
 
         // TODO: make contactIdentifier compatible with groups (chatType)
@@ -114,7 +118,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
                     Log.e("Hanasu-ChatAdapter", "Error getting user");
                 }
 
-                String userUid = task.getResult().getKey();
+                String userUid = null;
+
+                for(DataSnapshot dt : task.getResult().getChildren()){
+                    userUid = dt.getKey();
+                }
+
                 locateAndSetChatPicture(holder, userUid, chatImgKey, imgExtension);
             }
         });
@@ -127,6 +136,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
                 if (!task.isSuccessful()) {
+                    Log.e("Hanasu-ChatAdapter", "Error getting user");
                     return;
                 }
 
