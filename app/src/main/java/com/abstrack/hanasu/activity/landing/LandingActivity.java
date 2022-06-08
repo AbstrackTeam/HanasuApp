@@ -49,12 +49,10 @@ public class LandingActivity extends BaseAppActivity {
 
         init();
         buildOptionsListeners();
-        syncLandingComponents();
+        fetchInitialData();
     }
 
     public void init() {
-        ChatManager.getChatsList().clear();
-
         storiesBar = findViewById(R.id.storiesBar);
         chatsListView = findViewById(R.id.chatsListView);
 
@@ -75,15 +73,34 @@ public class LandingActivity extends BaseAppActivity {
         toBottomAnim = AnimationUtils.loadAnimation(this, R.anim.options_down);
 
     }
-    public void syncLandingComponents(){
-        UserManager.syncPublicAndPrivateData(new OnUserDataReceiveCallback() {
+
+    public void buildOptionsListeners() {
+        showMoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                animateOptions();
+            }
+        });
+
+        addChatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToAddFriendActivity();
+            }
+        });
+    }
+
+    public void fetchInitialData(){
+        UserManager.fetchPublicAndPrivateData(new OnUserDataReceiveCallback() {
             @Override
             public void onDataReceiver(PublicUser publicUser) {
             }
 
             @Override
             public void onDataReceiver(PrivateUser privateUser) {
-                syncChatRoomData();
+                //Fetch contacts
+                //Fetch chatRooms
+                //Create Listeners
             }
         });
     }
@@ -100,22 +117,6 @@ public class LandingActivity extends BaseAppActivity {
                         addChatsToView();
                     }
                 });
-            }
-        });
-    }
-
-    public void buildOptionsListeners() {
-        showMoreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                animateOptions();
-            }
-        });
-
-        addChatButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToAddFriendActivity();
             }
         });
     }
