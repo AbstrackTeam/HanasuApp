@@ -1,5 +1,7 @@
 package com.abstrack.hanasu.core.chatroom.chat;
 
+import com.abstrack.hanasu.core.chatroom.ChatRoom;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,19 +1,12 @@
 package com.abstrack.hanasu.core.chatroom.chat;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import com.abstrack.hanasu.activity.landing.LandingActivity;
-import com.abstrack.hanasu.callback.OnChatDataReceiveCallback;
-import com.abstrack.hanasu.callback.OnContactDataReceiveCallback;
 import com.abstrack.hanasu.core.chatroom.ChatRoom;
 import com.abstrack.hanasu.core.chatroom.chat.message.Message;
 import com.abstrack.hanasu.core.chatroom.chat.message.data.MessageStatus;
 import com.abstrack.hanasu.core.chatroom.data.ChatType;
+import com.abstrack.hanasu.core.contact.ContactManager;
 import com.abstrack.hanasu.core.user.PublicUser;
 import com.abstrack.hanasu.core.user.UserManager;
-
-import java.io.Serializable;
 
 public class Chat  {
 
@@ -21,36 +14,36 @@ public class Chat  {
     private MessageStatus lastMessageStatus;
     private ChatRoom chatRoom;
 
-    public void retrieveChatData(ChatRoom chatRoom, LandingActivity activity, OnChatDataReceiveCallback chatDataReceiveCallback) {
+    public void createChat(ChatRoom chatRoom) {
         this.chatRoom = chatRoom;
 
         Message lastMessage = chatRoom.getMessagesList().get(chatRoom.getMessagesList().size() - 1);
-        lastMessageContent = lastMessage.getContent();
-        lastMessageStatus = lastMessage.getMessageStatus();
-        lastMessageTimeStamp = lastMessage.getTimeStamp();
+        this.lastMessageContent = lastMessage.getContent();
+        this.lastMessageStatus = lastMessage.getMessageStatus();
+        this.lastMessageTimeStamp = lastMessage.getTimeStamp();
 
-        if (chatRoom.getChatType() == ChatType.GROUP) {
-            chatName = "Grouapal Chat";
-            imgKey = chatRoom.getChatImgKey();
+        if(chatRoom.getChatType() == ChatType.GROUP) {
+            this.chatName = "Groupal Chat";
+            this.imgKey = chatRoom.getChatImgKey();
+            ChatManager.addChatToChatList(this);
             return;
         }
 
-        for (String userIdentifier : chatRoom.getUsersList()) {
-            if (userIdentifier.equals(UserManager.currentPublicUser.getIdentifier())) {
+        for(String userIdentifier : chatRoom.getUsersList()) {
+            if(userIdentifier.equals(UserManager.currentPublicUser.getIdentifier())){
                 continue;
             }
 
-            UserManager.fetchAndListenContactPublicInformation(userIdentifier, new OnContactDataReceiveCallback() {
-                @Override
-                public void onDataReceive(PublicUser contactPublicUser) {
-                    chatName = contactPublicUser.getDisplayName();
-                    imgKey = contactPublicUser.getImgKey();
+            PublicUser contactPublicUser = ContactManager.getContactPublicUserList().get(userIdentifier);
 
-                    chatDataReceiveCallback.onDataReceive(Chat.this);
-                }
-            });
+            if(contactPublicUser != null) {
+                this.chatName = contactPublicUser.getDisplayName();
+                this.imgKey = contactPublicUser.getImgKey();
+                break;
+            }
         }
 
+        ChatManager.addChatToChatList(this);
     }
 
     public String getChatName() {

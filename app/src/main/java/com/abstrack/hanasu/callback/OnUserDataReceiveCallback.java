@@ -6,4 +6,5 @@ import com.abstrack.hanasu.core.user.PublicUser;
 public interface OnUserDataReceiveCallback {
     void onDataReceiver(PublicUser publicUser);
     void onDataReceiver(PrivateUser privateUser);
+    void onDataReceived();
 }

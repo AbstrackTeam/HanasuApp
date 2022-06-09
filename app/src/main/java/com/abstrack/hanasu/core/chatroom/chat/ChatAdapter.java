@@ -64,7 +64,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         holder.name.setText(chat.getChatName());
         holder.previewMessage.setText(chat.getLastMessageContent());
         holder.chatTime.setText(chat.getLastMessageTimeStamp());
-        //
         holder.userIcon.setImageResource(R.drawable.ic_profile_pic);
 
         fetchChatPicture(holder);

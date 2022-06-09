@@ -1,6 +1,7 @@
 package com.abstrack.hanasu.activity.landing;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -20,6 +21,7 @@ import com.abstrack.hanasu.core.chatroom.ChatRoomManager;
 import com.abstrack.hanasu.core.chatroom.chat.Chat;
 import com.abstrack.hanasu.core.chatroom.chat.ChatAdapter;
 import com.abstrack.hanasu.core.chatroom.chat.ChatManager;
+import com.abstrack.hanasu.core.contact.ContactManager;
 import com.abstrack.hanasu.core.story.StoriesAdapter;
 import com.abstrack.hanasu.core.story.Story;
 import com.abstrack.hanasu.core.user.PrivateUser;
@@ -36,9 +38,7 @@ public class LandingActivity extends BaseAppActivity {
     private CardView showMoreButton, addChatButton, addGroupsButton, searchButton;
     private ImageView showMoreButtonIcon;
 
-    Animation fromBottomAnim, toBottomAnim;
-
-    private List<Story> storiesList = new ArrayList<Story>();
+    private Animation fromBottomAnim, toBottomAnim;
 
     private boolean showingMoreOptions;
 
@@ -67,11 +67,10 @@ public class LandingActivity extends BaseAppActivity {
         addGroupsButton.setVisibility(View.GONE);
         searchButton.setVisibility(View.GONE);
 
-        showingMoreOptions = false;
-
         fromBottomAnim = AnimationUtils.loadAnimation(this, R.anim.options_up);
         toBottomAnim = AnimationUtils.loadAnimation(this, R.anim.options_down);
 
+        showingMoreOptions = false;
     }
 
     public void buildOptionsListeners() {
@@ -98,25 +97,37 @@ public class LandingActivity extends BaseAppActivity {
 
             @Override
             public void onDataReceiver(PrivateUser privateUser) {
-                //Fetch contacts
-                //Fetch chatRooms
-                //Create Listeners
-            }
-        });
-    }
-
-    private void syncChatRoomData(){
-        ChatRoomManager.syncPrivateData(new OnChatRoomDataReceiveCallback() {
-            @Override
-            public void onDataReceiver(ChatRoom chatRoom) {
-                new Chat().retrieveChatData(chatRoom, LandingActivity.this, new OnChatDataReceiveCallback() {
+                ContactManager.fetchPublicData(new OnUserDataReceiveCallback() {
                     @Override
-                    public void onDataReceive(Chat chat) {
-                        ChatManager.getChatsList().clear();
-                        ChatManager.addChatToChatList(chat);
-                        addChatsToView();
+                    public void onDataReceiver(PublicUser publicUser) {
+                    }
+
+                    @Override
+                    public void onDataReceiver(PrivateUser privateUser) {
+                    }
+
+                    @Override
+                    public void onDataReceived() {
+                        ChatRoomManager.fetchPrivateData(new OnChatRoomDataReceiveCallback() {
+                            @Override
+                            public void onDataReceiver(ChatRoom chatRoom) {
+                                new Chat().createChat(chatRoom);
+                            }
+
+                            @Override
+                            public void onDataReceived() {
+                                //Contacts are null for some reason
+                                addChatsToView();
+                            }
+                        });
                     }
                 });
+                //Create Listeners
+            }
+
+            @Override
+            public void onDataReceived() {
+
             }
         });
     }
@@ -129,15 +140,6 @@ public class LandingActivity extends BaseAppActivity {
         ChatAdapter chatAdapter = new ChatAdapter(ChatManager.getChatsList(), this);
         chatsListView.setAdapter((chatAdapter));
         chatsListView.setLayoutManager(new LinearLayoutManager(LandingActivity.this, RecyclerView.VERTICAL, false));
-    }
-
-    public void addStoriesToView(){
-        storiesList.add(new Story(false));
-
-        StoriesAdapter storiesAdapter = new StoriesAdapter(storiesList, storiesBar, this);
-        storiesBar.setAdapter(storiesAdapter);
-        storiesBar.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
-        storiesBar.setItemAnimator(null);
     }
 
     private void animateOptions() {

@@ -23,6 +23,39 @@ import java.util.UUID;
 
 public class ChatRoomManager {
 
+    public static void fetchPrivateData(OnChatRoomDataReceiveCallback chatRoomDataReceiveCallback) {
+        int listIndex = 0;
+        ChatManager.getChatsList().clear();
+
+        for(String chatRoomUUID : UserManager.currentPrivateUser.getChatRoomList().keySet()){
+            listIndex++;
+            int finalListIndex = listIndex;
+
+            if(!chatRoomUUID.equals("chatRoomUUID")){
+                Flame.getDataBaseReferenceWithPath("private").child("chatRooms").child(chatRoomUUID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if(!task.isSuccessful()){
+                            Log.d("Hanasu-ChatRoomManager", "Error getting data");
+                            return;
+                        }
+
+                        ChatRoom chatRoom = task.getResult().getValue(ChatRoom.class);
+
+                        if(chatRoom != null) {
+                            chatRoomDataReceiveCallback.onDataReceiver(chatRoom);
+
+                            if(finalListIndex == UserManager.currentPrivateUser.getChatRoomList().keySet().size() - 1) {
+                                chatRoomDataReceiveCallback.onDataReceived();
+                                Log.d("Hanasu-ChatRoomManager", "(ChatRoom) Data fetched");
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    }
+
     public static void syncPrivateData(OnChatRoomDataReceiveCallback chatRoomDataReceiveCallback) {
         Log.d("Hanasu-ChatRoomManager", "Sync started");
 
