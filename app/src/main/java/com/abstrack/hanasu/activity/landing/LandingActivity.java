@@ -108,6 +108,8 @@ public class LandingActivity extends BaseAppActivity {
 
                     @Override
                     public void onDataReceived() {
+                        //AQUI DESAPARECE EL ICONO
+
                         ChatRoomManager.fetchPrivateData(new OnChatRoomDataReceiveCallback() {
                             @Override
                             public void onDataReceiver(ChatRoom chatRoom) {
@@ -159,6 +161,7 @@ public class LandingActivity extends BaseAppActivity {
 
             @Override
             public void onDataReceived() {
+                //AQUI TAMBIEN
             }
         });
     }
