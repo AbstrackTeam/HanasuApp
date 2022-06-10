@@ -1,5 +1,7 @@
 package com.abstrack.hanasu.core.chatroom.chat;
 
+import android.util.Log;
+
 import com.abstrack.hanasu.core.chatroom.ChatRoom;
 import com.abstrack.hanasu.core.chatroom.chat.message.Message;
 import com.abstrack.hanasu.core.chatroom.chat.message.data.MessageStatus;

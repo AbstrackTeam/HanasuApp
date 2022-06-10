@@ -3,6 +3,7 @@ package com.abstrack.hanasu.core.chatroom.chat;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,8 @@ import com.abstrack.hanasu.activity.chat.ChatActivity;
 import com.abstrack.hanasu.activity.landing.LandingActivity;
 import com.abstrack.hanasu.callback.OnContactDataReceiveCallback;
 import com.abstrack.hanasu.core.Flame;
+import com.abstrack.hanasu.core.chatroom.ChatRoom;
+import com.abstrack.hanasu.core.chatroom.chat.message.Message;
 import com.abstrack.hanasu.core.chatroom.data.ChatType;
 import com.abstrack.hanasu.core.user.PublicUser;
 import com.abstrack.hanasu.core.user.UserManager;
@@ -58,7 +61,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
-
         Chat chat = chatsList.get(position);
 
         holder.name.setText(chat.getChatName());
@@ -68,6 +70,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
         fetchChatPicture(holder);
         buildChatListeners(holder);
+        buildDataListeners(holder);
     }
 
     public void buildChatListeners(ChatViewHolder holder){
@@ -83,6 +86,28 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         Intent intent = new Intent(activity, ChatActivity.class);
         intent.putExtra("cachedChatRoom", chatsList.get(holder.getAdapterPosition()).getChatRoom());
         activity.startActivity(intent);
+    }
+
+    public void buildDataListeners(ChatViewHolder holder){
+        //Ya me harté así que ni modo
+        Chat chat = chatsList.get(holder.getAdapterPosition());
+        ChatRoom chatRoom = chat.getChatRoom();
+
+        Flame.getDataBaseReferenceWithPath("private").child("chatRooms").child(chatRoom.getChatRoomUUID()).child("messagesList").limitToLast(1).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot messageData : snapshot.getChildren()){
+                    Message lastMessage = messageData.getValue(Message.class);
+                    holder.previewMessage.setText(lastMessage.getContent());
+                    holder.chatTime.setText(lastMessage.getTimeStamp());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     public void fetchChatPicture(ChatViewHolder holder){

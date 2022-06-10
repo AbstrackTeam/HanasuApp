@@ -71,7 +71,7 @@ public class ChatActivity extends BaseAppActivity {
         init();
         buildButtonsActions();
         loadChatMessages(false);
-        //syncChatInformation();
+        syncChatInformation();
     }
 
     public void init() {
@@ -107,7 +107,7 @@ public class ChatActivity extends BaseAppActivity {
         UserManager.sendMessage(cachedChatRoom, cachedPublicContactUser, edtTxtMsg);
     }
 
-  /**  public void syncChatInformation() {
+    public void syncChatInformation() {
         ChatRoomManager.syncPrivateDataByIdentifier(cachedChatRoom.getChatRoomUUID(), new OnChatRoomDataReceiveCallback() {
             @Override
             public void onDataReceiver(ChatRoom chatRoom) {
@@ -133,10 +133,14 @@ public class ChatActivity extends BaseAppActivity {
                 }
 
                 txtContactName.setText("Groupal chat");
-                // Change status to Members List
+            }
+
+            @Override
+            public void onDataReceived() {
+
             }
         });
-    } **/
+    }
 
     public void syncChatImage(String chatIdentifier) {
         if(isSyncingImage){

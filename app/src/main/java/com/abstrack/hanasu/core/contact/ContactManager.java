@@ -11,6 +11,8 @@ import com.abstrack.hanasu.core.user.UserManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
@@ -36,17 +38,55 @@ public class ContactManager {
                                 return;
                             }
 
-                            PublicUser contactPublicUser = task.getResult().getValue(PublicUser.class);
+                            for(DataSnapshot userData : task.getResult().getChildren()){
+                                PublicUser contactPublicUser = userData.getValue(PublicUser.class);
+
+                                if (contactPublicUser != null) {
+                                    addPublicUserToContactList(contactPublicUser);
+                                    userDataReceiveCallback.onDataReceiver(contactPublicUser);
+
+                                    if(finalListIndex == UserManager.currentPrivateUser.getContacts().keySet().size() - 1) {
+                                        Log.d("Hanasu-ContactManager", "(PublicUser) Data fetched");
+                                        userDataReceiveCallback.onDataReceived();
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    public static void syncPublicData(OnUserDataReceiveCallback userDataReceiveCallback) {
+        int listIndex = 0;
+        contactPublicUserList.clear();
+
+        if(Flame.getFireAuth().getCurrentUser() != null){
+            for(String contactIdentifier : UserManager.currentPrivateUser.getContacts().keySet()){
+                listIndex++;
+                int finalListIndex = listIndex;
+
+                if(!contactIdentifier.equals("friendIdentifier")){
+                    Flame.getDataBaseReferenceWithPath("public").child("users").orderByChild("identifier").equalTo(contactIdentifier).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            PublicUser contactPublicUser = snapshot.getValue(PublicUser.class);
 
                             if (contactPublicUser != null) {
                                 addPublicUserToContactList(contactPublicUser);
                                 userDataReceiveCallback.onDataReceiver(contactPublicUser);
 
                                 if(finalListIndex == UserManager.currentPrivateUser.getContacts().keySet().size() - 1) {
-                                    Log.d("Hanasu-ContactManager", "(PublicUser) Data fetched");
+                                    Log.d("Hanasu-ContactManager", "(PublicUser) Data Synced");
                                     userDataReceiveCallback.onDataReceived();
                                 }
                             }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.d("Hanasu-ContactManager", "Error getting data");
                         }
                     });
                 }

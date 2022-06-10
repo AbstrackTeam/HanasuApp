@@ -89,7 +89,7 @@ public class LandingActivity extends BaseAppActivity {
         });
     }
 
-    public void fetchInitialData(){
+    public void fetchInitialData() {
         UserManager.fetchPublicAndPrivateData(new OnUserDataReceiveCallback() {
             @Override
             public void onDataReceiver(PublicUser publicUser) {
@@ -116,18 +116,49 @@ public class LandingActivity extends BaseAppActivity {
 
                             @Override
                             public void onDataReceived() {
-                                //Contacts are null for some reason
+                                UserManager.initInitialValues();
                                 addChatsToView();
+                                buildDataListeners();
                             }
                         });
                     }
                 });
-                //Create Listeners
             }
 
             @Override
             public void onDataReceived() {
 
+            }
+        });
+    }
+
+    public void buildDataListeners() {
+        UserManager.syncPublicAndPrivateData(new OnUserDataReceiveCallback() {
+            @Override
+            public void onDataReceiver(PublicUser publicUser) {
+            }
+
+            @Override
+            public void onDataReceiver(PrivateUser privateUser) {
+
+            }
+
+            @Override
+            public void onDataReceived() {
+            }
+        });
+
+        ContactManager.syncPublicData(new OnUserDataReceiveCallback() {
+            @Override
+            public void onDataReceiver(PublicUser publicUser) {
+            }
+
+            @Override
+            public void onDataReceiver(PrivateUser privateUser) {
+            }
+
+            @Override
+            public void onDataReceived() {
             }
         });
     }
