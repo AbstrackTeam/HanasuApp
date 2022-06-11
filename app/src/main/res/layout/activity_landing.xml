@@ -8,9 +8,9 @@
     tools:context=".activity.landing.LandingActivity">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/noChatsTextView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:id="@+id/noChatsImageView"
+        android:layout_width="250dp"
+        android:layout_height="200dp"
         android:outlineProvider="none"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -18,7 +18,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-        app:srcCompat="@drawable/nochats" />
+        app:srcCompat="@drawable/wind_cheem" />
+
+    <TextView
+        android:id="@+id/noChatsTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:fontFamily="@font/quicksand_bold"
+        android:text="@string/no_chats_text_view"
+        android:textColor="@color/detail_color_secondary"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="@+id/noChatsImageView"
+        app:layout_constraintStart_toStartOf="@+id/noChatsImageView"
+        app:layout_constraintTop_toBottomOf="@+id/noChatsImageView" />
 
     <TextView
         android:id="@+id/txtChats"
@@ -57,7 +71,9 @@
         android:layout_marginBottom="16dp"
         android:keepScreenOn="false"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtChats">
+        app:layout_constraintTop_toBottomOf="@+id/txtChats"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"

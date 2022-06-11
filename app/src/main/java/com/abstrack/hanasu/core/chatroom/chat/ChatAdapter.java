@@ -25,6 +25,7 @@ import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.core.chatroom.ChatRoom;
 import com.abstrack.hanasu.core.chatroom.chat.message.Message;
 import com.abstrack.hanasu.core.chatroom.data.ChatType;
+import com.abstrack.hanasu.core.contact.ContactManager;
 import com.abstrack.hanasu.core.user.PublicUser;
 import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.util.AndroidUtil;
@@ -100,6 +101,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
                     Message lastMessage = messageData.getValue(Message.class);
                     holder.previewMessage.setText(lastMessage.getContent());
                     holder.chatTime.setText(lastMessage.getTimeStamp());
+                    fetchChatPicture(holder);
                 }
             }
 
@@ -180,8 +182,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
     public static class ChatViewHolder extends RecyclerView.ViewHolder {
         // Components
-        private TextView name, previewMessage, messageQuantity, chatTime;
-        private CardView chatCard, chatNotification;
+        private TextView name, previewMessage, chatTime;
+        private CardView chatCard;
         private ImageView userIcon;
 
         public ChatViewHolder(@NonNull View itemView) {
@@ -189,9 +191,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
             chatCard = itemView.findViewById(R.id.chatCard);
             name = itemView.findViewById(R.id.chatName);
             previewMessage = itemView.findViewById(R.id.previewMessage);
-            messageQuantity = itemView.findViewById(R.id.messagesCount);
             chatTime = itemView.findViewById(R.id.chatTime);
-            chatNotification = itemView.findViewById(R.id.chatNotification);
             userIcon = itemView.findViewById(R.id.userIcon);
         }
     }

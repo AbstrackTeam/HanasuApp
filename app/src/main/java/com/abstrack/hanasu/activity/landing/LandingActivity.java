@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,14 +31,15 @@ import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.util.AndroidUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class LandingActivity extends BaseAppActivity {
 
     private static RecyclerView storiesBar, chatsListView;
     private CardView showMoreButton, addChatButton, addGroupsButton, searchButton;
-    private ImageView showMoreButtonIcon;
-
+    private ImageView showMoreButtonIcon, noChatsImageView;
+    private TextView noChatsTextView;
     private Animation fromBottomAnim, toBottomAnim;
 
     private boolean showingMoreOptions;
@@ -62,6 +64,9 @@ public class LandingActivity extends BaseAppActivity {
         searchButton = findViewById(R.id.search);
 
         showMoreButtonIcon = findViewById(R.id.moreOptionsIcon);
+
+        noChatsImageView = findViewById(R.id.noChatsImageView);
+        noChatsTextView = findViewById(R.id.noChatsTextView);
 
         addChatButton.setVisibility(View.GONE);
         addGroupsButton.setVisibility(View.GONE);
@@ -90,6 +95,7 @@ public class LandingActivity extends BaseAppActivity {
     }
 
     public void fetchInitialData() {
+
         UserManager.fetchPublicAndPrivateData(new OnUserDataReceiveCallback() {
             @Override
             public void onDataReceiver(PublicUser publicUser) {
@@ -97,9 +103,13 @@ public class LandingActivity extends BaseAppActivity {
 
             @Override
             public void onDataReceiver(PrivateUser privateUser) {
+
+
+
                 ContactManager.fetchPublicData(new OnUserDataReceiveCallback() {
                     @Override
                     public void onDataReceiver(PublicUser publicUser) {
+
                     }
 
                     @Override
@@ -108,12 +118,12 @@ public class LandingActivity extends BaseAppActivity {
 
                     @Override
                     public void onDataReceived() {
-                        //AQUI DESAPARECE EL ICONO
 
                         ChatRoomManager.fetchPrivateData(new OnChatRoomDataReceiveCallback() {
                             @Override
                             public void onDataReceiver(ChatRoom chatRoom) {
                                 new Chat().createChat(chatRoom);
+
                             }
 
                             @Override
@@ -121,6 +131,7 @@ public class LandingActivity extends BaseAppActivity {
                                 UserManager.initInitialValues();
                                 addChatsToView();
                                 buildDataListeners();
+                                checkAndUpdateNoChatsIcon();
                             }
                         });
                     }
@@ -129,12 +140,13 @@ public class LandingActivity extends BaseAppActivity {
 
             @Override
             public void onDataReceived() {
-
+                checkAndUpdateNoChatsIcon();
             }
         });
     }
 
     public void buildDataListeners() {
+
         UserManager.syncPublicAndPrivateData(new OnUserDataReceiveCallback() {
             @Override
             public void onDataReceiver(PublicUser publicUser) {
@@ -161,7 +173,7 @@ public class LandingActivity extends BaseAppActivity {
 
             @Override
             public void onDataReceived() {
-                //AQUI TAMBIEN
+                checkAndUpdateNoChatsIcon();
             }
         });
     }
@@ -171,13 +183,26 @@ public class LandingActivity extends BaseAppActivity {
     }
 
     public void addChatsToView() {
+
         ChatAdapter chatAdapter = new ChatAdapter(ChatManager.getChatsList(), this);
         chatsListView.setAdapter((chatAdapter));
         chatsListView.setLayoutManager(new LinearLayoutManager(LandingActivity.this, RecyclerView.VERTICAL, false));
     }
 
+    private void checkAndUpdateNoChatsIcon() {
+        HashMap<String, PublicUser> hola = ContactManager.getContactPublicUserList();
+
+        if (hola.size() > 0) {
+            noChatsTextView.setVisibility(View.GONE);
+            noChatsImageView.setVisibility(View.GONE);
+            return;
+        }
+        noChatsTextView.setVisibility(View.VISIBLE);
+        noChatsImageView.setVisibility(View.VISIBLE);
+    }
+
     private void animateOptions() {
-        if(!showingMoreOptions){
+        if (!showingMoreOptions) {
             startOptionsShowAnimation();
             setOptionsClickable(true);
             showingMoreOptions = true;
@@ -188,7 +213,7 @@ public class LandingActivity extends BaseAppActivity {
         showingMoreOptions = false;
     }
 
-    private void setOptionsClickable(boolean bool){
+    private void setOptionsClickable(boolean bool) {
         addChatButton.setClickable(bool);
         addGroupsButton.setClickable(bool);
         searchButton.setClickable(bool);
@@ -204,7 +229,7 @@ public class LandingActivity extends BaseAppActivity {
         searchButton.startAnimation(fromBottomAnim);
     }
 
-    private void startOptionsCloseAnimation(){
+    private void startOptionsCloseAnimation() {
         showMoreButtonIcon.setImageResource(R.drawable.ic_plus);
 
         addChatButton.startAnimation(toBottomAnim);
@@ -214,7 +239,7 @@ public class LandingActivity extends BaseAppActivity {
         setOptionsVisibility(View.GONE);
     }
 
-    private void setOptionsVisibility(int visibility){
+    private void setOptionsVisibility(int visibility) {
         addChatButton.setVisibility(visibility);
         addGroupsButton.setVisibility(visibility);
         searchButton.setVisibility(visibility);
