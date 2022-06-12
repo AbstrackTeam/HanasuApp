@@ -236,7 +236,7 @@ public class UserManager {
 
     public static HashMap<String, Integer> retrieveNewChatRoomList(String chatRoomUUID) {
         HashMap<String, Integer> newChatRoomList = UserManager.currentPrivateUser.getChatRoomList();
-        newChatRoomList.put(chatRoomUUID, newChatRoomList.size());
+        newChatRoomList.put(chatRoomUUID, newChatRoomList.size() - 1);
         return newChatRoomList;
     }
 }
