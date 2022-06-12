@@ -35,10 +35,7 @@ public class ContactManager {
 
                 if(contactPublicUser != null){
                     contactDataReceiveCallback.onDataReceive(contactPublicUser);
-                    return;
                 }
-
-                Log.d("Chingado", "Putisima madre");
             }
         });
     }

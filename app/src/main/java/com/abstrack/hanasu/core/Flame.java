@@ -22,7 +22,7 @@ public class Flame {
 
     // :(
     public static final String FCM_API_URL = "https://fcm.googleapis.com/fcm/send";
-    public static final String SERVER_KEY = "AAAARBH4WWo:APA91bHV6Jrz-T8MFSksTTO4x-i7ziEmlMczmCenjm93R9B4x2_8z64VrrsqosVGc_Fs5IFQaLTlGsV8M9vrpJUsrB6X5LYW3gnwaUjdSm7zIPGYGBA-sfrc53xftmbkHplHlR0RJWHV";
+    public static final String SERVER_KEY = "AAAARBH4WWo:APA91bEZ5nEryWPkD102rd8Y6-yAFmD9C-8NBWOchw4nA5r3Y6HX3443XrHu69dF4aa14F3DJ7gQB1JqIteyZrayRAHo0e0oM2IE70run0DN__X2wH3p18ca5ZxHSSi2UFS1CEgRqDfw";
     public static final MediaType CONTENT_TYPE = MediaType.parse("application/json; charset=utf-8");
     private static boolean isPersistenceEnabled;
 
@@ -87,6 +87,8 @@ public class Flame {
 
                     Response response = client.newCall(request).execute();
                     Log.d("Test", response.toString());
+                    Log.d("Test", notificationDataJson.toString());
+                    Log.d("Test", messageDataJson.toString());
                 } catch (Exception e){
                     Log.e("Flame", "An error ocurred sending notification ", e);
                 }
