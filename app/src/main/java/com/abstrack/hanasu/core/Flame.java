@@ -85,7 +85,8 @@ public class Flame {
                             .post(body)
                             .build();
 
-                    client.newCall(request).execute();
+                    Response response = client.newCall(request).execute();
+                    Log.d("Test", response.toString());
                 } catch (Exception e){
                     Log.e("Flame", "An error ocurred sending notification ", e);
                 }

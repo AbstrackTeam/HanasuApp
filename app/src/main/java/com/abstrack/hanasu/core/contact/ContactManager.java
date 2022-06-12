@@ -31,16 +31,14 @@ public class ContactManager {
                     Log.d("Hanasu-UserManager", "Error getting data", task.getException());
                 }
 
-                for(DataSnapshot userData : task.getResult().getChildren()){
-                    PublicUser contactPublicUser = task.getResult().getValue(PublicUser.class);
+                PublicUser contactPublicUser = task.getResult().getValue(PublicUser.class);
 
-                    if(contactPublicUser != null){
-                        contactDataReceiveCallback.onDataReceive(contactPublicUser);
-                        break;
-                    }
-
-                    Log.d("Chingado", "Putisima madre");
+                if(contactPublicUser != null){
+                    contactDataReceiveCallback.onDataReceive(contactPublicUser);
+                    return;
                 }
+
+                Log.d("Chingado", "Putisima madre");
             }
         });
     }
