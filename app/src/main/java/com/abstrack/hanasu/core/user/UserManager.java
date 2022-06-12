@@ -13,6 +13,7 @@ import com.abstrack.hanasu.core.chatroom.ChatRoom;
 import com.abstrack.hanasu.core.chatroom.chat.message.Message;
 import com.abstrack.hanasu.core.chatroom.chat.message.data.MessageStatus;
 import com.abstrack.hanasu.core.chatroom.chat.message.data.MessageType;
+import com.abstrack.hanasu.core.contact.ContactManager;
 import com.abstrack.hanasu.core.user.data.ConnectionStatus;
 import com.abstrack.hanasu.util.AndroidUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,12 +41,7 @@ public class UserManager {
     }
 
     public static void sendFriendRequest(String chatRoomUUID, String contactIdentifier) {
-        fetchContactPublicInformation(contactIdentifier, new OnContactDataReceiveCallback() {
-            @Override
-            public void onDataReceive(PublicUser contactPublicUser) {
-                Flame.sendFriendRequestNotification(UserManager.currentPublicUser.getDisplayName(), "Te ha añadido como contacto", chatRoomUUID, contactPublicUser.getFcmToken());
-            }
-        });
+        Flame.sendFriendRequestNotification(UserManager.currentPublicUser.getDisplayName(), "Te ha añadido como contacto", chatRoomUUID, ContactManager.getContactPublicUserList().get(contactIdentifier).getFcmToken());
     }
 
     public static void sendMessage(ChatRoom chatRoom, PublicUser publicContactUser, EditText edtTxtMsg) {
@@ -195,8 +191,7 @@ public class UserManager {
         });
     }
 
-    public static void fetchContactPublicInformation(String
-                                                             contactIdentifier, OnContactDataReceiveCallback contactDataReceiveCallback) {
+    public static void fetchContactPublicInformation(String contactIdentifier, OnContactDataReceiveCallback contactDataReceiveCallback) {
         Log.d("Hanasu-UserManager", "Contact get data started");
 
         Flame.getDataBaseReferenceWithPath("public").child("users").orderByChild("identifier").equalTo(contactIdentifier).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -236,7 +231,7 @@ public class UserManager {
 
     public static HashMap<String, Integer> retrieveNewChatRoomList(String chatRoomUUID) {
         HashMap<String, Integer> newChatRoomList = UserManager.currentPrivateUser.getChatRoomList();
-        newChatRoomList.put(chatRoomUUID, newChatRoomList.size() - 1);
+        newChatRoomList.put(chatRoomUUID, newChatRoomList.size());
         return newChatRoomList;
     }
 }
