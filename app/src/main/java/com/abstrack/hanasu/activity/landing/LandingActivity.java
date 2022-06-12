@@ -168,6 +168,20 @@ public class LandingActivity extends BaseAppActivity {
                 checkAndUpdateNoChatsIcon();
             }
         });
+
+        ChatRoomManager.syncPrivateData(new OnChatRoomDataReceiveCallback() {
+            @Override
+            public void onDataReceiver(ChatRoom chatRoom) {
+                new Chat().createChat(chatRoom);
+            }
+
+            @Override
+            public void onDataReceived() {
+                addChatsToView();
+                buildDataListeners();
+                checkAndUpdateNoChatsIcon();
+            }
+        });
     }
 
     public void goToAddFriendActivity() {

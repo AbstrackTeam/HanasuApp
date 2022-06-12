@@ -23,6 +23,41 @@ import java.util.UUID;
 
 public class ChatRoomManager {
 
+    public static void syncPrivateData(OnChatRoomDataReceiveCallback chatRoomDataReceiveCallback){
+        int listIndex = 0;
+        ChatManager.getChatsList().clear();
+
+        for(String chatRoomUUID : UserManager.currentPrivateUser.getChatRoomList().keySet()){
+            listIndex++;
+            int finalListIndex = listIndex;
+
+            if(!chatRoomUUID.equals("chatRoomUUID")){
+                Flame.getDataBaseReferenceWithPath("private").child("chatRooms").child(chatRoomUUID).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for(DataSnapshot chatData : snapshot.getChildren()) {
+                            ChatRoom chatRoom = chatData.getValue(ChatRoom.class);
+
+                            if(chatRoom != null){
+                                chatRoomDataReceiveCallback.onDataReceiver(chatRoom);
+
+                                if(finalListIndex == UserManager.currentPrivateUser.getChatRoomList().keySet().size() - 1) {
+                                    chatRoomDataReceiveCallback.onDataReceived();
+                                    Log.d("Hanasu-ChatRoomManager", "(ChatRoom) Data Synced");
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("Hanasu", "Me rehuso a poner logs");
+                    }
+                });
+            }
+        }
+    }
+
     public static void fetchPrivateData(OnChatRoomDataReceiveCallback chatRoomDataReceiveCallback) {
         int listIndex = 0;
         ChatManager.getChatsList().clear();
@@ -56,29 +91,6 @@ public class ChatRoomManager {
         }
     }
 
-    public static void syncPrivateData(OnChatRoomDataReceiveCallback chatRoomDataReceiveCallback) {
-        Log.d("Hanasu-ChatRoomManager", "Sync started");
-
-        for(String chatRoomUUID : UserManager.currentPrivateUser.getChatRoomList().keySet()){
-            if(!chatRoomUUID.equals("chatRoomUUID")){
-                Flame.getDataBaseReferenceWithPath("private").child("chatRooms").child(chatRoomUUID).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        ChatRoom chatRoom = snapshot.getValue(ChatRoom.class);
-
-                        if(chatRoom != null){
-                            chatRoomDataReceiveCallback.onDataReceiver(chatRoom);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.d("Hanasu-ChatRoomManager", "An error ocurred while retrieving ChatRoom information", error.toException());
-                    }
-                });
-            }
-        }
-    }
     public static void syncPrivateDataByIdentifier(String chatRoomUUID, OnChatRoomDataReceiveCallback chatRoomDataReceiveCallback) {
         Log.d("Hanasu-ChatRoomManager", "Specific ChatRoom sync started");
 
