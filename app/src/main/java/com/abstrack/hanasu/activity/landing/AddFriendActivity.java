@@ -86,7 +86,7 @@ public class AddFriendActivity extends BaseAppActivity {
 
                 if(task.getResult().getValue() != null){
                     if(task.getResult().child("identifier").getValue().toString().equals(ownIdentifier)){
-                        Toast.makeText(AddFriendActivity.this, "No puedes agregarte a ti mismo XD", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddFriendActivity.this, "No puedes agregarte a ti mismo", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     UserManager.addToUserContacts(identifier);

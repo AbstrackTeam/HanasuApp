@@ -67,4 +67,8 @@
     <string name="profile_pic_trash">Basura</string>
     <string name="msg_hint">Mensaje</string>
     <string name="no_chats_text_view">Parece que aún no tienes ningún contacto, agrega uno</string>
+    <string name="profile_title">Perfil</string>
+    <string name="profile_name_hint">Este es el nombre que será visible para los demás</string>
+    <string name="profile_identifier_hint">Comparte este identificador para que puedan agregarte como contacto</string>
+
 </resources>

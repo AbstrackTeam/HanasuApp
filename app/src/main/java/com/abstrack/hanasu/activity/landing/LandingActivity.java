@@ -16,8 +16,6 @@ import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
 import com.abstrack.hanasu.core.chatroom.chat.Chat;
 import com.abstrack.hanasu.core.chatroom.chat.ChatsAdapter;
-import com.abstrack.hanasu.core.story.StoriesAdapter;
-import com.abstrack.hanasu.core.story.Story;
 import com.abstrack.hanasu.core.user.UserManager;
 import com.abstrack.hanasu.thread.UserServiceThread;
 import com.abstrack.hanasu.core.chatroom.message.data.MessageStatus;
@@ -37,7 +35,7 @@ public class LandingActivity extends BaseAppActivity {
 
     private static RecyclerView storiesBar, chatsListView;
 
-    private CardView showMoreButton, addChatButton, addGroupsButton, searchButton;
+    private CardView showMoreButton, addChatButton, addGroupsButton, searchButton, showUserInfo;
     private ImageView showMoreButtonIcon, noChatsImageView;
     private TextView noChatsTextView;
     private boolean showingMoreOptions;
@@ -46,7 +44,7 @@ public class LandingActivity extends BaseAppActivity {
 
     UserServiceThread userService = new UserServiceThread();
 
-    private Animation fromBottomAnim, toBottomAnim;
+    private Animation fromBottomAnim, toBottomAnim, fromRightAnim, toRightAnim;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +64,7 @@ public class LandingActivity extends BaseAppActivity {
         addChatButton = findViewById(R.id.addFriend);
         addGroupsButton = findViewById(R.id.addGroup);
         searchButton = findViewById(R.id.search);
+        showUserInfo = findViewById(R.id.showUserInfo);
 
         noChatsImageView = findViewById(R.id.noChatsImageView);
         noChatsTextView = findViewById(R.id.noChatsTextView);
@@ -77,9 +76,12 @@ public class LandingActivity extends BaseAppActivity {
         addChatButton.setVisibility(View.GONE);
         addGroupsButton.setVisibility(View.GONE);
         searchButton.setVisibility(View.GONE);
+        showUserInfo.setVisibility(View.GONE);
 
         fromBottomAnim = AnimationUtils.loadAnimation(this, R.anim.options_up);
         toBottomAnim = AnimationUtils.loadAnimation(this, R.anim.options_down);
+        toRightAnim = AnimationUtils.loadAnimation(this, R.anim.options_right);
+        fromRightAnim = AnimationUtils.loadAnimation(this, R.anim.options_left);
 
         addChatButton = findViewById(R.id.addFriend);
 
@@ -100,6 +102,13 @@ public class LandingActivity extends BaseAppActivity {
                 startAddFriendActivity();
             }
         });
+
+        showUserInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showUserInfoActivity();
+            }
+        });
     }
 
     public void startAddFriendActivity() {
@@ -116,6 +125,7 @@ public class LandingActivity extends BaseAppActivity {
 
                 // Load chats by contacts
                 HashMap<String, String> contacts = UserManager.getCurrentUser().getContacts();
+                System.out.println("Contacts: " + contacts);
 
                 List<String> keys = new ArrayList<>(contacts.keySet());
 
@@ -142,7 +152,6 @@ public class LandingActivity extends BaseAppActivity {
                             if (result.getValue() == null) {
                                 return;
                             }
-                            ;
 
                             ArrayList<String> users = (ArrayList<String>) result.child("users").getValue();
 
@@ -156,28 +165,6 @@ public class LandingActivity extends BaseAppActivity {
 
                             List<HashMap<String, String>> messagesList = (List<HashMap<String, String>>) result.child("messagesList").getValue();
                             int messageCount = 0;
-
-                            String sentBy = messagesList.get(messagesList.size() - 1).get("sentBy");
-
-                            /*
-                                For getting the messageQuantity, you have to know if you did see the last message
-                                and if you were the one who sended the message
-                             */
-
-                            if(!sentBy.equals("")) {
-                                // If you didn't send the message.
-                                if (!sentBy.equals(UserManager.getCurrentUser().getIdentifier())) {
-                                    for(int i = 1; i < messagesList.size(); i++){
-                                        // then we are going to count all the messages that don't have the tag "SEEN"
-                                        if(messagesList.get(i).get("sentBy").equals(UserManager.getCurrentUser().getIdentifier())){
-                                            continue;
-                                        }
-                                        if (MessageStatus.valueOf(messagesList.get(i).get("messageStatus")) != MessageStatus.SEEN)  {
-                                            messageCount += 1;
-                                        }
-                                    }
-                                }
-                            }
 
                             MessageStatus messageState = MessageStatus.valueOf(messagesList.get(messagesList.size() - 1).get("messageStatus"));
 
@@ -211,6 +198,10 @@ public class LandingActivity extends BaseAppActivity {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+    }
+
+    private void showUserInfoActivity(){
+        AndroidUtil.startNewActivity(this, UserInfoActivity.class);
     }
 
     private void addToChats(Chat chat) {
@@ -247,6 +238,7 @@ public class LandingActivity extends BaseAppActivity {
         addChatButton.setClickable(bool);
         addGroupsButton.setClickable(bool);
         searchButton.setClickable(bool);
+        showUserInfo.setClickable(bool);
     }
 
     private void startOptionsShowAnimation() {
@@ -257,6 +249,7 @@ public class LandingActivity extends BaseAppActivity {
         addChatButton.startAnimation(fromBottomAnim);
         addGroupsButton.startAnimation(fromBottomAnim);
         searchButton.startAnimation(fromBottomAnim);
+        showUserInfo.startAnimation(fromRightAnim);
     }
 
     private void startOptionsCloseAnimation() {
@@ -265,6 +258,7 @@ public class LandingActivity extends BaseAppActivity {
         addChatButton.startAnimation(toBottomAnim);
         addGroupsButton.startAnimation(toBottomAnim);
         searchButton.startAnimation(toBottomAnim);
+        showUserInfo.startAnimation(toRightAnim);
 
         setOptionsVisibility(View.GONE);
     }
@@ -273,5 +267,6 @@ public class LandingActivity extends BaseAppActivity {
         addChatButton.setVisibility(visibility);
         addGroupsButton.setVisibility(visibility);
         searchButton.setVisibility(visibility);
+        showUserInfo.setVisibility(visibility);
     }
 }

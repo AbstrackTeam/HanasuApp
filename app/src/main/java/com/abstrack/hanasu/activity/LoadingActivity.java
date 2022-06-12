@@ -31,17 +31,24 @@ import com.google.firebase.database.FirebaseDatabase;
 public class LoadingActivity extends BaseAppActivity {
 
     private Animation down_anim;
-    boolean hasIdentifier = false, hasDisplayName = false;
+    boolean hasIdentifier = false, hasDisplayName = false, persistence = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
+        setPersistence();
         animateContent();
         load();
         changeActivity();
+    }
+
+    private void setPersistence(){
+        if(!persistence){
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            persistence = true;
+        }
     }
 
     public void animateContent() {
