@@ -36,7 +36,7 @@ import java.util.List;
 
 public class LandingActivity extends BaseAppActivity {
 
-    private static RecyclerView storiesBar, chatsListView;
+    private static RecyclerView chatsListView;
     private CardView showMoreButton, addChatButton, addGroupsButton, searchButton;
     private ImageView showMoreButtonIcon, noChatsImageView;
     private TextView noChatsTextView;
@@ -55,7 +55,7 @@ public class LandingActivity extends BaseAppActivity {
     }
 
     public void init() {
-        storiesBar = findViewById(R.id.storiesBar);
+        UserManager.initInitialValues();
         chatsListView = findViewById(R.id.chatsListView);
 
         showMoreButton = findViewById(R.id.showMoreOptions);
@@ -95,7 +95,6 @@ public class LandingActivity extends BaseAppActivity {
     }
 
     public void fetchInitialData() {
-
         UserManager.fetchPublicAndPrivateData(new OnUserDataReceiveCallback() {
             @Override
             public void onDataReceiver(PublicUser publicUser) {
@@ -103,9 +102,6 @@ public class LandingActivity extends BaseAppActivity {
 
             @Override
             public void onDataReceiver(PrivateUser privateUser) {
-
-
-
                 ContactManager.fetchPublicData(new OnUserDataReceiveCallback() {
                     @Override
                     public void onDataReceiver(PublicUser publicUser) {
@@ -118,17 +114,14 @@ public class LandingActivity extends BaseAppActivity {
 
                     @Override
                     public void onDataReceived() {
-
                         ChatRoomManager.fetchPrivateData(new OnChatRoomDataReceiveCallback() {
                             @Override
                             public void onDataReceiver(ChatRoom chatRoom) {
                                 new Chat().createChat(chatRoom);
-
                             }
 
                             @Override
                             public void onDataReceived() {
-                                UserManager.initInitialValues();
                                 addChatsToView();
                                 buildDataListeners();
                                 checkAndUpdateNoChatsIcon();
@@ -146,7 +139,6 @@ public class LandingActivity extends BaseAppActivity {
     }
 
     public void buildDataListeners() {
-
         UserManager.syncPublicAndPrivateData(new OnUserDataReceiveCallback() {
             @Override
             public void onDataReceiver(PublicUser publicUser) {
@@ -183,7 +175,6 @@ public class LandingActivity extends BaseAppActivity {
     }
 
     public void addChatsToView() {
-
         ChatAdapter chatAdapter = new ChatAdapter(ChatManager.getChatsList(), this);
         chatsListView.setAdapter((chatAdapter));
         chatsListView.setLayoutManager(new LinearLayoutManager(LandingActivity.this, RecyclerView.VERTICAL, false));

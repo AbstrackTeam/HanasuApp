@@ -15,6 +15,7 @@ import com.abstrack.hanasu.core.Flame;
 import com.abstrack.hanasu.core.chatroom.ChatRoomManager;
 import com.abstrack.hanasu.core.chatroom.data.ChatType;
 import com.abstrack.hanasu.core.user.UserManager;
+import com.abstrack.hanasu.util.AndroidUtil;
 import com.abstrack.hanasu.util.TextUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -59,7 +60,7 @@ public class AddFriendActivity extends BaseAppActivity {
         returnToLandingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                goToLastActivity();
+                goToLandingActivity();
             }
         });
     }
@@ -111,7 +112,7 @@ public class AddFriendActivity extends BaseAppActivity {
                     ChatRoomManager.writeNewIndividualChatRoom(chatRoomUUID, ChatType.INDIVIDUAL, friendIdentifier);
 
                     Toast.makeText(AddFriendActivity.this, "Has agregado a " + friendIdentifier + ".", Toast.LENGTH_SHORT).show();
-                    goToLastActivity();
+                    goToLandingActivity();
                     return;
                 }
 
@@ -120,7 +121,7 @@ public class AddFriendActivity extends BaseAppActivity {
         });
     }
 
-    public void goToLastActivity() {
-        finish();
+    public void goToLandingActivity() {
+        AndroidUtil.startNewActivity(this, LandingActivity.class);
     }
 }
