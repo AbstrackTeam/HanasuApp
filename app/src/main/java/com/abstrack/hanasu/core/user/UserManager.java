@@ -41,7 +41,12 @@ public class UserManager {
     }
 
     public static void sendFriendRequest(String chatRoomUUID, String contactIdentifier) {
-        Flame.sendFriendRequestNotification(UserManager.currentPublicUser.getDisplayName(), "Te ha añadido como contacto", chatRoomUUID, ContactManager.getContactPublicUserList().get(contactIdentifier).getFcmToken());
+        UserManager.fetchContactPublicInformation(contactIdentifier, new OnContactDataReceiveCallback() {
+            @Override
+            public void onDataReceive(PublicUser contactPublicUser) {
+                Flame.sendFriendRequestNotification(UserManager.currentPublicUser.getDisplayName(), "Te ha añadido como contacto", chatRoomUUID, contactPublicUser.getFcmToken());
+            }
+        });
     }
 
     public static void sendMessage(ChatRoom chatRoom, PublicUser publicContactUser, EditText edtTxtMsg) {
@@ -205,25 +210,9 @@ public class UserManager {
                 contactDataReceiveCallback.onDataReceive(contactPublicUser);
             }
         });
-
-        Flame.getDataBaseReferenceWithPath("public").child("users").orderByChild("identifier").equalTo(contactIdentifier).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot contactDataSnapshot : snapshot.getChildren()) {
-                    PublicUser contactPublicUser = contactDataSnapshot.getValue(PublicUser.class);
-                    contactDataReceiveCallback.onDataReceive(contactPublicUser);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("Hanasu-UserManager", "An error ocurred while retrieving Public Contact information", error.toException());
-            }
-        });
     }
 
-    public static HashMap<String, String> retrieveNewContactList(String
-                                                                         friendIdentifier, String chatRoomUUID) {
+    public static HashMap<String, String> retrieveNewContactList(String friendIdentifier, String chatRoomUUID) {
         HashMap<String, String> newContactsList = UserManager.currentPrivateUser.getContacts();
         newContactsList.put(friendIdentifier, chatRoomUUID);
         return newContactsList;
