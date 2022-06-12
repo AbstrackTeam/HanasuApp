@@ -206,8 +206,13 @@ public class UserManager {
                     Log.d("Hanasu-UserManager", "Error getting data", task.getException());
                 }
 
-                PublicUser contactPublicUser = task.getResult().getValue(PublicUser.class);
-                contactDataReceiveCallback.onDataReceive(contactPublicUser);
+                for(DataSnapshot userData : task.getResult().getChildren()){
+                    PublicUser contactPublicUser = task.getResult().getValue(PublicUser.class);
+                    if(contactPublicUser != null){
+                        contactDataReceiveCallback.onDataReceive(contactPublicUser);
+                        break;
+                    }
+                }
             }
         });
     }
