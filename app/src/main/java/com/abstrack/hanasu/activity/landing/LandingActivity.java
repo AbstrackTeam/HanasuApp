@@ -51,13 +51,7 @@ public class LandingActivity extends BaseAppActivity {
 
         init();
         buildOptionsListeners();
-        fetchInitialData(false);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        fetchInitialData(true);
+        fetchInitialData();
     }
 
     public void init() {
@@ -100,13 +94,7 @@ public class LandingActivity extends BaseAppActivity {
         });
     }
 
-    public void fetchInitialData(boolean resumed) {
-
-        if(resumed){
-            ContactManager.getContactPublicUserList().clear();
-            ChatManager.getChatsList().clear();
-        }
-
+    public void fetchInitialData() {
         UserManager.fetchPublicAndPrivateData(new OnUserDataReceiveCallback() {
             @Override
             public void onDataReceiver(PublicUser publicUser) {
