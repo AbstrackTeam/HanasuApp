@@ -27,7 +27,7 @@ public class ChatRoomManager {
         int listIndex = 0;
         ChatManager.getChatsList().clear();
 
-        for(String chatRoomUUID : UserManager.currentPrivateUser.getChatRoomList().keySet()){
+        for(String chatRoomUUID : UserManager.currentPrivateUser.getChatRoomList().keySet()) {
             listIndex++;
             int finalListIndex = listIndex;
 
@@ -35,16 +35,14 @@ public class ChatRoomManager {
                 Flame.getDataBaseReferenceWithPath("private").child("chatRooms").child(chatRoomUUID).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot chatData : snapshot.getChildren()) {
-                            ChatRoom chatRoom = chatData.getValue(ChatRoom.class);
+                        ChatRoom chatRoom = snapshot.getValue(ChatRoom.class);
 
-                            if(chatRoom != null){
-                                chatRoomDataReceiveCallback.onDataReceiver(chatRoom);
+                        if(chatRoom != null){
+                            chatRoomDataReceiveCallback.onDataReceiver(chatRoom);
 
-                                if(finalListIndex == UserManager.currentPrivateUser.getChatRoomList().keySet().size() - 1) {
-                                    chatRoomDataReceiveCallback.onDataReceived();
-                                    Log.d("Hanasu-ChatRoomManager", "(ChatRoom) Data Synced");
-                                }
+                            if(finalListIndex == UserManager.currentPrivateUser.getChatRoomList().keySet().size()) {
+                                chatRoomDataReceiveCallback.onDataReceived();
+                                Log.d("Hanasu-ChatRoomManager", "(ChatRoom) Data Synced");
                             }
                         }
                     }

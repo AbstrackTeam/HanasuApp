@@ -60,7 +60,7 @@ public class AddFriendActivity extends BaseAppActivity {
         returnToLandingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                goToLandingActivity();
+                goToLastActivity();
             }
         });
     }
@@ -112,7 +112,7 @@ public class AddFriendActivity extends BaseAppActivity {
                     ChatRoomManager.writeNewIndividualChatRoom(chatRoomUUID, ChatType.INDIVIDUAL, friendIdentifier);
 
                     Toast.makeText(AddFriendActivity.this, "Has agregado a " + friendIdentifier + ".", Toast.LENGTH_SHORT).show();
-                    goToLandingActivity();
+                    goToLastActivity();
                     return;
                 }
 
@@ -121,7 +121,7 @@ public class AddFriendActivity extends BaseAppActivity {
         });
     }
 
-    public void goToLandingActivity() {
-        AndroidUtil.startNewActivity(this, LandingActivity.class);
+    public void goToLastActivity() {
+        finish();
     }
 }
