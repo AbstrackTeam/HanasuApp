@@ -1,5 +1,6 @@
 package com.abstrack.hanasu.activity.welcome;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,6 +9,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -15,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 
 import com.abstrack.hanasu.BaseAppActivity;
 import com.abstrack.hanasu.R;
@@ -42,7 +47,9 @@ public class SetProfileInfoActivity extends BaseAppActivity {
     private EditText edtTxtProfileName;
     private Button btnContinue;
 
-    private static final int IMAGE_CAPTURE_CODE = 1999, IMAGE_PICK_CODE = 2000;
+    Animation hideOptionsAnim, showOptionsAnim, fadeInAnim, fadeOutAnim;
+
+    private static final int IMAGE_CAPTURE_CODE = 1999, IMAGE_PICK_CODE = 2000, REQUEST_CAMERA_PERMISSIONS = 100;
 
     private boolean showPictureOptions = false;
     private String tempCameraImagePath = "";
@@ -57,15 +64,67 @@ public class SetProfileInfoActivity extends BaseAppActivity {
         clickableContainer.setClickable(false);
         clickableContainer.setVisibility(View.INVISIBLE);
 
-        LinearLayout layoutPictureOptions = findViewById(R.id.layoutPictureOptions);
-
-        viewPictureOptions = LayoutInflater.from(this).inflate(R.layout.select_picture_option, null, false);
-        viewPictureOptions.setVisibility(View.INVISIBLE);
-
-        layoutPictureOptions.addView(viewPictureOptions);
-
         edtTxtProfileName = findViewById(R.id.edtTxtProfileName);
         btnContinue = findViewById(R.id.btnContinue);
+
+        hideOptionsAnim = AnimationUtils.loadAnimation(this, R.anim.hide_profile_pic_options);
+        showOptionsAnim = AnimationUtils.loadAnimation(this, R.anim.show_profile_pic_options);
+        fadeInAnim = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        fadeOutAnim = AnimationUtils.loadAnimation(this, R.anim.fade_out);
+
+        viewPictureOptions = LayoutInflater.from(this).inflate(R.layout.select_picture_option, clickableContainer, false);
+        viewPictureOptions.setVisibility(View.INVISIBLE);
+        clickableContainer.addView(viewPictureOptions);
+
+        buildOptionsListeners();
+    }
+
+    private void buildOptionsListeners(){
+        clickableContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updatePictureOptions();
+            }
+        });
+
+        btnContinue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                submit();
+            }
+        });
+
+        CardView crdVCamera = findViewById(R.id.crdVCamera);
+        crdVCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updatePictureOptions();
+            }
+        });
+
+        Button btnCamera = viewPictureOptions.findViewById(R.id.btnCamera);
+        btnCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openCamera();
+            }
+        });
+
+        Button btnGallery = viewPictureOptions.findViewById(R.id.btnGallery);
+        btnGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openGallery();
+            }
+        });
+
+        Button btnTrash = viewPictureOptions.findViewById(R.id.btnTrash);
+        btnTrash.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                removeProfilePicture();
+            }
+        });
     }
 
     @Override
@@ -81,19 +140,6 @@ public class SetProfileInfoActivity extends BaseAppActivity {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == IMAGE_CAPTURE_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                tempCameraImagePath = AndroidUtil.takeCameraPhoto(this, IMAGE_CAPTURE_CODE);
-            } else {
-                Toast.makeText(this, "Camera Permission is Required to Use camera.", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     public void fetchCameraPhoto() {
@@ -130,7 +176,7 @@ public class SetProfileInfoActivity extends BaseAppActivity {
             @Override
             public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
                 if(!progressFirstRun[0]) {
-                    updatePictureOptions(findViewById(android.R.id.content).getRootView());
+                    updatePictureOptions();
                     progressFirstRun[0] = true;
                 }
             }
@@ -148,10 +194,33 @@ public class SetProfileInfoActivity extends BaseAppActivity {
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    public void removeProfilePicture(View view) {
+    public void removeProfilePicture() {
         ImageView profilePicImgView = findViewById(R.id.imgProfile);
         profilePicImgView.setImageBitmap(ImageUtil.convertDrawableToBitmap(getDrawable(R.drawable.ic_profile_pic)));
         hidePictureOptions();
+    }
+
+    public void openCamera() {
+        ActivityCompat.requestPermissions(this, new String[]{
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+                        Manifest.permission.MANAGE_MEDIA,
+                        Manifest.permission.MANAGE_DOCUMENTS,
+                        Manifest.permission.READ_EXTERNAL_STORAGE},
+                REQUEST_CAMERA_PERMISSIONS);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CAMERA_PERMISSIONS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                tempCameraImagePath = AndroidUtil.openCameraAndTakePhoto(this, IMAGE_CAPTURE_CODE);
+            } else {
+                Toast.makeText(this, "Permiso denegado, no se podrá tomar foto", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override
@@ -168,7 +237,7 @@ public class SetProfileInfoActivity extends BaseAppActivity {
         AndroidUtil.startNewActivity(SetProfileInfoActivity.this, LandingActivity.class);
     }
 
-    public void updatePictureOptions(View view) {
+    public void updatePictureOptions() {
         if (showPictureOptions) {
             hidePictureOptions();
             return;
@@ -178,6 +247,7 @@ public class SetProfileInfoActivity extends BaseAppActivity {
     }
 
     private void showPictureOptions() {
+        startPictureOptionsShowAnimation();
         btnContinue.setClickable(false);
         clickableContainer.setClickable(true);
         clickableContainer.setVisibility(View.VISIBLE);
@@ -185,7 +255,17 @@ public class SetProfileInfoActivity extends BaseAppActivity {
         showPictureOptions = true;
     }
 
+    private void startPictureOptionsShowAnimation(){
+        viewPictureOptions.startAnimation(showOptionsAnim);
+        clickableContainer.startAnimation(fadeInAnim);
+    }
+    private void startPictureOptionsHideAnimation(){
+        viewPictureOptions.startAnimation(hideOptionsAnim);
+        clickableContainer.startAnimation(fadeOutAnim);
+    }
+
     private void hidePictureOptions() {
+        startPictureOptionsHideAnimation();
         btnContinue.setClickable(true);
         clickableContainer.setClickable(false);
         clickableContainer.setVisibility(View.INVISIBLE);
@@ -193,7 +273,7 @@ public class SetProfileInfoActivity extends BaseAppActivity {
         showPictureOptions = false;
     }
 
-    public void submit(View view) {
+    public void submit() {
         if (!AuthManager.validateTextField(edtTxtProfileName)) {
             return;
         }
@@ -202,11 +282,7 @@ public class SetProfileInfoActivity extends BaseAppActivity {
         AndroidUtil.startNewActivity(this, LandingActivity.class);
     }
 
-    public void openCamera(View view) {
-        tempCameraImagePath = AndroidUtil.takeCameraPhoto(this, IMAGE_CAPTURE_CODE);
-    }
-
-    public void openGallery(View view) {
+    public void openGallery() {
         AndroidUtil.chooseGalleryPhoto(this, IMAGE_PICK_CODE);
     }
 }

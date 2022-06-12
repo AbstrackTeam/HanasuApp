@@ -49,29 +49,23 @@ public class AndroidUtil {
         return rightNow.get(Calendar.HOUR) + ":" + rightNow.get(Calendar.MINUTE) + " " + messageAmPm;
     }
 
-    public static String takeCameraPhoto(BaseAppActivity currentActivity, int captureCode) {
-        if(ContextCompat.checkSelfPermission(currentActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(currentActivity, new String[] {Manifest.permission.CAMERA}, captureCode);
-        } else {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(currentActivity.getPackageManager()) != null) {
-                File photoFile = null;
-                try {
-                    photoFile = ImageUtil.createImageFile();
-                } catch (IOException ex) {
-                    Log.d("HanasuFile", "An error ocurred while creating a file", ex);
-                }
+    public static String openCameraAndTakePhoto(BaseAppActivity currentActivity, int captureCode) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-                if (photoFile != null) {
-                    Uri photoURI = FileProvider.getUriForFile(currentActivity,
-                            "com.abstrack.hanasu.android.fileprovider",
-                            photoFile);
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                    currentActivity.startActivityForResult(takePictureIntent, captureCode);
-                    return photoFile.getAbsolutePath();
-                }
-            }
+        File photoFile = null;
+        try {
+            photoFile = ImageUtil.createImageFile(currentActivity);
+        } catch (IOException ex) {
+            Log.d("Hanasu-AndroidUtil", "An error ocurred while creating the file", ex);
         }
+        if (photoFile != null) {
+            Uri photoURI = FileProvider.getUriForFile(currentActivity, "com.abstrack.hanasu.android.fileprovider",
+                    photoFile);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+            currentActivity.startActivityForResult(takePictureIntent, captureCode);
+            return photoFile.getAbsolutePath();
+        }
+
         return null;
     }
 

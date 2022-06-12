@@ -38,6 +38,7 @@ public class UserManager{
                     Log.e("firebase", "Error getting data", task.getException());
                     return;
                 }
+
                 for(DataSnapshot user : task.getResult().getChildren()){
                     if(!user.child("uid").getValue().equals(AuthManager.getFireAuth().getCurrentUser().getUid())){
                         continue;

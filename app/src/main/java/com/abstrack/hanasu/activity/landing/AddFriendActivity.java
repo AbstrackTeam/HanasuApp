@@ -91,10 +91,15 @@ public class AddFriendActivity extends BaseAppActivity {
                     }
                     UserManager.addToUserContacts(identifier);
                     Toast.makeText(AddFriendActivity.this, "Has agregado a " + name, Toast.LENGTH_SHORT).show();
+                    returnToLanding();
                     return;
                 }
-                Toast.makeText(AddFriendActivity.this, "El usuarii no ha sido encontrado", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddFriendActivity.this, "El usuario no ha sido encontrado", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void returnToLanding(){
+        finish();
     }
 }

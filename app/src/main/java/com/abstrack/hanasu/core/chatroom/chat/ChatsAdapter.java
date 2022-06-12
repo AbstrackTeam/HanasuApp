@@ -65,14 +65,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
         // Set placeholder icon
         holder.userIcon.setImageResource(R.drawable.ic_profile_pic);
 
-        // If the messages are zero or is seen, hide the notification view.
-        if (chats.get(position).getMessagesCount() == 0 || chats.get(position).getMessageState() == MessageStatus.SEEN) {
-            holder.chatNotification.setVisibility(View.INVISIBLE);
-        } else {
-            holder.chatNotification.setVisibility(View.VISIBLE);
-        }
         // Set the notification icon quantity and value
-        holder.messageQuantity.setText(String.valueOf(chats.get(position).getMessagesCount()));
         holder.messageQuantityValue = chats.get(position).getMessagesCount();
 
         // Set the provided time
@@ -125,8 +118,8 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
 
     public static class ChatsViewHolder extends RecyclerView.ViewHolder {
         // Components
-        private TextView name, previewMessage, messageQuantity, chatTime;
-        private CardView chatCard, chatNotification;
+        private TextView name, previewMessage, chatTime;
+        private CardView chatCard;
         private ImageView userIcon;
 
         // Message quantity value
@@ -140,9 +133,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
             chatCard = itemView.findViewById(R.id.chatCard);
             name = itemView.findViewById(R.id.chatName);
             previewMessage = itemView.findViewById(R.id.previewMessage);
-            messageQuantity = itemView.findViewById(R.id.messagesCount);
             chatTime = itemView.findViewById(R.id.chatTime);
-            chatNotification = itemView.findViewById(R.id.chatNotification);
             userIcon = itemView.findViewById(R.id.userIcon);
         }
 
@@ -186,34 +177,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
                     // Assign all the properties
                     chatTime.setText(lastMessage.get("time"));
                     previewMessage.setText(lastMessage.get("content"));
-                    messageQuantityValue = 0;
 
-                    if(MessageStatus.valueOf(lastMessage.get("messageStatus")) == MessageStatus.SEEN){
-                        chatNotification.setVisibility(View.INVISIBLE);
-                        return;
-                    }
-
-                    if (!lastMessage.get("sentBy").equals(UserManager.getCurrentUser().getIdentifier())) {
-                        for (int i = 1; i < messagesList.size(); i++) {
-                            if (messagesList.get(i).get("sentBy").equals(UserManager.getCurrentUser().getIdentifier())) {
-                                continue;
-                            }
-                            if (MessageStatus.valueOf(messagesList.get(i).get("messageStatus")) != MessageStatus.SEEN) {
-                                messageQuantityValue++;
-                            }
-                        }
-
-                        if(messageQuantityValue == 0 ){
-                            messageQuantity.setText(String.valueOf(messageQuantityValue));
-                            chatNotification.setVisibility(View.INVISIBLE);
-                            return;
-                        }
-                        messageQuantity.setText(String.valueOf(messageQuantityValue));
-                        chatNotification.setVisibility(View.VISIBLE);
-                        return;
-                    }
-                    messageQuantity.setText(String.valueOf(messageQuantityValue));
-                    chatNotification.setVisibility(View.INVISIBLE);
                 }
 
                 @Override

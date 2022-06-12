@@ -8,6 +8,29 @@
     tools:context=".activity.landing.LandingActivity">
 
     <TextView
+        android:id="@+id/noChatsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:text="@string/no_chats_text_view"
+        android:textColor="@color/detail_color_secondary"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/noChatsImageView"
+        app:layout_constraintStart_toStartOf="@+id/noChatsImageView"
+        app:layout_constraintTop_toBottomOf="@+id/noChatsImageView" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/noChatsImageView"
+        android:layout_width="250dp"
+        android:layout_height="200dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/wind_cheem" />
+
+    <TextView
         android:id="@+id/txtChats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

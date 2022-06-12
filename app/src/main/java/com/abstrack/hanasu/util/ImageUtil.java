@@ -18,6 +18,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.webkit.MimeTypeMap;
 
+import com.abstrack.hanasu.BaseAppActivity;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -52,16 +54,17 @@ public class ImageUtil {
         return (Bitmap) extras.get("data");
     }
 
-    public static File createImageFile() throws IOException {
+    public static File createImageFile(BaseAppActivity currentActivity) throws IOException {
         @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File storageDir = currentActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         return File.createTempFile(
                 imageFileName,
                 ".jpg",
                 storageDir
         );
     }
+
 
     private String getFileExt(Context ctx, Uri contentUri) {
         ContentResolver c = ctx.getContentResolver();
