@@ -41,7 +41,7 @@ public class UserManager {
     }
 
     public static void sendFriendRequest(String chatRoomUUID, String contactIdentifier) {
-        UserManager.fetchContactPublicInformation(contactIdentifier, new OnContactDataReceiveCallback() {
+        ContactManager.fetchContactPublicDataViaIdentifier(contactIdentifier, new OnContactDataReceiveCallback() {
             @Override
             public void onDataReceive(PublicUser contactPublicUser) {
                 Flame.sendFriendRequestNotification(UserManager.currentPublicUser.getDisplayName(), "Te ha añadido como contacto", chatRoomUUID, contactPublicUser.getFcmToken());
@@ -192,27 +192,6 @@ public class UserManager {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.d("Hanasu-UserManager", "An error ocurred while retrieving Public Contact information", error.toException());
-            }
-        });
-    }
-
-    public static void fetchContactPublicInformation(String contactIdentifier, OnContactDataReceiveCallback contactDataReceiveCallback) {
-        Log.d("Hanasu-UserManager", "Contact get data started");
-
-        Flame.getDataBaseReferenceWithPath("public").child("users").orderByChild("identifier").equalTo(contactIdentifier).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.d("Hanasu-UserManager", "Error getting data", task.getException());
-                }
-
-                for(DataSnapshot userData : task.getResult().getChildren()){
-                    PublicUser contactPublicUser = task.getResult().getValue(PublicUser.class);
-                    if(contactPublicUser != null){
-                        contactDataReceiveCallback.onDataReceive(contactPublicUser);
-                        break;
-                    }
-                }
             }
         });
     }
