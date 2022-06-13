@@ -176,8 +176,12 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
                     HashMap<String, String> lastMessage = messagesList.get(messagesList.size() - 1);
                     // Assign all the properties
                     chatTime.setText(lastMessage.get("time"));
-                    previewMessage.setText(lastMessage.get("content"));
 
+                    if(lastMessage.get("messageType").equals("IMAGE")){
+                        previewMessage.setText("Foto");
+                    } else {
+                        previewMessage.setText(lastMessage.get("content"));
+                    }
                 }
 
                 @Override

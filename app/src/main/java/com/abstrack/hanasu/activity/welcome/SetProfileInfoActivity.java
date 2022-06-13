@@ -283,6 +283,6 @@ public class SetProfileInfoActivity extends BaseAppActivity {
     }
 
     public void openGallery() {
-        AndroidUtil.chooseGalleryPhoto(this, IMAGE_PICK_CODE);
+        AndroidUtil.chooseGalleryPhoto(this, "Select image to send", IMAGE_PICK_CODE);
     }
 }

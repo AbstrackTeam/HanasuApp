@@ -1,5 +1,6 @@
 package com.abstrack.hanasu.activity.chat;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,19 +27,25 @@ import com.abstrack.hanasu.core.chatroom.message.Message;
 import com.abstrack.hanasu.core.user.data.ConnectionStatus;
 import com.abstrack.hanasu.db.FireDatabase;
 import com.abstrack.hanasu.util.AndroidUtil;
+import com.abstrack.hanasu.util.ImageUtil;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class ChatActivity extends BaseAppActivity {
 
@@ -52,6 +60,8 @@ public class ChatActivity extends BaseAppActivity {
     private boolean firstAnimationRun = true;
 
     private List<Message> messageList;
+
+    private final int PICK_PHOTO_GALLERY_CODE = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +85,66 @@ public class ChatActivity extends BaseAppActivity {
         loadChatInformation();
         loadFriendInformation();
         syncMessages();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(resultCode == RESULT_OK){
+            if(requestCode == PICK_PHOTO_GALLERY_CODE){
+                uploadPhoto(data.getData(), ImageUtil.getMimeType(this, data.getData()));
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void pickPhotoFromGallery(View view){
+        AndroidUtil.chooseGalleryPhoto(this, "Select profile picture", PICK_PHOTO_GALLERY_CODE);
+    }
+
+    public void uploadPhoto(Uri imgUri, String imgExtension){
+        String imgKey = UUID.randomUUID().toString();
+        final boolean[] progressFirstRun = {false};
+
+        StorageReference imageStorageReference = FireDatabase.getStorageReference().child("image").child(imgKey + imgExtension);
+        imageStorageReference.putFile(imgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d("HanasuStorage", "Image uploaded successfully");
+                if(taskSnapshot.getMetadata() != null){
+                    if(taskSnapshot.getMetadata().getReference() != null){
+                        Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
+                        result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                String imageUrl = uri.toString();
+                                sendMessagePhoto(imageUrl);
+                            }
+                        });
+                    }
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("HanasuStorage", "Image failed to upload", e);
+            }
+        });
+    }
+
+    public void sendMessagePhoto(String photoUrl) {
+        DatabaseReference chatRoomRef = FireDatabase.getDataBaseReferenceWithPath("chat-rooms").child(chatRoom+"/messagesList");
+        chatRoomRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("HanasuChat", "Error getting values");
+                }
+
+                List<HashMap<String, String>> messagesList = (List<HashMap<String, String>>) task.getResult().getValue();
+                chatRoomRef.child(String.valueOf(messagesList.size())).setValue(new Message(photoUrl, AndroidUtil.getCurrentHour(), UserManager.getCurrentUser().getIdentifier(), MessageStatus.SENDING, MessageType.IMAGE));
+                edtTxtMsg.setText("");
+            }
+        });
     }
 
     public void sendMessage(View view) {

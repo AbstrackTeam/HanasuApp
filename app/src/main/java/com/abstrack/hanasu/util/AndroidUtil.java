@@ -25,14 +25,14 @@ import java.util.regex.Pattern;
 
 public class AndroidUtil {
 
-    public static void chooseGalleryPhoto(BaseAppActivity currentActivity, int pickCode){
+    public static void chooseGalleryPhoto(BaseAppActivity currentActivity, String title, int pickCode){
         Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
         getIntent.setType("image/*");
 
         Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         pickIntent.setType("image/*");
 
-        Intent chooserIntent = Intent.createChooser(getIntent, "Select a Profile Picture");
+        Intent chooserIntent = Intent.createChooser(getIntent, title);
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
 
         currentActivity.startActivityForResult(chooserIntent, pickCode);
